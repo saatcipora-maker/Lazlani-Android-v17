@@ -1,0 +1,55 @@
+# Keep this file aligned with the repository .gitignore.
+
+# compiled output
+dist
+tmp
+out-tsc
+*.tsbuildinfo
+.expo
+.expo-shared
+
+# dependencies
+node_modules
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+/libpeerconnection.log
+npm-debug.log
+yarn-error.log
+testem.log
+/typings
+
+# System Files
+.DS_Store
+Thumbs.db
+
+.cursor/rules/nx-rules.mdc
+.github/instructions/nx.instructions.md
+
+# Replit-only files
+.cache/
+.local/
+
+# EAS needs the complete pnpm workspace metadata for reproducible installs.
+!package.json
+!pnpm-lock.yaml
+!pnpm-workspace.yaml
+!artifacts/lazlani/package.json
+!artifacts/lazlani/app.json
+!artifacts/lazlani/eas.json
