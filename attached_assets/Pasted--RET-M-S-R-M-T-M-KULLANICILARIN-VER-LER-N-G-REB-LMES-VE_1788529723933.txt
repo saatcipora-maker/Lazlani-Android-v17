@@ -1,0 +1,511 @@
+🔴 ÜRETİM SÜRÜMÜ – TÜM KULLANICILARIN VERİLERİNİ GÖREBİLMESİ VE GERÇEK ZAMANLI SİSTEMİN AKTİF EDİLMESİ
+
+BU BİR HATA DÜZELTME VE ÜRETİM SÜRÜMÜ AKTİVASYON KOMUTUDUR.
+
+Google Play Store üzerinden uygulamayı indiren gerçek kullanıcılar şu anda birbirlerini bulamıyor, kullanıcıların paylaşımlarını göremiyor, mesajları göremiyor ve kitapları göremiyor.
+
+BU SORUNU KÖKÜNDEN ÇÖZ.
+
+Sadece arayüzde değişiklik yapma. Backend, veritabanı, Authentication, Storage, Security Rules, gerçek zamanlı bağlantılar, API yapılandırması ve üretim yapılandırmasını baştan sona kontrol et.
+
+---
+
+1. ÜRETİM BACKEND BAĞLANTISINI KONTROL ET
+
+Uygulamanın Google Play Store'dan indirilen release/production APK veya AAB sürümünün, geliştirme sırasında kullanılan backend ile aynı doğru üretim projesine bağlandığını doğrula.
+
+Kontrol et:
+
+- Firebase/Backend proje ID
+- Android application ID / package name
+- SHA-1
+- SHA-256
+- "google-services.json"
+- Firebase Authentication
+- Cloud Firestore
+- Cloud Storage
+- Realtime Database kullanılıyorsa Realtime Database
+- Cloud Functions / backend servisleri
+- API endpointleri
+- Production environment değişkenleri
+- Release build configuration
+
+Debug sürümü çalışan ancak Release sürümü çalışmayan hiçbir yapı bırakma.
+
+---
+
+2. KULLANICILAR BİRBİRLERİNİ BULABİLSİN
+
+Tüm gerçek kullanıcılar uygulamanın:
+
+KEŞFET → KULLANICILAR
+
+bölümünde birbirlerini arayabilsin.
+
+Arama gerçek veritabanından yapılacak.
+
+Kullanıcı:
+
+- Kullanıcı adına,
+- Kullanıcı adına ait benzersiz kullanıcı ID/username bilgisine
+
+göre aranabilsin.
+
+Sonuçlarda gerçek kullanıcılar gösterilsin.
+
+Bir kullanıcı kayıt olduğunda profili üretim veritabanına kaydedilsin.
+
+Başka bir kullanıcı bu profili aradığında bulabilsin.
+
+Kullanıcı verilerini yalnızca cihazın yerel belleğinde tutma.
+
+---
+
+3. KULLANICI PROFİLLERİ
+
+Her gerçek kullanıcının profili backend'de oluşturulmalı.
+
+Profilde gerekli bilgiler:
+
+- Kullanıcı ID
+- Kullanıcı adı
+- Profil fotoğrafı
+- Kapak fotoğrafı
+- Takipçi sayısı
+- Takip edilen sayısı
+- Kullanıcının paylaşımları
+- Kullanıcının kitapları
+
+gibi bilgiler gerçek veritabanından alınmalı.
+
+Bir kullanıcı başka bir kullanıcının profiline girdiğinde bilgiler yüklenmeli.
+
+---
+
+4. PAYLAŞIMLAR TÜM KULLANICILARA GÖRÜNMELİ
+
+Bir kullanıcı paylaşım yaptığında paylaşım gerçek backend'e kaydedilmeli.
+
+Onay sistemi gerekiyorsa:
+
+Beklemede → Yönetici Onayı → Yayında
+
+akışı kullanılmalı.
+
+Yönetici onayladıktan sonra paylaşım:
+
+TÜM YETKİLİ KULLANICILARIN KEŞFET/AKIŞ EKRANINDA GÖRÜNMELİ.
+
+Paylaşımı oluşturan kullanıcının cihazında görünmesi yeterli değildir.
+
+Başka cihazdan giriş yapan başka bir kullanıcı da aynı paylaşımı görebilmelidir.
+
+---
+
+5. MESAJLAR ÇALIŞACAK
+
+Kullanıcılar birbirlerine mesaj gönderebilsin.
+
+Mesaj:
+
+- Gerçek backend'e kaydedilmeli.
+- Gönderen ID'si tutulmalı.
+- Alıcı ID'si tutulmalı.
+- Mesaj zamanı tutulmalı.
+- Mesaj durumu tutulmalı.
+- Gerçek zamanlı olarak karşı tarafa ulaşmalı.
+
+Bir kullanıcı mesaj gönderdiğinde diğer kullanıcının mesaj ekranında:
+
+sayfa yenilemeden
+
+mesaj görünmeli.
+
+---
+
+6. KİTAPLAR TÜM KULLANICILARA GÖRÜNMELİ
+
+Bir yazar kitap oluşturduğunda kitap backend'e kaydedilmeli.
+
+Yönetici onayı gerekiyorsa:
+
+Beklemede → Onaylandı → Yayında
+
+durumu kullanılmalı.
+
+Yönetici kitabı onayladıktan sonra kitap:
+
+Keşfet → Kitaplar
+
+bölümünde tüm kullanıcıların arama sonuçlarında bulunabilmeli.
+
+Kitabın:
+
+- Kapak fotoğrafı
+- Kitap adı
+- Yazar
+- Açıklama
+- Kategori
+- Bölümler
+- Beğeni
+- Okuma sayısı
+- Yorumlar
+
+gibi bilgileri gerçek backend'den yüklenmeli.
+
+---
+
+7. KİTAP BÖLÜMLERİ
+
+Yazarın yazdığı bölümler backend'e kaydedilmeli.
+
+Yönetici onayı gerekiyorsa:
+
+Beklemede → Onaylandı
+
+akışı uygulanmalı.
+
+Onaylanan bölüm kitabın içerisinde tüm yetkili kullanıcılar tarafından görülebilmeli.
+
+Başka cihazdan giriş yapan kullanıcı da aynı bölümü görebilmeli.
+
+---
+
+8. GERÇEK ZAMANLI SİSTEMİ AKTİF ET
+
+Aşağıdaki işlemler için gerçek zamanlı listener/subscription sistemi kullan:
+
+- Kullanıcılar
+- Paylaşımlar
+- Mesajlar
+- Yorumlar
+- Beğeniler
+- Kitaplar
+- Kitap bölümleri
+- Takipçiler
+- Takip edilenler
+- Bildirimler
+- Okuma sayıları
+- Kitap önerileri
+- Yönetici onayları
+
+Firestore kullanılıyorsa gerçek zamanlı listener'ları doğru koleksiyon ve sorgulara bağla.
+
+Firebase dokümantasyonuna göre Firestore real-time listener'ları veriler değiştiğinde istemciye güncelleme gönderebilir; bu sistemi uygulamada doğru şekilde kullan.
+
+---
+
+9. FIRESTORE / DATABASE SECURITY RULES KONTROLÜ
+
+ÇOK ÖNEMLİ:
+
+Mevcut Security Rules'ları tamamen incele.
+
+Kullanıcıların birbirlerinin:
+
+- Profilini,
+- Yayınlanmış kitaplarını,
+- Onaylanmış bölümlerini,
+- Yayınlanmış paylaşımlarını,
+- Yorumlarını,
+- Gerekli takip bilgilerini
+
+okuyabilmesini engelleyen yanlış kurallar varsa düzelt.
+
+Ancak güvenliği tamamen kaldırma.
+
+"allow read, write: if true" gibi herkese açık ve güvensiz kurallar kullanma.
+
+Firebase, üretim uygulamalarında Authentication ve Security Rules ile erişimin sınırlandırılmasını öneriyor.
+
+---
+
+10. OKUMA VE YAZMA İZİNLERİNİ AYIR
+
+Kullanıcıların yayınlanmış ortak içerikleri okuyabilmesini sağla.
+
+Ancak:
+
+- Başka kullanıcının kitabını değiştiremesin.
+- Başka kullanıcının profilini değiştiremesin.
+- Başka kullanıcının mesajlarını okuyamasın.
+- Başka kullanıcının hesabını değiştiremesin.
+- Başka kullanıcının içeriğini silemesin.
+
+Yani:
+
+ORTAK İÇERİKLER = OKUNABİLİR
+
+KİŞİSEL VERİLER = YALNIZCA YETKİLİ KULLANICI
+
+YÖNETİCİ İŞLEMLERİ = YALNIZCA YÖNETİCİ
+
+şeklinde güvenli erişim modeli oluştur.
+
+Firebase Security Rules'ın istemci tarafındaki hatalara karşı bağımsız bir güvenlik katmanı olduğunu dikkate al.
+
+---
+
+11. SORUNLU SORGU VE INDEXLERİ KONTROL ET
+
+Tüm Firestore sorgularını kontrol et.
+
+Özellikle:
+
+- Kullanıcı arama
+- Kitap arama
+- Paylaşım listesi
+- Mesaj listesi
+- Yorum listesi
+- Takipçi listesi
+- Takip edilenler
+- Kitap bölümleri
+
+için gerekli sorguların üretim ortamında çalıştığını doğrula.
+
+Security Rules ile sorguların birbiriyle uyumlu olması gerektiğini unutma.
+
+Eksik index varsa oluştur.
+
+---
+
+12. RELEASE SÜRÜMÜNDE VERİTABANI BOŞ GÖRÜNMESİN
+
+Google Play Store'dan indirilen uygulamada:
+
+"Kullanıcı bulunamadı"
+
+"Kitap bulunamadı"
+
+"Paylaşım bulunamadı"
+
+"Mesaj bulunamadı"
+
+gibi hataların nedeni gerçek veritabanına bağlantı sorunuysa bunu düzelt.
+
+Release uygulamasını gerçek üretim veritabanına bağla.
+
+---
+
+13. LOCAL CACHE KULLANIMINI KONTROL ET
+
+Kullanıcıların birbirlerinin verilerini görememesinin nedeni yalnızca local/device storage ise bu mimariyi düzelt.
+
+Local cache yalnızca performans için kullanılabilir.
+
+ANA VERİ KAYNAĞI BACKEND OLMALIDIR.
+
+---
+
+14. OTURUM VE AUTHENTICATION
+
+Her kullanıcı giriş yaptığında:
+
+- Gerçek Firebase Authentication / backend kullanıcı ID'si alınmalı.
+- Kullanıcı profili bu ID ile eşleştirilmeli.
+- Kullanıcının kitapları bu ID ile eşleştirilmeli.
+- Paylaşımları bu ID ile eşleştirilmeli.
+- Mesajları bu ID ile eşleştirilmeli.
+- Takip sistemi bu ID ile eşleştirilmeli.
+
+Anonymous/debug kullanıcı ID'si ile gerçek kullanıcı verisini karıştırma.
+
+---
+
+15. TAKİP SİSTEMİ DE ÇALIŞACAK
+
+Kullanıcılar:
+
+Takip Et
+
+butonuna bastığında gerçek takip kaydı oluşturulmalı.
+
+Takipçi ve takip edilen listeleri backend'den alınmalı.
+
+Takipçi sayıları gerçek veritabanından hesaplanmalı.
+
+İki farklı cihazda test edildiğinde aynı takip durumu görülmeli.
+
+---
+
+16. YORUM VE BEĞENİLER
+
+Bir kullanıcı yorum yaptığında diğer kullanıcılar görebilmeli.
+
+Bir kullanıcı beğendiğinde beğeni sayısı diğer cihazlarda da güncellenmeli.
+
+Aynı kullanıcı aynı içeriği birden fazla kez beğenmemeli.
+
+---
+
+17. OKUMA SAYISI
+
+Kitap okuma kayıtları gerçek backend'de tutulmalı.
+
+Okuma sayıları tüm cihazlarda aynı gerçek veriyi göstermeli.
+
+---
+
+18. ÖZEL FOTOĞRAF SİSTEMİ
+
+Özel bölümündeki:
+
+Günlük 5 fotoğraf
+
+ve
+
+7 gün sonra otomatik silme
+
+kuralları backend tarafında çalışmalı.
+
+Fotoğraf dosyaları gerçek Storage'a yüklenmeli.
+
+7 günlük süre dolduğunda:
+
+- Storage dosyası,
+- Database kaydı
+
+temizlenmeli.
+
+---
+
+19. YÖNETİCİ ONAY SİSTEMİ
+
+Yönetici panelindeki onay işlemlerinin gerçek backend ile bağlantısını kontrol et.
+
+Yönetici:
+
+ONAYLA
+
+dediğinde database'deki içerik durumu gerçekten değişmeli.
+
+Örneğin:
+
+"status = approved"
+
+olduğunda uygulamadaki gerçek kullanıcıların sorguları bu içeriği bulabilmeli.
+
+---
+
+20. ÜRETİM TESTİ – İKİ AYRI CİHAZLA TEST ET
+
+Bu işlemi mutlaka gerçekleştir:
+
+CİHAZ A
+
+Kullanıcı A ile giriş yap.
+
+CİHAZ B
+
+Kullanıcı B ile giriş yap.
+
+Sonra test et:
+
+1. A, B'yi arayabiliyor mu?
+2. B, A'yı arayabiliyor mu?
+3. A, paylaşım oluşturabiliyor mu?
+4. B, A'nın paylaşımını görebiliyor mu?
+5. A, kitap oluşturabiliyor mu?
+6. Yönetici kitabı onaylıyor mu?
+7. B, onaylanan kitabı görebiliyor mu?
+8. B, kitabı arayabiliyor mu?
+9. A, B'yi takip edebiliyor mu?
+10. B, takipçisini görebiliyor mu?
+11. A, B'ye mesaj gönderebiliyor mu?
+12. B mesajı gerçek zamanlı alabiliyor mu?
+13. Yorumlar iki cihazda da görünüyor mu?
+14. Beğeniler iki cihazda da güncelleniyor mu?
+15. Okuma sayıları iki cihazda da doğru mu?
+16. Bildirimler çalışıyor mu?
+17. Özel fotoğraflar doğru kullanıcılar tarafından görülebiliyor mu?
+18. Günlük 5 fotoğraf limiti çalışıyor mu?
+19. 7 günlük otomatik silme çalışıyor mu?
+
+---
+
+21. HATA LOG SİSTEMİ
+
+Production ortamında oluşan hataları yakala.
+
+Özellikle:
+
+- Permission denied
+- Permission missing
+- Failed to fetch
+- Network error
+- Authentication error
+- Firestore query error
+- Storage error
+- Invalid configuration
+- Missing index
+- Missing document
+- Release configuration error
+
+hatalarını tespit et.
+
+Kullanıcıya yalnızca teknik hata kodu gösterme.
+
+Ancak geliştirici tarafında gerçek hata logunu kaydet.
+
+---
+
+22. VERİ KAYBI OLMAYACAK
+
+Mevcut kullanıcıların:
+
+- Hesaplarını,
+- Kitaplarını,
+- Bölümlerini,
+- Paylaşımlarını,
+- Yorumlarını,
+- Beğenilerini,
+- Takiplerini,
+- Mesajlarını
+
+gereksiz yere silme.
+
+Mevcut veritabanını düzeltirken veri kaybına neden olacak migration işlemlerini kontrolsüz gerçekleştirme.
+
+---
+
+🔴 SON TALİMAT
+
+BU SORUNU SADECE EKRAN TASARIMINI DEĞİŞTİREREK ÇÖZME.
+
+Sorunun kaynağını bul ve düzelt.
+
+Kontrol et:
+
+Android Release → Firebase/Backend → Authentication → Database → Security Rules → Queries → Indexes → Storage → Realtime Listeners → Production Configuration
+
+Bu zincirin tamamı çalışır durumda olmalıdır.
+
+Google Play Store'dan uygulamayı indiren iki farklı gerçek kullanıcı, internete bağlı oldukları sürece aynı üretim sistemine bağlanmalı ve yetkileri dahilindeki ortak verileri görebilmelidir.
+
+Kullanıcılar birbirlerini bulacak.
+
+Paylaşımlar birbirlerine görünecek.
+
+Kitaplar birbirlerine görünecek.
+
+Kitap bölümleri görünecek.
+
+Yorumlar gerçek zamanlı görünecek.
+
+Beğeniler gerçek zamanlı görünecek.
+
+Okuma sayıları gerçek zamanlı görünecek.
+
+Takip sistemi çalışacak.
+
+Mesajlar gerçek zamanlı çalışacak.
+
+Bildirimler çalışacak.
+
+Özel fotoğraf sistemi çalışacak.
+
+Yönetici onayları gerçek veritabanına işlenecek.
+
+Hiçbir özellik demo veya sahte veriyle çalışmayacak.
+
+Önce problemi tespit et, sonra düzelt, ardından Release/Production build üzerinde uçtan uca test et. Testler tamamlanmadan görevi tamamlandı olarak işaretleme.

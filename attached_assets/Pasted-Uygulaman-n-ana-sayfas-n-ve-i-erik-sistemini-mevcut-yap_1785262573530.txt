@@ -1,0 +1,120 @@
+Uygulamanın ana sayfasını ve içerik sistemini mevcut yapıyı bozmadan aşağıdaki şekilde yeniden düzenle.
+
+1. Ana Sayfa Düzeni
+
+Günün Kitabı bölümü mevcut yerinde kalsın ve çalışma sistemi değişmesin.
+
+Bunun dışındaki kitap bölümleri yeniden düzenlensin.
+
+Ana sayfada kitaplar rastgele değil, kategorilere göre gösterilsin.
+
+Ana sayfada art arda en fazla 5 kategori görüntülensin.
+
+Örnek kategoriler:
+
+- Roman
+- Hikâye
+- Şiir
+- Bilim Kurgu
+- Polisiye
+
+Her kategorinin altında o kategoriye ait kitaplar yatay kaydırılabilir (slider) şekilde listelensin.
+
+Kullanıcı "Tümünü Gör" seçeneğine bastığında o kategorideki tüm kitapları görebilsin.
+
+2. Ana Sayfada Kalacak Bölümler
+
+Aşağıdaki bölümler ana sayfada yerlerini korusun:
+
+- Okuma Hedefin
+- AI Önerileri
+
+Bu bölümler kaldırılmasın.
+
+Bu iki bölümün hemen altına yeni bir bölüm ekle:
+
+Haftanın Kitabı
+
+Bu bölümde:
+
+- Yönetici tarafından seçilen haftanın kitabı gösterilsin.
+- Kitap kapağı büyük şekilde gösterilsin.
+- Kitap özeti görüntülensin.
+- Okuma butonu bulunsun.
+- Beğeni ve yorum sayıları gösterilsin.
+- Haftanın kitabı yönetici panelinden değiştirilebilsin.
+
+3. AI Önerileri
+
+AI Önerileri bölümünü akıllı bir yapay zekâ asistanına dönüştür.
+
+Botun adı:
+
+Lazlani
+
+Kullanıcı bu bölüme tıkladığında sohbet ekranı açılsın.
+
+Lazlani;
+
+- Kullanıcının ilgi alanlarına göre kitap önerebilsin.
+- Hikâye önerebilsin.
+- Şiir önerebilsin.
+- Yeni yazarlar önerebilsin.
+- Benzer kitaplar önerebilsin.
+- Okuma hedeflerine göre öneriler sunabilsin.
+- Kullanıcının yazdığı isteklere doğal dilde cevap verebilsin.
+- Gerektiğinde uygulama içindeki içerikleri kullanarak öneriler oluştursun.
+
+Modern ve kullanımı kolay bir sohbet arayüzü tasarlansın.
+
+4. Küfür ve Uygunsuz İçerik Filtresi
+
+Uygulamaya gelişmiş bir içerik filtreleme sistemi ekle.
+
+Filtre aşağıdaki alanlarda çalışsın:
+
+- Kitaplar
+- Hikâyeler
+- Şiirler
+- Yorumlar
+- Sohbet mesajları
+- Bülten paylaşımları
+- Dergi yazıları
+- Profil paylaşımları
+- Özel bölüm paylaşımları
+
+Kullanıcı küfür, hakaret veya uygunsuz ifadeler yazdığında:
+
+- İçerik yayınlanmasın.
+- Mesaj gönderilmesin.
+- Kullanıcıya anında uyarı gösterilsin.
+
+Örnek uyarı:
+
+"Paylaşımınız uygunsuz ifadeler içerdiği için yayınlanmadı. Lütfen topluluk kurallarına uygun bir dil kullanınız."
+
+Filtre;
+
+- Türkçe küfürleri,
+- Hakaretleri,
+- Nefret söylemlerini,
+- Aşağılayıcı ifadeleri,
+- Spam içerikleri,
+
+otomatik olarak tespit edebilsin.
+
+Yönetici panelinde:
+
+- Yasaklı kelime listesini düzenleyebilme,
+- Yeni kelime ekleyebilme,
+- Kelime silebilme,
+- Filtrenin çalışma seviyesini ayarlayabilme,
+
+özellikleri de bulunsun.
+
+5. Performans
+
+- Tüm yeni özellikler mevcut tasarımı bozmadan uygulamaya entegre edilsin.
+- Tüm sistemler gerçek zamanlı çalışsın.
+- Mobil cihazlarda hızlı, akıcı ve yüksek performanslı çalışsın.
+- Tüm ekran boyutlarına tam uyumlu (responsive) olsun.

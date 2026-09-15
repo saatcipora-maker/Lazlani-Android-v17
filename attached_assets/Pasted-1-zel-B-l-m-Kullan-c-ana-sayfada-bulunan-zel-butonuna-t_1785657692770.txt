@@ -1,0 +1,60 @@
+1. Özel Bölümü
+
+- Kullanıcı ana sayfada bulunan "Özel" butonuna tıkladığında sadece bu butona bağlı video paylaşımlarını görebilsin.
+- Yeni bir sayfa veya ayrı bir bölüm açılmayacak; içerik ana sayfa içinde filtrelenmiş şekilde gösterilecek.
+- Sayfanın üst kısmında belirgin bir "Abone Ol" butonu bulunsun.
+
+2. Abonelik Sistemi
+
+- Kullanıcı ana sayfada bulunan özel butonuna tıkladığında açılan sayfada ön üst kısımda "Abone Ol" seçeneğini görsün.
+- Kullanıcı Abone Ol seçeneğine tıkladığında aşağıdaki abonelik seçeneği gösterilsin:
+  - Aylık Abonelik – 100 TL
+- Ayrıca bilgilendirme metni olarak şu ifade yer alsın:
+  - “Paylaşımlarınız 15 gün boyunca yayında kalır ve günde 50 saniyelik video paylaşabilirsiniz.”
+- Kullanıcının abonelik talebi yönetici paneline gönderilsin.
+- Yönetici onay verdiğinde abonelik aktif olsun.
+
+3. Abone Kullanıcı Ayrıcalıkları
+
+Aboneliği aktif olan kullanıcılar:
+
+- Günde en fazla 4 video paylaşabilsin.
+- Sadece video yükleyebilsin, fotoğraf veya metin paylaşamasın.
+- Her video en fazla 50 saniye uzunluğunda olsun.
+- Videolar uygulamanın desteklediği kaliteye göre optimize edilerek depolansın ve oynatılsın.
+
+4. Otomatik Silme
+
+- Bu bölümde paylaşılan tüm videolar 15 gün sonra sistem tarafından otomatik olarak silinsin.
+- Silinen videolar uygulama ve veritabanından kaldırılır.
+
+5. İzleme ve Etkileşim
+
+Tüm kullanıcılar Özel bölümündeki videoları görüntüleyebilsin ve:
+
+- Beğeni (kalp) bırakabilsin.
+- Yorum yapabilsin.
+- Yorumlara yanıt verebilsin (iç içe yorum sistemi).
+- Beğeni ve yorum sayıları gerçek zamanlı güncellensin.
+
+6. Video İndirme
+
+- Her videoda "İndir" butonu bulunsun.
+- Yalnızca aktif aboneliği bulunan kullanıcılar videoları indirebilsin.
+- Abone olmayan kullanıcı indir butonuna bastığında abonelik sayfasına yönlendirilsin.
+
+7. Gerçek Zamanlı Sistem
+
+- Yeni videolar, beğeniler, yorumlar ve yorum yanıtları tüm kullanıcılarda gerçek zamanlı olarak güncellensin.
+- Sayfa yenilemeye gerek kalmadan tüm değişiklikler anında görülsün.
+
+8. Yönetici Paneli
+
+Yönetici panelinden:
+
+- Abonelik talepleri onaylanıp reddedilebilsin.
+- Gerekirse videolar kaldırılabilsin.
+- Abonelik durumları yönetilebilsin.
+- Kullanıcıların paylaşım ve abonelik geçmişi görüntülenebilsin.
+
+Bu özelliklerin tamamı güvenli, yüksek performanslı ve mobil cihazlarla tam uyumlu şekilde geliştirilmelidir.

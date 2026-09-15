@@ -1,0 +1,37 @@
+Uygulamamızdaki Kullanım Kuralları ve Gizlilik Politikası butonlarını aktif hale getir ve içeriklerini profesyonel bir şekilde oluştur. Mevcut tasarımı bozmadan aşağıdaki metinleri uygulamaya entegre et.
+
+Kullanım Kuralları
+
+1. Uygulamayı kullanan herkes bu kuralları kabul etmiş sayılır.
+2. Kullanıcılar birbirlerine karşı saygılı davranmalıdır.
+3. Hakaret, küfür, tehdit, nefret söylemi, ayrımcılık ve zorbalık içeren içerikler paylaşmak yasaktır.
+4. Yasa dışı faaliyetleri teşvik eden içerikler paylaşılmaz.
+5. Başkasına ait telif hakkı bulunan içerikler izin alınmadan paylaşılmaz.
+6. Spam, reklam veya yanıltıcı içerikler paylaşmak yasaktır.
+7. Sahte hesap oluşturmak veya başka bir kullanıcıyı taklit etmek yasaktır.
+8. Kullanıcılar hesap bilgilerinin güvenliğinden kendileri sorumludur.
+9. Kitap, hikâye ve diğer paylaşımların sorumluluğu paylaşımı yapan kullanıcıya aittir.
+10. Uygulama yönetimi, kullanım kurallarını ihlal eden içerikleri kaldırma ve gerekli durumlarda hesapları askıya alma veya kalıcı olarak kapatma hakkını saklı tutar.
+11. Kullanıcılar uygulamayı kötüye kullanacak yazılım, bot veya otomatik sistemler kullanamaz.
+12. Kurallar gerektiğinde güncellenebilir ve güncellenen kurallar yayınlandığı andan itibaren geçerli olur.
+
+Gizlilik Politikası
+
+1. Kullanıcıların kişisel bilgileri gizlilik ilkelerine uygun şekilde korunur.
+2. Paylaşılan içerikler yalnızca uygulamanın sunduğu hizmetleri sağlamak amacıyla işlenir.
+3. Kullanıcı şifreleri güvenli şekilde saklanır ve hiçbir kullanıcıya gösterilmez.
+4. Uygulama, kullanıcı verilerini izinsiz olarak üçüncü kişilerle satmaz veya paylaşmaz. Yasal zorunluluklar ve kullanıcı onayı gereken durumlar bu kapsamın dışındadır.
+5. Profil fotoğrafları, paylaşımlar ve kullanıcı tarafından herkese açık olarak paylaşılan bilgiler uygulama içinde diğer kullanıcılar tarafından görüntülenebilir.
+6. Kullanıcı istediği zaman hesabını silebilir. Hesap silme işleminden sonra ilgili veriler yürürlükteki yasal yükümlülükler saklı kalmak kaydıyla sistemden kaldırılır.
+7. Uygulama güvenliği için teknik ve idari güvenlik önlemleri uygulanır.
+8. Gizlilik politikası gerektiğinde güncellenebilir ve yeni sürüm uygulama içerisinde yayınlanır.
+9. Kullanıcı uygulamayı kullanmaya devam ederek güncel gizlilik politikasını kabul etmiş sayılır.
+
+Arayüz
+
+- Kullanım Kuralları butonuna tıklandığında bu metin modern ve okunabilir bir sayfada açılsın.
+- Gizlilik Politikası butonuna tıklandığında gizlilik politikası aynı tasarım diliyle ayrı bir sayfada görüntülensin.
+- Başlıklar belirgin, yazılar okunaklı ve mobil cihazlara uyumlu olsun.
+- Sayfaların alt kısmında "Son Güncelleme" bilgisi otomatik olarak gösterilsin.
+- İleride yeni maddeler kolayca eklenebilecek şekilde dinamik bir yapı oluşturulsun.
+- Tüm tasarım uygulamanın genel arayüzüyle uyumlu, şık ve profesyonel olsun.

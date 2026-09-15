@@ -1,0 +1,23 @@
+kind = "mobile"
+previewPath = "/"
+title = "LAZLANI"
+version = "1.0.0"
+id = "artifacts/lazlani"
+router = "expo-domain"
+
+[[services]]
+name = "expo"
+ensurePreviewReachable = "/status"
+paths = [ "/" ]
+localPort = 23406
+
+[services.development]
+run = "pnpm --filter @workspace/lazlani run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/lazlani", "run", "build" ]
+run = [ "pnpm", "--filter", "@workspace/lazlani", "run", "serve" ]
+
+[services.env]
+PORT = "23406"
+BASE_PATH = "/"

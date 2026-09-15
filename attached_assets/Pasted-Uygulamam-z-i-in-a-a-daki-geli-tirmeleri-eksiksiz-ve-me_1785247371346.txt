@@ -1,0 +1,97 @@
+Uygulamamız için aşağıdaki geliştirmeleri eksiksiz ve mevcut sistemi bozmadan uygula.
+
+1. Sohbet ekranı düzeltmesi
+
+- Sohbet butonuna tıklandığında açılan sohbet ekranında en altta bulunan mesaj yazma alanı görünmüyor.
+- Bu sorunu tamamen gider.
+- Mesaj yazma kutusu, gönder butonu ve ek dosya/fotoğraf ekleme alanı her zaman ekranın alt kısmında görünür olsun.
+- Klavye açıldığında mesaj yazma alanı klavyenin hemen üzerinde kalsın ve hiçbir şekilde ekranın dışında kalmasın.
+- Sohbet ekranı tüm telefon ekran boyutlarında sorunsuz ve responsive çalışsın.
+
+2. Bültenler bölümünü sosyal paylaşım platformuna dönüştür
+
+Uygulamanın üst kısmında bulunan Bültenler bölümünü tam kapsamlı bir sosyal paylaşım alanı haline getir.
+
+Tüm kullanıcılar:
+
+- Yazı paylaşabilsin.
+- Fotoğraf paylaşabilsin.
+- Birden fazla fotoğraf yükleyebilsin.
+- Kendi yazdığı hikâyeleri paylaşabilsin.
+- Kendi yazdığı kitapları paylaşabilsin.
+- Paylaşımlarına başlık ve açıklama ekleyebilsin.
+
+3. Etkileşim sistemi
+
+Her paylaşım için aşağıdaki özellikler bulunsun:
+
+- Beğenme
+- Yorum yapma
+- Yoruma cevap verme
+- Yorumu beğenme
+- Yoruma emoji ile tepki verme
+- Paylaşımı kaydetme
+- Paylaşımı paylaşma
+
+Tüm işlemler gerçek zamanlı çalışsın.
+
+4. Gelişmiş yorum sistemi
+
+Kullanıcılar:
+
+- Başka kullanıcıların paylaşımlarına yorum yapabilsin.
+- Başka kullanıcıların yorumlarına cevap verebilsin.
+- Yorumlara emoji ile tepki verebilsin.
+- Yorumları beğenebilsin.
+- İç içe (thread) yorum sistemi desteklensin.
+
+5. Profil sayfası geliştirmesi
+
+Her kullanıcı kendi profil sayfasında:
+
+- Yazı paylaşabilsin.
+- Fotoğraf paylaşabilsin.
+- Hikâye paylaşabilsin.
+- Kitap paylaşabilsin.
+- Tüm paylaşımları kronolojik sırayla görüntülenebilsin.
+- Paylaşımlarına gelen beğeni, yorum, cevap ve tepkileri gerçek zamanlı görebilsin.
+
+6. Gerçek zamanlı çalışma
+
+Aşağıdaki işlemlerin tamamı anlık olarak güncellensin:
+
+- Yeni paylaşımlar
+- Fotoğraf paylaşımları
+- Hikâye paylaşımları
+- Kitap paylaşımları
+- Beğeniler
+- Yorumlar
+- Yorum cevapları
+- Emoji tepkileri
+- Profil güncellemeleri
+- Bildirimler
+
+Hiçbir sayfayı yenilemeye gerek kalmadan tüm değişiklikler anında tüm kullanıcılara yansısın.
+
+7. Üst menü tasarımı
+
+- Uygulamanın üst kısmında bulunan tüm butonların tasarımını daha modern, şık ve zarif hale getir.
+- Butonların genişliğini biraz azaltarak daha kibar ve düzenli görünmelerini sağla.
+- Yazı boyutlarını okunabilirliği bozmayacak şekilde optimize et.
+- Butonlar arasında dengeli boşluklar bırak ve mobil cihazlarda daha estetik bir görünüm oluştur.
+- Tasarım uygulamanın genel arayüzüyle uyumlu olsun.
+
+8. "Bremil" butonu
+
+- Üst menüde bulunan Bremil yazılı butonun boyutunu diğer butonlara göre biraz daha küçük yap.
+- Yazı boyutunu ve buton yüksekliğini küçülterek daha sade ve zarif bir görünüm kazandır.
+- Küçültme işlemi butonun kullanılabilirliğini ve okunabilirliğini olumsuz etkilemesin.
+
+9. Kullanıcı deneyimi
+
+- Tüm yeni özellikler mevcut uygulamanın tasarımına uyumlu şekilde entegre edilsin.
+- Mevcut çalışan özelliklerde hiçbir bozulmaya neden olunmasın.
+- Uygulama hızlı, akıcı ve yüksek performanslı çalışsın.
+- Tüm ekran boyutlarında tamamen responsive olsun.
+- Kaydırma, paylaşım, yorum ve sohbet işlemleri gecikme olmadan sorunsuz çalışsın.
+- Tüm veriler güvenli şekilde saklansın ve gerçek zamanlı senkronizasyon ile tüm kullanıcılara anında yansısın.

@@ -1,0 +1,94 @@
+Lazlani Uygulaması Geliştirme Komutu
+
+Uygulamayı Android ve iOS platformlarına tam uyumlu olacak şekilde yeniden düzenle ve aşağıdaki geliştirmelerin tamamını eksiksiz uygula.
+
+1. Kitap, Hikâye ve Şiir Yazma Bölümleri
+
+- Kitap Yazma, Hikâye Yazma ve Şiir Yazma bölümlerine mobil cihazdan görsel yükleme desteği ekle.
+- Kullanıcılar telefon galerilerinden veya kameralarından kitap kapak fotoğrafı yükleyebilsin.
+- Yüklenen kapak görselleri yüksek kalitede saklansın ve tüm cihazlarda doğru görüntülensin.
+
+2. Profil Sistemi
+
+- Kullanıcılar mobil cihazlarından profil fotoğrafı yükleyebilsin.
+- Kullanıcılar mobil cihazlarından profil kapak fotoğrafı yükleyebilsin.
+- Fotoğraf kırpma, yeniden boyutlandırma ve önizleme özellikleri eklensin.
+- Profil sayfası modern ve premium bir tasarıma dönüştürülsün.
+
+3. Android ve iOS Uyumluluğu
+
+- Uygulamanın tüm ekranları Android ve iOS cihazlarda eksiksiz çalışacak şekilde optimize edilsin.
+- Responsive tasarım uygulanarak tüm ekran boyutlarına tam uyum sağlansın.
+- Performans ve animasyonlar her iki platformda da akıcı çalışsın.
+
+4. Alt Navigasyon (Bottom Navigation)
+
+Android ve iOS cihazlarda görünmeyen alt navigasyon sorununu tamamen gider.
+
+Aşağıdaki sekmeler tüm cihazlarda eksiksiz görünsün:
+
+- Anasayfa
+- Keşfet
+- Kütüphane
+- Mesajlar
+- Profil
+
+Ayrıca:
+
+- Daha modern,
+- Daha zarif,
+- Daha premium,
+- Daha lüks,
+- Akıcı animasyonlara sahip bir alt navigasyon tasarımı oluştur.
+- Sayfa geçiş animasyonlarını yeniden tasarla.
+
+5. Anasayfa Üst Bölümü
+
+Anasayfanın üst kısmına aşağıdaki butonları ekle:
+
+- Mağaza
+- Özel Bültenler
+- Sohbet
+
+Bu butonlar modern kart tasarımında ve kolay erişilebilir olsun.
+
+6. Kitap Bölüm Listesi
+
+Şu anda kitap bölümleri alt alta 1, 2, 3 şeklinde sıralanmaktadır.
+
+Bu sistemi tamamen değiştir.
+
+Yeni sistem:
+
+- Sağ üst köşede "Bölümler" menüsü bulunsun.
+- Kullanıcı bu menüye dokunduğunda tüm bölümler açılır liste halinde görüntülensin.
+- Her bölümün yanında kısa bir özet yer alsın.
+- Kullanıcı istediği bölüme tek dokunuşla geçiş yapabilsin.
+- Bölüm listesi modern ve şık bir tasarıma sahip olsun.
+
+7. Yorum Sistemi
+
+Tüm kullanıcılar:
+
+- Kitaplara yorum yapabilsin.
+- Kitapları beğenebilsin.
+- Yapılan yorumlara cevap yazabilsin.
+- Cevaplara tekrar cevap verebilsin (iç içe yorum sistemi).
+- Beğeni sayıları ve yorum sayıları gerçek zamanlı güncellensin.
+
+8. Arayüz Tasarımı
+
+Uygulamanın genel tasarımını yeniden düzenle.
+
+Hedef tasarım:
+
+- Premium görünüm
+- Modern arayüz
+- Daha zarif ikonlar
+- Daha kaliteli animasyonlar
+- Daha akıcı geçişler
+- Android ve iOS tasarım standartlarına tam uyum
+- Yüksek performans
+- Profesyonel kullanıcı deneyimi
+
+Yapılacak tüm geliştirmeler mevcut verileri silmeden uygulanmalı ve uygulamanın tüm özellikleri sorunsuz çalışmaya devam etmelidir.

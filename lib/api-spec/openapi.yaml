@@ -1,0 +1,1406 @@
+openapi: 3.1.0
+info:
+  # Do not change the title, if the title changes, the import paths will be broken
+  title: Api
+  version: 0.1.0
+  description: API specification
+servers:
+  - url: /api
+    description: Base API path
+tags:
+  - name: health
+    description: Health operations
+  - name: auth
+    description: Authentication operations
+  - name: sync
+    description: Authenticated cross-device synchronization operations
+  - name: storage
+    description: Persistent user-uploaded media
+  - name: premium
+    description: Premium subscription request operations
+  - name: admin
+    description: Superadmin-only account role administration
+paths:
+  /healthz:
+    get:
+      operationId: healthCheck
+      tags: [health]
+      summary: Health check
+      description: Returns server health status
+      responses:
+        "200":
+          description: Healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthStatus"
+  /auth/password-reset/request:
+    post:
+      operationId: requestPasswordReset
+      tags: [auth]
+      summary: Send a password reset code
+      description: Sends a short-lived, single-use password reset code by email.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordResetRequestInput"
+      responses:
+        "202":
+          description: Reset request accepted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetRequestResponse"
+        "400":
+          description: Invalid email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Too many requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Email delivery is not configured or unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/password-reset/confirm:
+    post:
+      operationId: confirmPasswordReset
+      tags: [auth]
+      summary: Confirm a password reset
+      description: Validates a reset code and atomically consumes it before saving the new password hash.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PasswordResetConfirmInput"
+      responses:
+        "200":
+          description: Password reset completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PasswordResetConfirmResponse"
+        "400":
+          description: Invalid request or password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Invalid, expired, or already used code
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Too many attempts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/login:
+    post:
+      operationId: authLogin
+      tags: [auth]
+      summary: Verify a server-stored password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthLoginInput"
+      responses:
+        "200":
+          description: Authenticated session and user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionPayload"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/register:
+    post:
+      operationId: authRegister
+      tags: [auth]
+      summary: Register an account and start a session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthRegisterInput"
+      responses:
+        "201":
+          description: Account created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionPayload"
+        "400":
+          description: Invalid registration
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Email or username already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/session:
+    get:
+      operationId: authSession
+      tags: [auth]
+      summary: Restore a server-verified session
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Current authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUserPayload"
+        "401":
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    delete:
+      operationId: authLogout
+      tags: [auth]
+      summary: Revoke the current session
+      security:
+        - bearerAuth: []
+      responses:
+        "204":
+          description: Session revoked
+  /auth/profile:
+    patch:
+      operationId: authUpdateProfile
+      tags: [auth]
+      summary: Update the authenticated profile
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthProfileUpdateInput"
+      responses:
+        "200":
+          description: Updated profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUserPayload"
+        "400":
+          description: Invalid profile values
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Username already exists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/sessions:
+    get:
+      operationId: listAuthSessions
+      tags: [auth]
+      summary: List the authenticated user's active sessions
+      description: Lists only sessions that are unexpired and still match the current password credential. Token hashes are never returned.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Active authenticated sessions
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionListResponse"
+        "401":
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/sessions/others:
+    delete:
+      operationId: revokeOtherAuthSessions
+      tags: [auth]
+      summary: Revoke all other sessions
+      description: Revokes every session owned by the authenticated user except the current session.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Other sessions revoked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionRevokeOthersResponse"
+        "401":
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/sessions/{sessionId}:
+    delete:
+      operationId: revokeAuthSession
+      tags: [auth]
+      summary: Revoke one owned session
+      description: Revokes a session only when it belongs to the authenticated user. Revoking the current session is allowed and invalidates its bearer token.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: sessionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Selected session revoked
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionRevokeResponse"
+        "401":
+          description: Missing or invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Session not found or not owned by the caller
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/password:
+    put:
+      operationId: authChangePassword
+      tags: [auth]
+      summary: Change the authenticated password
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthChangePasswordInput"
+      responses:
+        "200":
+          description: Password changed and replacement session issued
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionPayload"
+        "400":
+          description: Invalid password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Current password or session invalid
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /auth/google:
+    post:
+      operationId: authGoogle
+      tags: [auth]
+      summary: Sign in to an existing account with Google
+      description: Verifies a Google ID token and allows access only when its verified email belongs to an existing LAZLANI password account.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AuthGoogleInput"
+      responses:
+        "200":
+          description: Google identity verified and matched
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthSessionPayload"
+        "400":
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Invalid Google identity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: No existing LAZLANI account for the verified email
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "429":
+          description: Too many attempts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Google authentication is not configured
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /premium-requests:
+    post:
+      operationId: createPremiumRequest
+      tags: [premium]
+      summary: Create a premium subscription request
+      description: Creates a request for the server-defined monthly price of 100 TRY. The client cannot set the price.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PremiumRequestCreateInput"
+      responses:
+        "201":
+          description: Premium request created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PremiumRequestResponse"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: A pending request already exists for this user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    get:
+      operationId: listPremiumRequests
+      tags: [premium]
+      summary: List the authenticated user's premium requests
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Premium requests belonging to the authenticated user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PremiumRequestListResponse"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /premium-requests/{requestId}:
+    get:
+      operationId: getPremiumRequest
+      tags: [premium]
+      summary: Get one of the authenticated user's premium requests
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: requestId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Premium request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PremiumRequestResponse"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Request not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /admin/premium-requests:
+    get:
+      operationId: listAdminPremiumRequests
+      tags: [premium]
+      summary: List all premium requests
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: All premium requests
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PremiumRequestListResponse"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Administrator access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /admin/users:
+    get:
+      operationId: listAdminUsers
+      tags: [admin]
+      summary: List authenticated users and their server-controlled roles
+      description: Lists real auth users. Only a superadmin may access this endpoint.
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Auth users and roles
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUserListResponse"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Superadmin access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /admin/users/{userId}/role:
+    patch:
+      operationId: updateAdminUserRole
+      tags: [admin]
+      summary: Set a user's regular admin role
+      description: Sets only user or admin. Superadmin changes are reserved for the controlled bootstrap CLI.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema: { type: string }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AdminUserRoleUpdateInput"
+      responses:
+        "200":
+          description: Updated user role
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AdminUserRoleUpdateResponse"
+        "400":
+          description: Invalid role or unsafe target
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Superadmin access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Target is a superadmin and can only be changed by bootstrap
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /admin/premium-requests/{requestId}/approve:
+    post:
+      operationId: approvePremiumRequest
+      tags: [premium]
+      summary: Approve a pending premium request
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: requestId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Request approved and user entitlement granted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PremiumRequestResponse"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Administrator access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Request not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Request is no longer pending
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /admin/premium-requests/{requestId}/reject:
+    post:
+      operationId: rejectPremiumRequest
+      tags: [premium]
+      summary: Reject a pending premium request
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: requestId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        "200":
+          description: Request rejected without granting premium entitlement
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PremiumRequestResponse"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Administrator access required
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Request not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "409":
+          description: Request is no longer pending
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /sync/snapshot:
+    get:
+      operationId: getSyncSnapshot
+      tags: [sync]
+      summary: Read the authenticated user's current sync snapshot
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema: { type: integer, minimum: 0 }
+      responses:
+        "200":
+          description: Current records and the event cursor
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncSnapshot"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /sync/operations:
+    post:
+      operationId: submitSyncOperation
+      tags: [sync]
+      summary: Submit an idempotent synchronization operation
+      description: The authenticated session is the actor. clientOperationId is scoped to that authenticated user.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SyncOperationInput"
+      responses:
+        "200":
+          description: Canonical event and snapshot record, including a prior result for a duplicate operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SyncOperationResult"
+        "400":
+          description: Invalid operation or unauthorized private target
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /sync/events:
+    get:
+      operationId: streamSyncEvents
+      tags: [sync]
+      summary: Stream committed synchronization events
+      description: SSE stream with persistent replay. Send Last-Event-ID or cursor to resume.
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: cursor
+          in: query
+          required: false
+          schema: { type: integer, minimum: 0 }
+        - name: Last-Event-ID
+          in: header
+          required: false
+          schema: { type: integer, minimum: 0 }
+      responses:
+        "200":
+          description: Server-sent events
+          content:
+            text/event-stream:
+              schema:
+                type: string
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /storage/uploads/request-url:
+    post:
+      operationId: requestUploadUrl
+      tags: [storage]
+      summary: Request a protected upload URL for a book cover
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadUrlRequest"
+      responses:
+        "200":
+          description: Upload URL generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadUrlResponse"
+        "400":
+          description: Invalid file metadata
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "503":
+          description: Storage unavailable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /storage/uploads/finalize:
+    post:
+      operationId: finalizeUpload
+      tags: [storage]
+      summary: Verify and finalize a staged book cover
+      description: Verifies the stored object's metadata and image signature, then promotes it into the public book-covers namespace.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FinalizeUploadRequest"
+      responses:
+        "200":
+          description: Upload finalized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FinalizeUploadResult"
+        "400":
+          description: Invalid or unverifiable uploaded object
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Staged object belongs to another user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Staged object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+  /storage/objects/{objectPath}:
+    get:
+      operationId: getStorageObject
+      tags: [storage]
+      summary: Serve a persistent book cover
+      parameters:
+        - name: objectPath
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^book-covers/"
+      responses:
+        "200":
+          description: Stored image
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+            image/png:
+              schema:
+                type: string
+                format: binary
+            image/webp:
+              schema:
+                type: string
+                format: binary
+        "404":
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+    delete:
+      operationId: deleteStorageObject
+      tags: [storage]
+      summary: Delete an owned finalized book cover
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: objectPath
+          in: path
+          required: true
+          schema:
+            type: string
+            pattern: "^book-covers/"
+      responses:
+        "204":
+          description: Object deleted
+        "401":
+          description: Invalid session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Object belongs to another user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "404":
+          description: Object not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: opaque
+  schemas:
+    HealthStatus:
+      type: object
+      properties:
+        status:
+          type: string
+      required:
+        - status
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+      required:
+        - error
+    UploadUrlRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 180
+        size:
+          type: integer
+          minimum: 1
+          maximum: 10485760
+        contentType:
+          type: string
+          enum: [image/jpeg, image/png, image/webp]
+      required: [name, size, contentType]
+    UploadUrlResponse:
+      type: object
+      properties:
+        uploadURL:
+          type: string
+        objectPath:
+          type: string
+          pattern: "^/objects/uploads/book-covers/"
+        metadata:
+          $ref: "#/components/schemas/UploadUrlRequest"
+      required: [uploadURL, objectPath, metadata]
+    FinalizeUploadRequest:
+      type: object
+      properties:
+        objectPath:
+          type: string
+          pattern: "^/objects/uploads/book-covers/"
+        size:
+          type: integer
+          minimum: 1
+          maximum: 10485760
+        contentType:
+          type: string
+          enum: [image/jpeg, image/png, image/webp]
+      required: [objectPath]
+    FinalizeUploadResult:
+      type: object
+      properties:
+        objectPath:
+          type: string
+          pattern: "^/objects/book-covers/"
+      required: [objectPath]
+    PasswordResetRequestInput:
+      type: object
+      properties:
+        email:
+          type: string
+          pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+      required:
+        - email
+    PasswordResetRequestResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        expiresInSeconds:
+          type: integer
+      required:
+        - message
+        - expiresInSeconds
+    PasswordResetConfirmInput:
+      type: object
+      properties:
+        email:
+          type: string
+          pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+        code:
+          type: string
+          pattern: "^[0-9]{6}$"
+        newPassword:
+          type: string
+          minLength: 8
+      required:
+        - email
+        - code
+        - newPassword
+    PasswordResetConfirmResponse:
+      type: object
+      properties:
+        message:
+          type: string
+      required:
+        - message
+    AuthLoginInput:
+      type: object
+      properties:
+        email:
+          type: string
+          pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+        password:
+          type: string
+          minLength: 1
+      required:
+        - email
+        - password
+    AuthRegisterInput:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: "^[a-zA-Z0-9_]+$"
+        displayName:
+          type: string
+          minLength: 2
+          maxLength: 80
+        email:
+          type: string
+          pattern: "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+        password:
+          type: string
+          minLength: 8
+      required:
+        - username
+        - displayName
+        - email
+        - password
+    AuthProfileUpdateInput:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 30
+          pattern: "^[a-zA-Z0-9_]+$"
+        displayName:
+          type: string
+          minLength: 2
+          maxLength: 80
+        bio:
+          type: string
+          maxLength: 500
+        avatarColor: { type: string }
+        coverColor: { type: string }
+        avatarUrl: { type: string }
+        coverUrl: { type: string }
+        theme: { type: string }
+    AuthChangePasswordInput:
+      type: object
+      properties:
+        currentPassword:
+          type: string
+          minLength: 1
+        newPassword:
+          type: string
+          minLength: 8
+      required: [currentPassword, newPassword]
+    AuthUser:
+      type: object
+      properties:
+        id: { type: string }
+        username: { type: string }
+        displayName: { type: string }
+        email: { type: string }
+        bio: { type: string }
+        avatarColor: { type: string }
+        coverColor: { type: string }
+        avatarUrl: { type: string }
+        coverUrl: { type: string }
+        theme: { type: string }
+        followersCount: { type: integer }
+        followingCount: { type: integer }
+        likesReceivedCount: { type: integer }
+        booksCount: { type: integer }
+        storiesCount: { type: integer }
+        poemsCount: { type: integer }
+        isPremium: { type: boolean }
+        isAdmin: { type: boolean }
+        isSuperAdmin: { type: boolean }
+        joinedAt: { type: string }
+      required:
+        - id
+        - username
+        - displayName
+        - email
+        - bio
+        - avatarColor
+        - coverColor
+        - followersCount
+        - followingCount
+        - likesReceivedCount
+        - booksCount
+        - storiesCount
+        - poemsCount
+        - isPremium
+        - isAdmin
+        - isSuperAdmin
+        - joinedAt
+    AuthUserPayload:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/AuthUser"
+      required: [user]
+    AuthSessionPayload:
+      type: object
+      properties:
+        token: { type: string }
+        user:
+          $ref: "#/components/schemas/AuthUser"
+      required: [token, user]
+    AuthSession:
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        expiresAt:
+          type: string
+          format: date-time
+        userAgent:
+          type: string
+        deviceLabel:
+          type: string
+        isCurrent:
+          type: boolean
+      required: [id, createdAt, expiresAt, deviceLabel, isCurrent]
+    AuthSessionListResponse:
+      type: object
+      properties:
+        sessions:
+          type: array
+          items:
+            $ref: "#/components/schemas/AuthSession"
+      required: [sessions]
+    AuthSessionRevokeResponse:
+      type: object
+      properties:
+        revoked:
+          type: boolean
+        currentRevoked:
+          type: boolean
+      required: [revoked, currentRevoked]
+    AuthSessionRevokeOthersResponse:
+      type: object
+      properties:
+        revokedCount:
+          type: integer
+          minimum: 0
+        currentRevoked:
+          type: boolean
+      required: [revokedCount, currentRevoked]
+    AuthGoogleInput:
+      type: object
+      properties:
+        idToken:
+          type: string
+          minLength: 20
+      required:
+        - idToken
+    AdminUser:
+      type: object
+      properties:
+        id: { type: string }
+        email: { type: string }
+        username: { type: string }
+        displayName: { type: string }
+        isAdmin: { type: boolean }
+        isSuperAdmin: { type: boolean }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+      required: [id, email, username, displayName, isAdmin, isSuperAdmin, createdAt, updatedAt]
+    AdminUserListResponse:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: "#/components/schemas/AdminUser"
+      required: [users]
+    AdminUserRoleUpdateInput:
+      type: object
+      additionalProperties: false
+      properties:
+        role:
+          type: string
+          enum: [user, admin]
+      required: [role]
+    AdminUserRoleUpdateResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/AdminUser"
+      required: [user]
+    PremiumRequestCreateInput:
+      type: object
+      description: Empty by design. The monthly price is fixed by the server at 100 TRY.
+      additionalProperties: false
+    PremiumRequest:
+      type: object
+      properties:
+        id: { type: string }
+        userId: { type: string }
+        price: { type: integer, enum: [100] }
+        currency: { type: string, enum: [TRY] }
+        status:
+          type: string
+          enum: [pending, approved, rejected]
+        reviewedBy: { type: string }
+        reviewedAt: { type: string, format: date-time }
+        createdAt: { type: string, format: date-time }
+        updatedAt: { type: string, format: date-time }
+        user:
+          type: object
+          properties:
+            id: { type: string }
+            username: { type: string }
+            displayName: { type: string }
+            email: { type: string }
+          required: [id, username, displayName, email]
+      required: [id, userId, price, currency, status, createdAt, updatedAt]
+    PremiumRequestResponse:
+      type: object
+      properties:
+        request:
+          $ref: "#/components/schemas/PremiumRequest"
+      required: [request]
+    PremiumRequestListResponse:
+      type: object
+      properties:
+        requests:
+          type: array
+          items:
+            $ref: "#/components/schemas/PremiumRequest"
+      required: [requests]
+    SyncOperationType:
+      type: string
+      enum:
+        - create_message
+        - create_notification
+        - create_comment
+        - create_reply
+        - create_ozel_comment
+        - create_ozel_reply
+        - upsert_ozel_video
+        - toggle_like
+        - set_reaction
+        - toggle_vote
+        - create_book
+        - update_book
+        - delete_book
+    SyncEntityType:
+      type: string
+      enum:
+        - message
+        - notification
+        - comment
+        - reply
+        - ozel_comment
+        - ozel_reply
+        - ozel_video
+        - like
+        - reaction
+        - vote
+        - book
+    SyncOperationInput:
+      type: object
+      properties:
+        clientOperationId:
+          type: string
+          minLength: 1
+          maxLength: 200
+        operationType:
+          $ref: "#/components/schemas/SyncOperationType"
+        payload:
+          $ref: "#/components/schemas/SyncOperationPayload"
+      required: [clientOperationId, operationType, payload]
+    SyncOperationPayload:
+      type: object
+      description: Typed common operation fields. rating is required by toggle_vote and is always an integer from 1 through 5.
+      properties:
+        id: { type: string }
+        targetType: { type: string }
+        targetId: { type: string }
+        recipientUserId: { type: string }
+        coverUrl: { type: string }
+        title: { type: string }
+        coverColor: { type: string }
+        authorId: { type: string }
+        authorName: { type: string }
+        authorAvatarColor: { type: string }
+        description: { type: string }
+        genre: { type: string }
+        chapters:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        likesCount: { type: integer }
+        commentsCount: { type: integer }
+        readCount: { type: integer }
+        isFeatured: { type: boolean }
+        isEditorChoice: { type: boolean }
+        isDraft: { type: boolean }
+        createdAt: { type: string }
+        tags:
+          type: array
+          items: { type: string }
+        active: { type: boolean }
+        value: { type: string }
+        rating:
+          type: integer
+          minimum: 0
+          maximum: 5
+        activeCount:
+          type: integer
+          minimum: 0
+          readOnly: true
+          description: Authoritative count of active likes or reactions for the target.
+        valueCounts:
+          type: object
+          additionalProperties:
+            type: integer
+            minimum: 0
+          readOnly: true
+          description: Authoritative active count by reaction value.
+        ratingCount:
+          type: integer
+          minimum: 0
+          readOnly: true
+          description: Authoritative count of active ratings for the target.
+        ratingAverage:
+          type: number
+          minimum: 0
+          maximum: 5
+          readOnly: true
+          description: Authoritative average of all active ratings for the target.
+      additionalProperties: true
+    SyncEvent:
+      type: object
+      properties:
+        id: { type: integer }
+        entityType:
+          $ref: "#/components/schemas/SyncEntityType"
+        entityId: { type: string }
+        payload:
+          type: object
+          additionalProperties: true
+        createdAt: { type: string, format: date-time }
+      required: [id, entityType, entityId, payload, createdAt]
+    SyncRecord:
+      type: object
+      properties:
+        id: { type: string }
+        entityType:
+          $ref: "#/components/schemas/SyncEntityType"
+        payload:
+          type: object
+          additionalProperties: true
+        version: { type: integer }
+        updatedAt: { type: string, format: date-time }
+      required: [id, entityType, payload, version, updatedAt]
+    SyncSnapshot:
+      type: object
+      properties:
+        cursor: { type: integer }
+        records:
+          type: array
+          items:
+            $ref: "#/components/schemas/SyncRecord"
+      required: [cursor, records]
+    SyncOperationResult:
+      type: object
+      properties:
+        clientOperationId: { type: string }
+        duplicate: { type: boolean }
+        event:
+          $ref: "#/components/schemas/SyncEvent"
+        record:
+          $ref: "#/components/schemas/SyncRecord"
+      required: [clientOperationId, duplicate, event, record]

@@ -1,0 +1,118 @@
+Yapay Zekâ Geliştirme Komutu – Kullanıcı, İçerik ve Gerçek Zamanlı Görünürlük Hatalarını Düzelt
+
+Uygulamada kullanıcıların içeriklerinin ve hesaplarının görünmemesiyle ilgili tüm hataları tespit ederek kalıcı olarak düzelt. Aşağıdaki özelliklerin eksiksiz çalışmasını sağla.
+
+1. Kullanıcı Listesi
+
+- Yeni kayıt olan her kullanıcı, kayıt işlemi başarıyla tamamlandıktan sonra otomatik olarak kullanıcı listesine eklensin.
+- Tüm kullanıcılar, diğer kullanıcıları kullanıcı listesinde görebilsin.
+- Kullanıcı listesi gerçek zamanlı olarak güncellensin.
+- Yeni kayıt olan kullanıcılar sayfa yenilenmeden listede görünsün.
+
+2. Kullanıcı Arama Sistemi
+
+Kullanıcılar;
+
+- Kullanıcı adına göre,
+- Görünen adına göre,
+
+arama yaparak diğer kullanıcıları kolayca bulabilsin.
+
+Arama sonuçları anlık olarak listelensin ve ilgili kullanıcının profil sayfasına gidilebilsin.
+
+3. Profil Görünürlüğü
+
+Her kullanıcının profil sayfası doğru şekilde oluşturulsun ve erişilebilir olsun.
+
+Profilde;
+
+- Profil fotoğrafı,
+- Kapak fotoğrafı,
+- Paylaşımlar,
+- Kitaplar,
+- Hikâyeler,
+- Şiirler,
+- Takipçi ve takip edilen bilgileri
+
+eksiksiz görüntülensin.
+
+4. Kitapların Görünmemesi Sorununu Düzelt
+
+Bir kullanıcı kitap yayımladığında;
+
+- Kitap kendi profilinde görünsün.
+- Arama sonuçlarında görünsün.
+- Keşfet bölümünde görünsün.
+- Kategori sayfalarında görünsün.
+- Ana sayfada uygun alanlarda gösterilsin.
+- Diğer kullanıcılar kitabı açıp okuyabilsin.
+
+Kitaplar veritabanına başarıyla kaydedilsin ve gerçek zamanlı olarak yayınlansın.
+
+5. Paylaşımların Görünmemesi Sorununu Düzelt
+
+Kullanıcıların yaptığı gönderiler;
+
+- Kendi profillerinde,
+- Ana sayfa akışında,
+- Takip eden kullanıcıların akışında
+
+hemen görünsün.
+
+Fotoğraf ve metin içerikleri eksiksiz yüklensin.
+
+6. Yorumların Görünmemesi Sorununu Düzelt
+
+Kitaplara, hikâyelere, şiirlere ve gönderilere yapılan yorumlar;
+
+- Anında kaydedilsin.
+- Gerçek zamanlı olarak görüntülensin.
+- Sayfa yenilenmeden tüm kullanıcılara gösterilsin.
+
+Yorum silme ve düzenleme işlemleri de anında güncellensin.
+
+7. Gerçek Zamanlı Senkronizasyon
+
+Aşağıdaki tüm işlemler gerçek zamanlı çalışsın:
+
+- Yeni kullanıcı kaydı
+- Profil güncellemesi
+- Yeni paylaşım
+- Yeni kitap
+- Yeni hikâye
+- Yeni şiir
+- Yeni yorum
+- Yeni beğeni
+- Takip etme ve takipten çıkma
+- Okunma sayıları
+- Bildirimler
+
+Sayfa yenilemeye gerek kalmadan tüm kullanıcılar değişiklikleri anında görebilsin.
+
+8. Veritabanı Kontrolü
+
+Uygulamanın veritabanı ve API bağlantılarını kontrol et.
+
+- Kayıt edilen verilerin gerçekten veritabanına yazıldığını doğrula.
+- Listeleme sorgularını düzelt.
+- Filtreleme veya güvenlik kuralları nedeniyle görünmeyen kayıtları tespit edip düzelt.
+- Tüm veriler doğru şekilde okunup uygulama arayüzünde gösterilsin.
+
+9. Test ve Hata Giderme
+
+Tüm sistemi baştan sona test et ve aşağıdaki işlemlerin sorunsuz çalıştığını doğrula:
+
+- Kullanıcı kaydı
+- Kullanıcı arama
+- Profil görüntüleme
+- Kitap paylaşma
+- Hikâye paylaşma
+- Şiir paylaşma
+- Gönderi paylaşma
+- Yorum yapma
+- Beğeni yapma
+- Takip etme
+
+Hiçbir içerik kaybolmamalı ve hiçbir kullanıcı veya içerik görünmez durumda kalmamalıdır.
+
+Amaç, LAZLANI uygulamasında tüm kullanıcıların, profillerin, kitapların, paylaşımların, yorumların ve diğer içeriklerin güvenilir, eksiksiz ve gerçek zamanlı olarak tüm kullanıcılara görünmesini sağlamaktır.

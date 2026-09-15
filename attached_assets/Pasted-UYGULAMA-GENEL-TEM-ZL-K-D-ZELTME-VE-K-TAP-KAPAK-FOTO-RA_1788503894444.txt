@@ -1,0 +1,193 @@
+UYGULAMA GENEL TEMİZLİK, DÜZELTME VE KİTAP KAPAK FOTOĞRAFI DÜZENLEMESİ
+
+Uygulamayı baştan sona kapsamlı şekilde kontrol et, mevcut tüm hataları düzelt ve uygulamayı üretim ortamına uygun, temiz, stabil ve profesyonel bir hale getir.
+
+1. KİTAP YAZARLARI – KAPAK FOTOĞRAFI YÜKLEME ALANI
+
+Kitap yazarları kitaplarını oluştururken veya düzenlerken kullandıkları “Kitap Kapak Fotoğrafı Ekle” bölümünü değiştir.
+
+- Kapak fotoğrafı yükleme alanı yatay (landscape) formatta olsun.
+- Bu alanın oranı ve görünümü ana sayfadaki kitap kapaklarının yatay görünümüyle aynı mantıkta olsun.
+- Yazar mobil telefondan kapak fotoğrafı yüklediğinde fotoğraf yatay alana düzgün şekilde otursun.
+- Fotoğrafın gereksiz şekilde dikey olarak sıkıştırılmasına veya kırpılmasına izin verme.
+- Mobil, tablet ve masaüstü cihazlarda responsive çalışsın.
+- Yüklenen kapak fotoğrafının önizlemesi de aynı yatay ölçekte gösterilsin.
+- Ana sayfada kullanılan kitap kapaklarının görsel oranı ile kitap oluşturma/düzenleme ekranındaki kapak yükleme alanının oranını mümkün olduğunca birebir eşleştir.
+- Fotoğraf yükleme sırasında ekran taşması, kayma, bozuk ölçeklendirme veya görüntünün kesilmesi oluşmasın.
+- Mevcut kitapların kapak fotoğraflarını bozma.
+
+2. DEMO GİRİŞİNİ TAMAMEN KALDIR
+
+Uygulamanın giriş ekranını kontrol et.
+
+Giriş ekranının en altında bulunan:
+
+“Demo Giriş”
+
+seçeneğini tamamen kaldır.
+
+- Demo Giriş butonu görünmeyecek.
+- Demo Giriş yazısı görünmeyecek.
+- Demo kullanıcı hesabına yönlendirme olmayacak.
+- Demo giriş ile ilgili gereksiz frontend ve backend bağlantılarını da güvenli şekilde temizle.
+- Gerçek kullanıcıların normal kayıt ve giriş sistemi aynen çalışmaya devam etsin.
+- Google ile giriş gibi mevcut gerçek kullanıcı giriş yöntemleri varsa bunları bozma.
+
+3. ÖNCEKİ PAYLAŞIMLARI TEMİZLE
+
+Uygulamadaki daha önce oluşturulmuş test/deneme amaçlı içerikleri tespit et ve temizle.
+
+Özellikle:
+
+- Eski test paylaşımları
+- Demo içerikleri
+- Deneme kitapları
+- Test mesajları
+- Test yorumları
+- Test beğenileri
+- Test oyları
+- Test bildirimleri
+- Test videoları
+- Test amaçlı oluşturulmuş diğer içerikler
+
+temizlensin.
+
+Ancak gerçek kullanıcıların gerçek içerikleri kesinlikle silinmemelidir.
+
+Silme işleminden önce verileri kullanıcı türüne göre ayır ve gerçek kullanıcı verilerinin yanlışlıkla silinmesini önle.
+
+4. TEST KULLANICILARINI TEMİZLE
+
+Uygulamada daha önce test amacıyla eklenmiş geliştirici/test kullanıcılarını tespit et.
+
+- Test kullanıcı hesaplarını kaldır.
+- Geliştirici tarafından yalnızca test amacıyla oluşturulmuş sahte hesapları kaldır.
+- Demo hesaplarını kaldır.
+- Test hesaplarına ait test içeriklerini de temizle.
+- Test hesaplarına ait mesaj, yorum, beğeni, oy, bildirim ve diğer ilişkili test verilerini de temizle.
+
+ÇOK ÖNEMLİ:
+
+Gerçek kullanıcı hesaplarına kesinlikle dokunma.
+
+Gerçek kullanıcıların:
+
+- hesapları,
+- kitapları,
+- profilleri,
+- profil fotoğrafları,
+- gerçek paylaşımları,
+- gerçek yorumları,
+- gerçek beğenileri,
+- gerçek mesajları
+
+korunmalıdır.
+
+Bir hesabın test hesabı mı gerçek kullanıcı mı olduğu kesin olarak belirlenemiyorsa hesabı otomatik olarak silme. Önce güvenli şekilde ayırt edilebilen test hesaplarını temizle.
+
+5. UYGULAMAYI SIFIRDAN TEMİZ VE STABİL HALE GETİR
+
+Uygulamanın bütün ekranlarını ve özelliklerini tek tek kontrol et.
+
+Şunların tamamını test et:
+
+- Kayıt olma
+- Giriş yapma
+- Çıkış yapma
+- Google ile giriş
+- Ana sayfa
+- Kitaplar
+- Kitap oluşturma
+- Kitap düzenleme
+- Kitap kapak fotoğrafı yükleme
+- Profil
+- Profil fotoğrafı
+- Kapak fotoğrafı
+- Sohbet
+- Mesaj gönderme
+- Bildirimler
+- Yorumlar
+- Beğeniler
+- Oy sistemi
+- Paylaşımlar
+- Video alanları
+- Yönetici paneli
+- Yetkilendirme
+- Mobil görünüm
+- Tablet görünümü
+- Masaüstü görünümü
+
+Bulduğun bütün frontend, backend, veritabanı, responsive tasarım ve kullanıcı deneyimi hatalarını düzelt.
+
+6. MOBİL UYUMLULUK
+
+Uygulama öncelikle mobil cihazlarda kusursuz çalışmalıdır.
+
+Özellikle kontrol et:
+
+- Klavye açıldığında input alanlarının klavyenin altında kalmaması
+- Sayfanın yatay olarak taşmaması
+- Butonların ekran dışına çıkmaması
+- Fotoğrafların bozulmaması
+- Kitap kapaklarının doğru oranda görünmesi
+- Sohbet ekranının düzgün çalışması
+- Mesaj yazma alanının görünür kalması
+- Kaydırma problemlerinin olmaması
+- Ekranlar arasında gereksiz sıçrama/kayma olmaması
+
+7. GERÇEK ZAMANLI SİSTEMLER
+
+Mevcut gerçek zamanlı özellikleri kontrol et.
+
+Beğeni, yorum, oy, mesaj ve bildirim gibi sistemlerde kullanıcıların yaptığı işlemler gerekiyorsa diğer kullanıcılara doğru şekilde gerçek zamanlı yansısın.
+
+Çift kayıt, gecikme, yanlış sayaç, tekrar beğeni, kaybolan mesaj veya yanlış bildirim gibi sorunları düzelt.
+
+8. GOOGLE PLAY STORE ÜRETİM ORTAMI
+
+Uygulamanın Google Play Store'da yayınlanmış olduğunu dikkate al.
+
+Bu nedenle uygulamada:
+
+- Demo/test kullanıcı arayüzleri,
+- geliştirme amaçlı butonlar,
+- test verileri,
+- debug ekranları,
+- gereksiz geliştirici seçenekleri,
+- kullanıcıya görünmemesi gereken test mesajları
+
+bulunmamalıdır.
+
+Ancak gerçek kullanıcıların kullandığı üretim özelliklerini bozma.
+
+9. VERİ SİLMEDE GÜVENLİK
+
+Veritabanında toplu silme işlemi yapmadan önce kullanıcıları ve içerikleri kategorilere ayır.
+
+Gerçek kullanıcı verilerini yanlışlıkla silmek kesinlikle yasaktır.
+
+Silinecek verileri önce belirle, ilişkili verileri kontrol et ve yalnızca açıkça test/demo olduğu doğrulanabilen verileri temizle.
+
+10. SON KONTROL
+
+Tüm düzenlemeler tamamlandıktan sonra uygulamayı baştan sona tekrar test et.
+
+Özellikle:
+
+Kitap yazarı → kitap oluştur → yatay kapak fotoğrafı ekle → fotoğrafı kaydet → kitabı yayınla → ana sayfada görüntüle
+
+akışını gerçek bir mobil cihaz ekranında test et.
+
+Ayrıca:
+
+Giriş ekranı → Demo Giriş görünmüyor → gerçek kullanıcı girişi çalışıyor
+
+akışını test et.
+
+Son olarak uygulamada hiçbir test/demo kalıntısı, ekran taşması, bozuk buton, kırık bağlantı, hatalı veri, responsive problem veya konsol/backend hatası bırakma.
+
+HEDEF
+
+Uygulama artık geliştirme/test görünümünde değil, gerçek kullanıcıların kullanacağı temiz, profesyonel, stabil ve üretime hazır bir uygulama olarak çalışmalıdır.
+
+Mevcut gerçek kullanıcı verilerini ve çalışan gerçek özellikleri koru; yalnızca test/demo verilerini ve hatalı/gereksiz bölümleri temizle.

@@ -1,0 +1,94 @@
+Uygulamamda aşağıdaki özellikleri eksiksiz şekilde geliştir ve mevcut tasarımı/özellikleri bozmadan uygula:
+
+1. Mesaj Beğenileri – Gerçek Zamanlı
+
+- Uygulamadaki tüm yazılı mesajlara kullanıcılar beğeni bırakabilsin.
+- Bir kullanıcı mesajı beğendiğinde bu beğeni gerçek zamanlı olarak tüm ilgili kullanıcılara yansısın.
+- Aynı kullanıcı aynı mesaja yalnızca 1 beğeni verebilsin.
+- Kullanıcı tekrar beğeni butonuna basarsa kendi beğenisini kaldırabilsin.
+- Beğeni sayısı anlık olarak güncellensin; sayfayı yenilemek gerekmemeli.
+- Aynı mesajın beğeni sayısı farklı kullanıcılarda tutarlı görünmeli.
+
+2. Oylama – Gerçek Zamanlı
+
+- Uygulamadaki tüm oylama/oy verme özellikleri gerçek zamanlı çalışsın.
+- Kullanıcı oy verdiğinde oy sonucu diğer kullanıcılara anında yansısın.
+- Bir kullanıcı aynı oylamada yalnızca izin verilen sayıda oy kullanabilsin ve aynı oy tekrar tekrar eklenmesin.
+- Oy sonuçları tüm kullanıcılarda senkronize olsun.
+- Sayfa yenilemeye gerek kalmadan oy sayıları ve sonuçlar güncellensin.
+
+3. Sohbet Ekranı ve Klavye Sorunu
+
+Tüm kullanıcılar için sohbet ekranını mobil cihazlarda düzgün çalışacak şekilde düzelt.
+
+- Kullanıcı Sohbet butonuna tıkladığında sohbet sayfası normal şekilde açılsın.
+- Sohbet ekranındaki mesaj yazma alanına dokunulduğunda telefon klavyesi açılsın.
+- Klavye açıldığında mesaj yazma alanı klavyenin arkasında kalmasın.
+- Mesaj yazma kutusu ve gönder butonu her zaman kullanıcının görebileceği konumda kalsın.
+- Klavye açıldığında sohbet ekranı otomatik olarak klavyeye göre yeniden boyutlansın.
+- Kullanıcı yazı yazarken mesaj kutusu görünür kalmalı.
+- Son mesajlar gerektiğinde otomatik olarak yukarı kaydırılmalı.
+- Klavye kapatıldığında sohbet ekranı normal boyutuna dönmeli.
+- Android ve farklı ekran boyutlarında aynı sorun tekrar oluşmamalı.
+- Mesaj yazma alanı hiçbir şekilde ekranın veya klavyenin altında gizlenmemeli.
+
+4. Kullanıcı Keşfetme Sistemi
+
+Uygulamaya tüm kullanıcıların birbirlerini kolayca keşfedebileceği bir sistem ekle.
+
+- Tüm kullanıcılar diğer kullanıcıları arayabilsin.
+- Kullanıcı adı, isim veya mevcut kullanıcı bilgilerine göre arama yapılabilsin.
+- Arama sonuçları mümkün olduğunca gerçek zamanlı gösterilsin.
+- Kullanıcılar birbirlerinin profillerine ulaşabilsin.
+- Kullanıcıların kendi profillerini de kolayca bulabilmeleri mümkün olsun.
+- Arama sistemi hızlı, anlaşılır ve mobil uyumlu olsun.
+- Kullanıcı bulunamadığında uygun bir “Kullanıcı bulunamadı” mesajı gösterilsin.
+
+5. Kitap Keşfetme ve Arama
+
+Uygulamada yazılmış olan tüm kitapların bulunabileceği gelişmiş bir arama/keşfetme sistemi oluştur.
+
+- Kullanıcılar uygulamada yayınlanan kitapları arayabilsin.
+- Kitap adıyla arama yapılabilsin.
+- Yazar adıyla arama yapılabilsin.
+- Kategori/kurgu türüne göre kitaplar bulunabilsin.
+- Arama sonuçlarında kitabın kapak fotoğrafı ve gerekli temel bilgiler gösterilsin.
+- Kullanıcı kitabın üzerine tıklayarak kitap sayfasına gidebilsin.
+- Yayınlanan kitaplar arama sonuçlarında kaybolmamalı.
+- Yeni kitap yayınlandığında keşfetme/arama sisteminde otomatik olarak görünmeli.
+- Arama sonuçları mümkün olduğunca hızlı şekilde güncellenmeli.
+
+6. Genel Gerçek Zamanlı Sistem
+
+Uygulamadaki kullanıcı etkileşimlerini mümkün olduğunca gerçek zamanlı ve senkronize hale getir.
+
+Özellikle:
+
+- Mesajlar
+- Mesaj beğenileri
+- Oylar ve oylama sonuçları
+- Sohbetler
+- Kullanıcıların bulunması
+- Kitapların bulunması
+
+farklı kullanıcıların ekranlarında mümkün olduğunca anlık güncellenmeli.
+
+7. Önemli Teknik Kural
+
+Bu değişiklikleri yaparken mevcut uygulamanın tasarımını, kullanıcı hesaplarını, kitapları, profilleri ve mevcut özellikleri bozma.
+
+Mevcut verileri silme veya sıfırlama.
+
+Özellikle mobil cihazlarda test et ve:
+
+- Klavye açılması
+- Mesaj yazma alanının görünürlüğü
+- Gönder butonunun görünürlüğü
+- Gerçek zamanlı beğeni
+- Gerçek zamanlı oy
+- Kullanıcı arama
+- Kitap arama
+
+özelliklerinin düzgün çalıştığından emin ol.
+
+Amaç: Kullanıcı uygulamaya girdiğinde kendini bulabilsin, diğer kullanıcıları bulabilsin, yazılmış kitapları kolayca bulabilsin, mesajlaşabilsin, mesajları beğenebilsin ve oylamalara katılabilsin. Tüm bu işlemler mümkün olduğunca gerçek zamanlı çalışmalı.

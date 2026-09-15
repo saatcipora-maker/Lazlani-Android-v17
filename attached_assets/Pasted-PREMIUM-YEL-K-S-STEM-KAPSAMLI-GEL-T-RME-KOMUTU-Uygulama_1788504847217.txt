@@ -1,0 +1,228 @@
+PREMIUM ÜYELİK SİSTEMİ – KAPSAMLI GELİŞTİRME KOMUTU
+
+Uygulamaya tamamen çalışan, güvenli ve mobil uyumlu bir Premium abonelik sistemi ekle.
+
+1. PREMIUM BUTONU
+
+Uygulamada bulunan “Premium” butonu aktif ve çalışır durumda olsun.
+
+Kullanıcı Premium butonuna tıkladığında Premium üyeliğin özelliklerini ve abonelik seçeneğini görebilsin.
+
+Premium fiyatı:
+
+Aylık 100 TL
+
+Kullanıcı aylık 100 TL karşılığında Premium aboneliği başlatabilsin.
+
+- Abonelik ödeme sistemi gerçek ödeme altyapısına uygun şekilde tasarlansın.
+- Ödeme başarılı olmadan Premium özellikleri açılmasın.
+- Ödeme başarısız olursa Premium aktif edilmesin.
+- Aboneliğin başlangıç ve bitiş tarihi sistemde tutulmalı.
+- Abonelik süresi dolduğunda Premium özellikleri otomatik olarak kapanmalı.
+- Kullanıcı Premium durumunu profilinden görebilmeli.
+- Yönetici panelinden Premium abonelikleri görüntüleyebilmeliyim.
+
+2. PREMIUM KULLANICI ADI TASARIMLARI
+
+Premium üyeliği aktif olan kullanıcıların kullanıcı adlarına özel görsel seçenekler açılsın.
+
+Premium kullanıcılar aşağıdaki özelliklerden seçim yapabilsin:
+
+- Hareketli kullanıcı adı efektleri
+- Flash/parlak renk efektleri
+- Animasyonlu harf efektleri
+- Farklı renk seçenekleri
+- Işıltılı kullanıcı adı efektleri
+- Premium'a özel kullanıcı adı stilleri
+
+Kullanıcı seçtiği efekti profilinden değiştirebilsin.
+
+ÖNEMLİ
+
+Bu efektler uygulamanın performansını düşürmemeli.
+
+Özellikle mobil cihazlarda:
+
+- FPS düşüşü,
+- ekran titremesi,
+- sayfa kayması,
+- gereksiz animasyon yükü
+
+oluşmamalıdır.
+
+3. PREMIUM PROFİL ÇERÇEVELERİ
+
+Premium kullanıcılara özel profil fotoğrafı çerçeveleri oluştur.
+
+Kullanıcı profil ayarlarından farklı Premium çerçeveler arasından seçim yapabilsin.
+
+Örneğin:
+
+- Işıklı çerçeve
+- Hareketli çerçeve
+- Parlak çerçeve
+- Renk değiştiren çerçeve
+- Özel Premium çerçeve
+- Animasyonlu çerçeve
+
+Seçilen çerçeve kullanıcının profil fotoğrafının çevresinde uygulamanın gerekli bölümlerinde gösterilsin.
+
+4. PREMIUM PAYLAŞIM BİLDİRİMLERİ
+
+Premium kullanıcı bir paylaşım yaptığında tüm aktif kullanıcılara bildirim gönderilebilsin.
+
+Örneğin Premium kullanıcı:
+
+“Yeni bir paylaşım yaptı.”
+
+şeklinde sistem bildirimi oluşturabilsin.
+
+Bildirim:
+
+- Gerçek zamanlı çalışmalı.
+- Kullanıcılara mümkün olduğunca hızlı ulaşmalı.
+- Aynı bildirim aynı kullanıcıya tekrar tekrar gönderilmemeli.
+- Bildirim kutusunda görüntülenmeli.
+- Bildirime tıklandığında ilgili paylaşım açılmalı.
+
+BİLDİRİM SPAM KONTROLÜ
+
+Premium kullanıcıların çok sık paylaşım yapması durumunda sistem diğer kullanıcıları spam bildirimlerle rahatsız etmemeli.
+
+Gerekli rate-limit ve bildirim kontrol sistemlerini ekle.
+
+5. ÖZEL BUTONU – PREMIUM VİDEO PAYLAŞIMI
+
+Uygulamadaki “Özel” bölümünü Premium sistemine bağla.
+
+Premium aboneliği aktif olan kullanıcılar Özel bölümünde video paylaşabilsin.
+
+Video süresi:
+
+Maksimum 59 saniye.
+
+59 saniyeden uzun videolar yüklenememeli.
+
+Sistem:
+
+- Video süresini otomatik kontrol etmeli.
+- 59 saniyeyi geçen videoyu reddetmeli.
+- Kullanıcıya anlaşılır hata mesajı göstermeli.
+- Videoyu uygulamanın ekranına uygun şekilde göstermeli.
+- Mobil cihazlarda dikey/yatay videoları bozmadan göstermeli.
+- Video yükleme sırasında ilerleme durumu gösterilmeli.
+- Yükleme tamamlanmadan paylaşım yayınlanmamalı.
+
+6. ÖZEL BÖLÜMÜNDEKİ VİDEOLAR
+
+Premium kullanıcı tarafından paylaşılan 59 saniyeye kadar videolar Özel bölümünde diğer kullanıcılar tarafından görüntülenebilsin.
+
+Videoların altında/üzerinde mevcut uygulama tasarımına uygun şekilde:
+
+- Beğeni
+- Yorum
+- Paylaşım
+- Görüntüleme
+
+özellikleri bulunabilsin.
+
+Mevcut uygulamadaki tasarımı bozma; yeni özellikleri mevcut tasarıma uyumlu şekilde ekle.
+
+7. PREMIUM ROZETİ
+
+Premium kullanıcıların kullanıcı adının yanında özel bir Premium rozeti göster.
+
+Bu rozet:
+
+- Profilde
+- Paylaşımlarda
+- Yorumlarda
+- Sohbette
+- Gerekli diğer kullanıcı alanlarında
+
+tutarlı şekilde görüntülensin.
+
+8. PREMIUM OLMAYAN KULLANICILAR
+
+Premium olmayan kullanıcıların Premium özelliklerine erişmesine izin verme.
+
+Premium özelliklerini kullanmaya çalıştığında kullanıcıya:
+
+“Bu özellik Premium üyeler içindir. Aylık 100 TL karşılığında Premium'a geçebilirsiniz.”
+
+şeklinde anlaşılır bir bilgi göster ve Premium abonelik ekranına yönlendir.
+
+9. ABONELİK DURUMU
+
+Kullanıcı hesabında Premium durumunu güvenilir şekilde kontrol et.
+
+Özellikleri yalnızca frontend'deki bir değişkene bakarak açma.
+
+Premium yetkisini backend/veritabanı tarafında da doğrula.
+
+Kullanıcının aboneliği sona erdiğinde:
+
+- Premium kullanıcı adı efektleri,
+- Premium profil çerçevesi,
+- Premium rozeti,
+- Premium video paylaşma yetkisi
+
+otomatik olarak kapansın.
+
+Daha önce yayınlanan içerikler için mevcut uygulamanın veri saklama kurallarını koru.
+
+10. YÖNETİCİ PANELİ
+
+Admin paneline Premium yönetim bölümü ekle.
+
+Yönetici:
+
+- Premium aboneleri görebilsin.
+- Abonelik başlangıç tarihini görebilsin.
+- Abonelik bitiş tarihini görebilsin.
+- Aktif/pasif durumunu görebilsin.
+- Premium kullanıcıların paylaşımlarını yönetebilsin.
+- Premium video içeriklerini gerektiğinde moderasyon kurallarına göre yönetebilsin.
+
+11. MOBİL UYUMLULUK
+
+Premium sistemi tüm mobil cihazlarda kusursuz çalışmalı.
+
+Özellikle:
+
+- Premium butonu ekran dışına çıkmamalı.
+- Abonelik ekranı klavyeden etkilenmemeli.
+- Profil çerçeveleri düzgün ölçeklenmeli.
+- Animasyonlu kullanıcı adları ekranı taşırmamalı.
+- Video oynatıcı ekranı bozmamalı.
+- 59 saniyelik videolar mobilde düzgün oynatılmalı.
+- Sayfalarda yatay kayma oluşmamalı.
+
+12. GÜVENLİK VE PERFORMANS
+
+Premium özelliklerini kullanıcı tarafında kolayca manipüle edilemeyecek şekilde oluştur.
+
+Kullanıcı kendisini Premium olarak değiştirememeli.
+
+Premium yetkisi sunucu tarafında doğrulanmalı.
+
+Ödeme ve abonelik durumları güvenli şekilde tutulmalı.
+
+Animasyonlar ve video sistemi mobil cihazlarda uygulamanın performansını düşürmemeli.
+
+SONUÇ
+
+Uygulamaya gerçek çalışan bir Premium üyelik sistemi oluştur.
+
+Aylık ücret: 100 TL
+
+Premium üyeler:
+
+1. Özel hareketli/Flash kullanıcı adı efektleri kullanabilsin.
+2. Farklı Premium profil çerçeveleri seçebilsin.
+3. Premium rozeti kullanabilsin.
+4. Paylaşım yaptığında tüm aktif kullanıcılara gerçek zamanlı bildirim gönderilebilsin.
+5. Özel bölümünde maksimum 59 saniyelik video paylaşabilsin.
+6. Premium özellikleri yalnızca aktif abonelik süresince kullanılabilsin.
+
+Bütün sistemi mevcut uygulamanın tasarımına entegre et ve mevcut gerçek kullanıcıları, kitapları, paylaşımları ve çalışan özellikleri kesinlikle bozma.

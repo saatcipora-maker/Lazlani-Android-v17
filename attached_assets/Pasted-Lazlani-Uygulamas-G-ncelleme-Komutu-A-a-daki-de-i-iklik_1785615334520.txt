@@ -1,0 +1,50 @@
+Lazlani Uygulaması Güncelleme Komutu
+
+Aşağıdaki değişiklikleri mevcut uygulamaya eksiksiz şekilde uygula. Mevcut verileri ve sistemi bozma, tüm yeni özellikleri mevcut altyapıya entegre et.
+
+1. Kitap Kapak Fotoğrafları
+
+- Tüm kitap yazarları kitaplarının kapak fotoğraflarını mobil cihazlarından yükleyebilsin.
+- Kapak fotoğrafı yüklendiğinde sistem bunu gerçek zamanlı olarak işlesin ve onaylandıktan sonra anında uygulamada görünsün.
+- Ana sayfadaki kitap kartlarında yalnızca kapak fotoğrafı görünsün.
+- Okuma sayısı, yorum sayısı ve beğeni sayısı kapak fotoğrafının üzerinde görünmesin. Bu bilgiler kapak görselinin arka katmanında veya detay sayfasında yer alsın.
+- Kapak fotoğrafının üzerinde yalnızca yazarın adı görünsün.
+
+2. Profil Düzenleme
+
+- Tüm kullanıcılar kendi profil sayfalarından mobil cihazlarıyla profil fotoğraflarını değiştirebilsin.
+- Tüm kullanıcılar profil kapak fotoğraflarını da mobil cihazlarından yükleyip değiştirebilsin.
+- Yapılan değişiklikler gerçek zamanlı olarak tüm uygulamada güncellensin.
+
+3. Sohbet Sistemi
+
+- Sohbet ekranındaki mesaj yazma kutusu bazı cihazlarda ekranın altında görünmüyor.
+- Bu hatayı tamamen düzelt.
+- Mesaj yazma alanı her zaman ekranın altında sabit ve görünür olsun.
+- Klavye açıldığında mesaj kutusu kaybolmasın ve kullanıcı rahatça mesaj yazabilsin.
+
+4. Süper Admin Yetkisi
+
+Aşağıdaki e-posta adresini sistemde kalıcı olarak en üst düzey yetkili hesap olarak tanımla:
+
+saatcipora@gmail.com
+
+Bu hesaba:
+
+- Tam Yetki (Full Access)
+- Süper Admin
+- Owner (Sistem Sahibi)
+- Tüm yönetici paneline sınırsız erişim
+- Tüm kullanıcıları yönetme
+- Kitapları yönetme
+- Kategorileri yönetme
+- Yorumları yönetme
+- Beğenileri yönetme
+- Okuma istatistiklerini yönetme
+- Reklam ve sistem ayarlarını yönetme
+- Yetki verme ve kaldırma
+- Tüm yönetici işlemlerini gerçekleştirme
+
+yetkilerini eksiksiz ver.
+
+Bu hesap sistemin en üst düzey yöneticisi olsun ve hiçbir yönetici tarafından yetkisi kaldırılamasın. Yönetici panelinin tamamına tam erişime sahip olsun.

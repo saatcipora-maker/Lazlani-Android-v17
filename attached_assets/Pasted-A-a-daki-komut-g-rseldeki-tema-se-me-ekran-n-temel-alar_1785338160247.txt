@@ -1,0 +1,98 @@
+Aşağıdaki komut, görseldeki tema seçme ekranını temel alarak hazırlanmıştır. Ayrıca bu secenekler kullanıcı purafilinde menüde olsun
+
+Uygulamadaki Tema Seç ekranını mevcut tasarım anlayışını koruyarak geliştir.
+
+Genel Tasarım
+
+- Tema seçme ekranı modern, sade ve mobil uyumlu kalsın.
+- Her tema seçeneği ayrı bir kart (card) şeklinde gösterilsin.
+- Kartların köşeleri yuvarlatılmış olsun.
+- Seçili tema belirgin bir çerçeve ve onay işareti (✓) ile vurgulansın.
+- Temalar arasında yeterli boşluk bırakılarak okunabilirlik artırılsın.
+- Tema değiştirildiğinde uygulamanın tamamı anında yeni temaya geçsin ve kullanıcının seçimi kalıcı olarak kaydedilsin.
+
+Tema Adı Güncellemesi
+
+Görselde bulunan Vaveyla isimli temanın adını tamamen kaldır ve yerine:
+
+Lazlani
+
+adını kullan.
+
+Uygulamanın hiçbir bölümünde artık Vaveyla adı görünmesin. Bu tema bundan sonra Lazlani Teması olarak adlandırılsın.
+
+Tema Seçenekleri
+
+Tema seçenekleri şu şekilde olsun:
+
+- Aydınlık
+- Sage
+- Karanlık
+- Lazlani
+- Dream
+- Samsun
+- Midnight
+
+Tema Kartlarının Özellikleri
+
+Her tema kartında:
+
+- Tema adı
+- Sol tarafta tema rengine ait küçük renk göstergesi
+- Sağ tarafta seçim dairesi
+- Seçildiğinde onay işareti
+- Hafif gölge efekti
+- Yuvarlatılmış köşeler
+- Dokunulduğunda yumuşak animasyon
+
+bulunsun.
+
+Lazlani Teması
+
+Lazlani teması uygulamanın ana kimliğini yansıtsın.
+
+Özellikleri:
+
+- Koyu yeşil ağırlıklı modern görünüm
+- Parlak yeşil vurgu renkleri
+- Beyaz okunabilir yazılar
+- Yüksek kontrast
+- Göz yormayan renk geçişleri
+- Premium ve profesyonel tasarım
+
+Tema Sistemi
+
+Kullanıcı istediği zaman temayı değiştirebilsin.
+
+Tema değiştirildiğinde aşağıdaki alanların tamamı otomatik olarak yeni temaya uyum sağlasın:
+
+- Ana sayfa
+- Profil
+- Sohbet ekranı
+- Kitap okuma ekranı
+- Kitap yazma ekranı
+- Hikâye yazma ekranı
+- Şiir yazma ekranı
+- Bültenler
+- Dergi
+- Özel bölümü
+- Yönetici paneli
+- Ayarlar
+- Bildirimler
+- Arama sayfası
+- Tüm butonlar
+- Kartlar
+- Menü çubukları
+- Alt gezinme menüsü
+- Açılır pencereler
+- Form alanları
+- Kaydırma çubukları
+- İkonlar
+
+Performans
+
+- Tema değişikliği uygulamayı yeniden başlatmadan anında gerçekleşsin.
+- Seçilen tema kullanıcı hesabına kaydedilsin ve uygulama tekrar açıldığında otomatik olarak yüklensin.
+- Tüm ekranlarda renk uyumu korunsun.
+- Tema geçişleri akıcı animasyonlarla gerçekleştirilsin.
+- Mevcut tasarım dili korunarak modern, şık ve yüksek performanslı bir tema sistemi oluşturulsun.

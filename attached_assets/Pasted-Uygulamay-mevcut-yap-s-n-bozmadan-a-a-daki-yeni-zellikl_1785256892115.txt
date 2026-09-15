@@ -1,0 +1,136 @@
+Uygulamayı mevcut yapısını bozmadan aşağıdaki yeni özelliklerle geliştir. Tüm özellikler mobil uyumlu, güvenli, yüksek performanslı ve gerçek zamanlı çalışsın.
+
+1. Kitap, Hikâye ve Şiir Yazma Sistemi
+
+Yazarlar için gelişmiş bir içerik oluşturma sistemi ekle.
+
+- Bir kitap, hikâye veya şiir oluşturulabilsin.
+- Bir kitaba sınırsız sayıda bölüm eklenebilsin.
+- Bölümler daha sonra düzenlenebilsin, silinebilsin veya yeniden sıralanabilsin.
+- Kitap yayınlanmadan önce taslak olarak kaydedilebilsin.
+- Yazarlar yazı yazarken tüm bu seçenekleri açık ve kolay kullanılabilir şekilde görebilsin.
+
+2. Klavye Sorununu Düzelt
+
+Uygulamanın tüm sayfalarında:
+
+- Mesaj yazarken,
+- Yorum yazarken,
+- Kitap yazarken,
+- Hikâye yazarken,
+- Şiir yazarken,
+
+klavye açıldığında yazı alanı klavyenin arkasında kalmasın.
+
+Yazı yazılan alan otomatik olarak klavyenin üzerine taşınsın ve kullanıcı yazdığı metni her zaman görebilsin.
+
+3. Ana Sayfa
+
+Ana sayfanın üst kısmına mevcut:
+
+- Mağaza
+- Özel
+- Bültenler
+
+butonlarının yanına yeni bir Dergi butonu ekle.
+
+4. Dergi Bölümü
+
+Dergi bölümü profesyonel şekilde çalışsın.
+
+- Tüm kullanıcılar dergideki içerikleri okuyabilsin.
+- Tüm kullanıcılar yorum yapabilsin.
+- Tüm kullanıcılar beğeni bırakabilsin.
+- Sadece yönetici panelinden onay verilen kullanıcılar dergide paylaşım yapabilsin.
+- Dergi yazıları için en az 10.000 kelimelik içerik yazma kapasitesi sağla.
+- Dergi paylaşımlarına kapak görseli eklenebilsin.
+
+5. Özel Bölümü
+
+Özel bölümde:
+
+- Tüm kullanıcılar yorum yapabilsin.
+- Tüm kullanıcılar beğeni bırakabilsin.
+- Video ve fotoğraf paylaşımı yalnızca yönetici tarafından yetkilendirilen kullanıcılar tarafından yapılabilsin.
+- Video yükleme süresi en fazla 40 saniye olsun.
+- Paylaşılan videolar 7 gün sonra otomatik olarak silinsin.
+- Silinme süresi dolan videolar sistem tarafından otomatik kaldırılsın.
+
+6. Bildirim Sistemi
+
+Gerçek zamanlı bildirim sistemi oluştur.
+
+Aşağıdaki durumlarda kullanıcının telefonuna anlık bildirim gönderilsin:
+
+- Yeni özel mesaj geldiğinde.
+- Kitabına yorum yapıldığında.
+- Kitabını biri beğendiğinde.
+- Hikâyesine yorum yapıldığında.
+- Hikâyesini biri beğendiğinde.
+- Şiirine yorum yapıldığında.
+- Şiirini biri beğendiğinde.
+- Paylaşımına yorum yapıldığında.
+- Paylaşımı beğenildiğinde.
+- Bir yoruma cevap verildiğinde.
+- Yönetici tarafından mesaj gönderildiğinde.
+
+Bildirimlere tıklanınca ilgili sayfa doğrudan açılsın.
+
+7. Okundu Sistemi
+
+- Kullanıcı özel mesajı açtığında mesaj otomatik olarak Okundu olarak işaretlensin.
+- Kullanıcı bildirimi açtığında bildirim otomatik olarak Okundu durumuna geçsin.
+- Okunmamış bildirimler farklı renkle gösterilsin.
+
+8. Yönetici Paneli
+
+Yönetici paneline aşağıdaki yeni bölümleri ekle.
+
+İstatistik
+
+Gerçek zamanlı göster:
+
+- Toplam kayıtlı kullanıcı
+- Aktif kullanıcı sayısı
+- Çevrim içi kullanıcı sayısı
+- Uygulamanın toplam indirilme sayısı
+- Günlük yeni kayıt sayısı
+- Günlük aktif kullanıcı sayısı
+- Toplam kitap sayısı
+- Toplam hikâye sayısı
+- Toplam şiir sayısı
+- Toplam paylaşım sayısı
+- Toplam yorum sayısı
+- Toplam beğeni sayısı
+
+Yetkilendirme
+
+Ayrı bir Yetkilendirme bölümü oluştur.
+
+Buradan yönetici:
+
+- Kullanıcıya dergi yazarı yetkisi verebilsin.
+- Kullanıcıya video paylaşma yetkisi verebilsin.
+- Kullanıcıya fotoğraf paylaşma yetkisi verebilsin.
+- Kullanıcının yetkilerini kaldırabilsin.
+- Kullanıcının hesap durumunu görüntüleyebilsin.
+
+Kullanıcı İşlemleri
+
+Yönetici:
+
+- Kullanıcıyı geçici olarak engelleyebilsin.
+- Kalıcı olarak engelleyebilsin.
+- Engeli kaldırabilsin.
+- Kullanıcı hesabını askıya alabilsin.
+- Askıya alınan hesabı tekrar aktif edebilsin.
+
+Tüm işlemler kayıt altına alınsın ve hangi yöneticinin hangi işlemi yaptığı log sisteminde görülebilsin.
+
+9. Performans
+
+- Tüm yeni özellikler gerçek zamanlı çalışsın.
+- Sayfa yenilemeye gerek kalmadan veriler güncellensin.
+- Uygulama hızlı ve akıcı çalışsın.
+- Mevcut özelliklerde hiçbir bozulma oluşmasın.
+- Tüm yeni sistemler mevcut tasarımla uyumlu şekilde entegre edilsin.

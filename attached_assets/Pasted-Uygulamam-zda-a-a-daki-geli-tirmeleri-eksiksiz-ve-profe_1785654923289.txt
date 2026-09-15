@@ -1,0 +1,76 @@
+Uygulamamızda aşağıdaki geliştirmeleri eksiksiz ve profesyonel şekilde uygula:
+
+1. Renk Teması
+
+- Tema seçeneklerine Kristal Saten Kırık Beyaz rengini ekle.
+- Bu tema modern, premium ve göz yormayan bir tasarıma sahip olsun.
+- Uygulamanın tüm sayfalarında sorunsuz çalışsın.
+
+2. Gerçek Zamanlı Sistem
+
+- Tüm paylaşımlar, yorumlar, beğeniler, takipler, profil güncellemeleri ve kitap güncellemeleri gerçek zamanlı çalışsın.
+- Bir kullanıcı paylaşım yaptığında, yorum yaptığında, beğeni yaptığında veya profilini güncellediğinde tüm kullanıcılar anında görebilsin.
+- Hiçbir sayfanın manuel yenilenmesine gerek kalmasın.
+
+3. Gönderilerin Silinmemesi
+
+- Kullanıcıların yayınladıkları gönderiler sistem tarafından kendiliğinden silinmesin.
+- Veritabanında güvenli şekilde saklansın ve yalnızca kullanıcı veya yönetici tarafından silinebilsin.
+
+4. Bildirim Sistemi
+
+- Yeni bir bildirim geldiğinde bildirim kutusu sinyal (rozet) göstersin.
+- Kullanıcı bildirimi açıp okuduğunda sinyal kaybolsun.
+- Aynı bildirim için tekrar sinyal oluşmasın.
+- Sadece yeni gelen bildirimlerde tekrar sinyal oluşsun.
+
+5. Mesaj Sistemi
+
+- Yeni mesaj geldiğinde mesaj butonu sinyal göstersin.
+- Kullanıcı mesajı açıp okuduğunda sinyal kaybolsun.
+- Aynı mesaj için tekrar sinyal oluşmasın.
+- Sadece yeni gelen mesajlarda tekrar sinyal oluşsun.
+
+6. Profil ve Kapak Fotoğrafları
+
+- Tüm kullanıcıların profil fotoğrafları ve kapak fotoğrafları gerçek zamanlı olarak tüm kullanıcılara görünsün.
+- Profil veya kapak fotoğrafı değiştirildiğinde tüm kullanıcılar anında güncellenmiş halini görebilsin.
+
+7. Kitap Kapakları
+
+- Kitap kapak fotoğrafları hem ana sayfada hem de kitap detay sayfasında görünsün.
+- Kitap kapakları yatay (landscape) formatta yüklensin ve görüntülensin.
+- Görseller yüksek kalite korunarak gösterilsin.
+
+8. Premium Sistemi
+
+- Premium butonu tamamen aktif hale getirilsin.
+- Kullanıcı Premium butonuna bastığında premium üyelik sayfası açılsın.
+- Kullanıcıya Yıllık 200 TL üyelik seçeneği gösterilsin.
+- Kullanıcı satın alma talebi oluşturduğunda bu talep yönetici paneline düşsün.
+- Yönetici onay verdiğinde Premium üyeliği aktif olsun.
+
+9. Rozet Sistemi
+
+- Kullanıcı "Rozetler" bölümüne girdiğinde aşağıdaki seçenekleri görsün:
+  - Yazarlık Rozeti – Yıllık 200 TL
+  - VIP Üyelik – Yıllık 200 TL
+- Satın alma talepleri yönetici paneline gönderilsin ve yönetici onayından sonra aktifleşsin.
+
+10. VIP Üyelik Özellikleri
+VIP üyeliği aktif olan kullanıcılar aşağıdaki ayrıcalıklara sahip olsun:
+
+- Diğer VIP kullanıcılarla özel mesajlaşabilsin.
+- Diğer VIP kullanıcılarla sesli görüşme yapabilsin.
+- Profil çerçevesinin rengini üyeliği aktif ederken seçebilsin.
+- Seçilen profil çerçevesi tüm kullanıcılar tarafından görülsün.
+- VIP kullanıcıların tüm paylaşımları, yorumları ve yazıları seçtikleri renkte görüntülensin.
+- Renk seçimi yalnızca üyelik ilk aktif edilirken yapılabilsin.
+- Seçilen renk daha sonra hiçbir şekilde değiştirilemesin.
+
+11. Performans ve Güvenlik
+
+- Tüm bu sistemler güvenli, hızlı ve ölçeklenebilir şekilde geliştirilsin.
+- Gerçek zamanlı senkronizasyon gecikmesiz çalışsın.
+- Veritabanı veri kaybına karşı korumalı olsun.
+- Mobil cihazlarda yüksek performans ve düşük internet kullanımı sağlansın.

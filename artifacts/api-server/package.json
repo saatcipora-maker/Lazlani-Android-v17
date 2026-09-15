@@ -1,0 +1,42 @@
+{
+  "name": "@workspace/api-server",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "export NODE_ENV=development && pnpm run build && pnpm run start",
+    "build": "node ./build.mjs",
+    "start": "node --enable-source-maps ./dist/index.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test:security": "sh -c 'mkdir -p .test-dist; pnpm exec esbuild src/lib/password-reset-store.test.mjs --bundle --platform=node --format=cjs --outfile=.test-dist/password-reset-store.test.cjs; status=$?; if [ $status -eq 0 ]; then node --test .test-dist/password-reset-store.test.cjs; status=$?; fi; rm -rf .test-dist; exit $status'",
+    "test:auth": "sh -c 'mkdir -p .test-dist; pnpm exec esbuild src/routes/auth.integration.test.mjs --bundle --platform=node --format=cjs --outfile=.test-dist/auth.integration.test.cjs; status=$?; if [ $status -eq 0 ]; then NODE_ENV=production LOG_LEVEL=silent node --test .test-dist/auth.integration.test.cjs; status=$?; fi; rm -rf .test-dist; exit $status'",
+    "test:premium": "sh -c 'mkdir -p .test-dist; pnpm exec esbuild src/routes/premium.integration.test.mjs --bundle --platform=node --format=cjs --outfile=.test-dist/premium.integration.test.cjs; status=$?; if [ $status -eq 0 ]; then NODE_ENV=production LOG_LEVEL=silent node --test .test-dist/premium.integration.test.cjs; status=$?; fi; rm -rf .test-dist; exit $status'",
+    "demo-cleanup:dry-run": "sh -c 'mkdir -p .test-dist; pnpm exec esbuild src/scripts/demo-cleanup.mjs --bundle --platform=node --format=cjs --outfile=.test-dist/demo-cleanup.cjs && NODE_ENV=development DEMO_CLEANUP_TARGET=development node .test-dist/demo-cleanup.cjs; status=$?; rm -rf .test-dist; exit $status'",
+    "demo-cleanup:apply": "sh -c 'mkdir -p .test-dist; pnpm exec esbuild src/scripts/demo-cleanup.mjs --bundle --platform=node --format=cjs --outfile=.test-dist/demo-cleanup.cjs && NODE_ENV=development DEMO_CLEANUP_TARGET=development node .test-dist/demo-cleanup.cjs --apply; status=$?; rm -rf .test-dist; exit $status'",
+    "test:sync": "sh -c 'mkdir -p .test-dist; pnpm exec esbuild src/routes/sync.integration.test.mjs --bundle --platform=node --format=cjs --outfile=.test-dist/sync.integration.test.cjs; status=$?; if [ $status -eq 0 ]; then NODE_ENV=production LOG_LEVEL=silent node --test .test-dist/sync.integration.test.cjs; status=$?; fi; rm -rf .test-dist; exit $status'",
+    "test:storage": "sh -c 'mkdir -p .test-dist; pnpm exec esbuild src/routes/storage.test.mjs --bundle --platform=node --format=cjs --outfile=.test-dist/storage.test.cjs; status=$?; if [ $status -eq 0 ]; then node --test .test-dist/storage.test.cjs; status=$?; fi; rm -rf .test-dist; exit $status'",
+    "auth-role": "sh -c 'mkdir -p .test-dist; pnpm exec esbuild src/scripts/set-auth-role.mjs --bundle --platform=node --format=esm --outfile=.test-dist/set-auth-role.mjs && node .test-dist/set-auth-role.mjs \"$@\"; status=$?; rm -rf .test-dist; exit $status' --"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^8.1.0",
+    "@workspace/api-zod": "workspace:*",
+    "@workspace/db": "workspace:*",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "drizzle-orm": "catalog:",
+    "express": "^5.2.1",
+    "google-auth-library": "^11.0.2",
+    "pino": "^9.14.0",
+    "pino-http": "^10.5.0"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "catalog:",
+    "esbuild": "0.27.3",
+    "esbuild-plugin-pino": "^2.3.3",
+    "pino-pretty": "^13.1.3",
+    "thread-stream": "3.1.0"
+  }
+}

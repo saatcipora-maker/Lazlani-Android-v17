@@ -1,0 +1,4 @@
+- [LAZLANI App Architecture](lazlani-architecture.md) — Demo içeriği yerel kalırken hesap kurtarma sunucu güvenlik sınırından geçer.
+- [Monorepo Dependency Installs](monorepo-dependency-installs.md) — Workspace bağımlılıklarını her zaman sahibi olan pakete hedefle, kök workspace’e değil.
+- [EAS Android build dependency failures](eas-build.md) — Çok sayıda standart Maven paketi çözülemiyorsa sorun genellikle uzak EAS worker/önbellek erişimidir.
+- [Google login and Play signing](google-play-signing.md) — Android Google girişi, upload sertifikasıyla değil Play App Signing SHA-1 ile fiziksel Play kurulumunda doğrulanır.

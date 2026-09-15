@@ -1,0 +1,214 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "BppABSq4ZRi5ZdX01DtBl"
+uri = "file://screenshots/lazlani-icon-512.png"
+type = "image"
+title = "🎨 LAZLANI — Uygulama İkonu (512x512)"
+logical_id = "ac4be039-a154-4c42-ae3b-424cefb3ba5d"
+
+[[outputs]]
+id = "hebv4Z97BtojGJPS94G8_"
+uri = "file://screenshots/lazlani-feature-graphic.png"
+type = "image"
+title = "🖼️ LAZLANI — Feature Graphic (Play Store Banner)"
+logical_id = "61c05ed9-f000-4c6b-aa22-3e379b442ee5"
+
+[[outputs]]
+id = "-eliDccT06d7QI4L9P8yf"
+uri = "file://screenshots/lazlani-promo-bg.png"
+type = "image"
+title = "📱 LAZLANI — Tanıtım Görseli"
+logical_id = "f155bda4-5581-4520-a46c-d694d41345f0"
+
+[[outputs]]
+id = "vJ_uUv0OM2mWjbU-lu629"
+uri = "file://screenshots/lazlani-screen-login.jpg"
+type = "image"
+title = "📸 LAZLANI — Ekran Görüntüsü 1 (Giriş)"
+logical_id = "96f1014b-e4c4-4415-a75f-a7be0a633bb6"
+
+[[outputs]]
+id = "fGzha987LE4tZeGmK4GfU"
+uri = "file://attached_assets/generated_images/lazlani-icon-512.jpg"
+type = "image"
+title = "LAZLANI — App Icon (512×512, 50 KB)"
+logical_id = "8ae8653c-0782-4cd7-b896-e95f7c064694"
+
+[[outputs]]
+id = "ez95SPWvocde3D4xQooMJ"
+uri = "file://attached_assets/generated_images/screenshot-1-home.jpg"
+type = "image"
+title = "1 — Ana Sayfa"
+logical_id = "5d1f1990-21fa-4524-92d7-b3a6e4eab464"
+
+[[outputs]]
+id = "Wd3MwsO5Lr8iG9Ecz9Uzh"
+uri = "file://attached_assets/generated_images/screenshot-2-ai.jpg"
+type = "image"
+title = "2 — Lazlani AI"
+logical_id = "dca034c7-779d-45c8-8455-347a5544bf5c"
+
+[[outputs]]
+id = "gCZ7hVfIuGPJia0TCjq97"
+uri = "file://attached_assets/generated_images/screenshot-3-category.jpg"
+type = "image"
+title = "3 — Kategori"
+logical_id = "0e84ae99-2bc9-4f2a-b2f8-9e9a62daf175"
+
+[[outputs]]
+id = "soe5GJEWJn9ZwEWqOghiO"
+uri = "file://attached_assets/generated_images/screenshot-4-write.jpg"
+type = "image"
+title = "4 — Yazma Ekranı"
+logical_id = "c99d86c0-4bb8-4854-9c03-c5bf1e9abfea"
+
+[[outputs]]
+id = "UU0bJEWfrDtrXJ8_i2RrJ"
+uri = "file://attached_assets/generated_images/lazlani-featured-graphic.jpg"
+type = "image"
+title = "LAZLANI — Featured Graphic (1024×500)"
+logical_id = "a05f1e63-f38a-4b21-80e4-d5acfa0174d4"
+
+[[outputs]]
+id = "RcfsorJUKHDJpVDG53VHv"
+uri = "file://attached_assets/generated_images/chromebook-1-home.jpg"
+type = "image"
+title = "1 — Ana Sayfa (Chromebook)"
+logical_id = "db269741-e20c-4c3a-871e-636e67116227"
+
+[[outputs]]
+id = "ATZOgfOVCu60j_IMJQsPl"
+uri = "file://attached_assets/generated_images/chromebook-2-ai.jpg"
+type = "image"
+title = "2 — Lazlani AI (Chromebook)"
+logical_id = "1caca42b-3c24-471a-b2c3-88efa17f268c"
+
+[[outputs]]
+id = "K0GyiG6hSsHQGg1w7UM6n"
+uri = "file://attached_assets/generated_images/chromebook-3-category.jpg"
+type = "image"
+title = "3 — Kategori (Chromebook)"
+logical_id = "f08bf299-56e8-40ec-bc3c-16f2345abd6e"
+
+[[outputs]]
+id = "CZCWEvZf6gB76H0MMQD6W"
+uri = "file://attached_assets/generated_images/chromebook-4-write.jpg"
+type = "image"
+title = "4 — Yazma Ekranı (Chromebook)"
+logical_id = "14cecccb-6782-494f-97be-cfad473145c9"
+
+[[outputs]]
+id = "ncJzQG-zCMtnA7VS0HtwZ"
+uri = "file://attached_assets/generated_images/tablet-1-home.jpg"
+type = "image"
+title = "1 — Ana Sayfa (10\" Tablet)"
+logical_id = "5d4c83e2-d628-43bd-826e-71a43cc1b623"
+
+[[outputs]]
+id = "qVI7MiAnzfSqa_J_iTyFB"
+uri = "file://attached_assets/generated_images/tablet-2-ai.jpg"
+type = "image"
+title = "2 — Lazlani AI (10\" Tablet)"
+logical_id = "6b7ca17f-0fe9-4e47-9c04-7ef1248a1691"
+
+[[outputs]]
+id = "SbSP93GOYauQiAHlLmQGu"
+uri = "file://attached_assets/generated_images/tablet-3-category.jpg"
+type = "image"
+title = "3 — Kategori (10\" Tablet)"
+logical_id = "a5995bd1-bdcb-42b0-a871-211be9bdc084"
+
+[[outputs]]
+id = "1ORAW2UEiGnGBRZadE9d9"
+uri = "file://attached_assets/generated_images/tablet-4-feed.jpg"
+type = "image"
+title = "4 — Sosyal Akış (10\" Tablet)"
+logical_id = "fb94b008-ac12-4c83-8d32-31e0393c1fa1"
+
+[[outputs]]
+id = "6CaUmZYTzUoJ-3mKjOU_0"
+uri = "file://attached_assets/lazlani-v1.1.0.zip"
+type = "unspecified"
+title = "LAZLANI v1.1.0 — Kaynak Kod (2.3 MB)"
+description = "Expo React Native projesi — node_modules hariç tüm kaynak kodlar"
+logical_id = "de650dd3-ffcb-4436-947e-458b27ce11a8"
+
+[[outputs]]
+id = "wSplPSLuFxBypJ4CLxUXc"
+uri = "file://attached_assets/lazlani-v1.1.0-full.zip"
+type = "unspecified"
+title = "LAZLANI v1.1.0 — Tam Sürüm (2.4 MB)"
+description = "Tüm yeni özellikler dahil — node_modules hariç kaynak kod"
+logical_id = "17db4ca3-2333-4297-a37b-2d4f73628bf6"
+
+[[outputs]]
+id = "0WchpnWnVYcR8ZouUadmG"
+uri = "file://attached_assets/lazlani-v1.2.0.zip"
+type = "unspecified"
+title = "LAZLANI v1.2.0 — Kaynak Kod (2.4 MB)"
+description = "Tüm yeni özellikler — EditBook, Favorites, Önerilerim, Match-3"
+logical_id = "ad2137d0-1cee-4c2a-97d3-97e01241626f"
+
+[[outputs]]
+id = "otiHnmhJHeQNXMdNzZXuw"
+uri = "file://attached_assets/lazlani-upload.pem"
+type = "unspecified"
+title = "lazlani-upload.pem — Play Console Sertifikası"
+description = "Google Play Console upload key reset için PEM sertifikası"
+logical_id = "0735e6df-c5fd-4d59-a6d8-36535bac038b"
+
+[[outputs]]
+id = "9R_Jg65e4qObACEUbWEtk"
+uri = "file://attached_assets/lazlani-upload.jks"
+type = "unspecified"
+title = "lazlani-upload.jks — Keystore Dosyası"
+description = "EAS Build ile imzalama için kullanılacak keystore"
+logical_id = "b8ae395e-2545-43a7-a0ee-236e8dcda878"
+
+[[outputs]]
+id = "z9gxQBIo6YjYCLWW1xLMS"
+uri = "file://attached_assets/upload_certificate.pem"
+type = "unspecified"
+title = "upload_certificate.pem — Google Play Console İçin"
+description = "keytool -export -rfc komutuyla üretildi. Play Console upload key reset formuna yükle."
+logical_id = "27924057-1633-41ce-9112-8d55274160d9"
+
+[[outputs]]
+id = "ZGCa6DNganoM08zTG7wso"
+uri = "file://attached_assets/lazlani-keys.zip"
+type = "unspecified"
+title = "lazlani-keys.zip — Sertifika ve Keystore"
+description = "upload_certificate.pem + lazlani-upload.jks"
+logical_id = "ecb5e933-6bf8-48aa-adde-6d71750ca635"
+
+[[outputs]]
+id = "HB1bzbMTkHd988_3kVLNn"
+uri = "file://attached_assets/lazlani-v1.2.1.zip"
+type = "unspecified"
+title = "LAZLANI v1.2.1 — Güncel Kaynak Kod (2.4 MB)"
+description = "Kapak fotoğrafı + profil foto + sohbet düzeltmesi + süper admin"
+logical_id = "a1742eeb-4d1e-42fd-abab-4eb38bf8255c"
+
+[[outputs]]
+id = "p8vJzn_bOY8gO0uNj0cJO"
+uri = "file://attached_assets/lazlani-v1.2.2.zip"
+type = "unspecified"
+title = "LAZLANI v1.2.2 — Kaynak Kod (2.4 MB)"
+description = "Neon kart tasarımı, LAZLANİ Önerileri slaytı, sohbet düzeltmesi, süper admin"
+logical_id = "c82a8b51-157a-45e0-96b2-a2630ca33ede"
+
+[[outputs]]
+id = "VJTvPGIXPsZVOSXY8CMSG"
+uri = "file://artifacts/lazlani/releases/lazlani-1.4.9-15.aab"
+type = "unspecified"
+title = "AAB DOSYASINI İNDİR"
+description = "LAZLANI Android App Bundle — 1.4.9, versionCode 15"
+logical_id = "092c453b-6448-4223-be66-83f222f4f1f7"
+content_hash = "sha256:5cfa06f35351efe69a9b44ee0c3714216cf4bbdc825fef3e2d9d40940fbf55ae"
+size = 67064101
+mtime_ms = 1789413119671
+storage_uri = "gcs://replit-rams-assets-pike/rams/assets/repl:a45bcb60-3dbf-452f-b413-d55d62733f2f/092c453b-6448-4223-be66-83f222f4f1f7/69c85bd3-8a33-4a1d-bac7-28b0a4bee4c1"
+storage_version_token = "1789422868813199"
+content_type = "application/octet-stream"

@@ -1,0 +1,126 @@
+Uygulamamızın Profil > Ayarlar bölümünü geliştir ve aşağıdaki özellikleri mevcut tasarımı bozmadan profesyonel şekilde ekle.
+
+1. Telif Hakkı Sayfası
+
+Profil > Ayarlar menüsüne Telif Hakkı adlı yeni bir seçenek ekle.
+
+Bu sayfada aşağıdaki bilgiler yer alsın:
+
+- Uygulamanın tüm tasarımı, yazılımı, logosu, arayüzü ve içerikleri telif hakkı kapsamında korunsun.
+- Kullanıcılar yalnızca kendilerine ait içerikleri paylaşabilir.
+- Başkalarına ait telif hakkıyla korunan eserler izinsiz olarak paylaşılmamalıdır.
+- Telif hakkı ihlali tespit edilen içerikler yönetici tarafından kaldırılabilir.
+- Tekrarlayan ihlallerde kullanıcı hesabı geçici veya kalıcı olarak askıya alınabilir.
+- Kullanıcılar, telif hakkı ihlali bildiriminde bulunabilsin.
+- Sayfa modern, okunabilir ve mobil uyumlu tasarıma sahip olsun.
+
+2. Destek ve Şikâyet
+
+Profil > Ayarlar menüsüne Destek ve Şikâyet adlı yeni bir seçenek ekle.
+
+Bu bölümde kullanıcılar:
+
+- Teknik destek talebi oluşturabilsin.
+- Hata bildirimi gönderebilsin.
+- Şikâyet oluşturabilsin.
+- Öneri gönderebilsin.
+- Talep gönderirken konu ve açıklama yazabilsin, gerekirse ekran görüntüsü ekleyebilsin.
+
+İletişim e-posta adresi:
+
+saatcipora@gmail.com
+
+Bu adres destek ve şikâyet sayfasında açıkça gösterilsin ve kullanıcılar isterlerse bu adrese doğrudan e-posta gönderebilsin.
+
+3. İletişim Sayfası
+
+Profil > Ayarlar menüsüne İletişim adlı yeni bir seçenek ekle.
+
+Bu sayfada kullanıcılar:
+
+- Yöneticiye mesaj gönderebilsin.
+- İstek ve önerilerini iletebilsin.
+- Sorularını yazabilsin.
+- Geri bildirim gönderebilsin.
+
+Gönderilen mesajlar doğrudan yönetici paneline düşsün.
+
+4. Ayarlar Menüsü
+
+Profil > Ayarlar bölümünde aşağıdaki seçenekler yer alsın:
+
+- Kullanım Kuralları
+- Gizlilik Politikası
+- Telif Hakkı
+- Destek ve Şikâyet
+- İletişim
+
+Tüm sayfalar aynı tasarım diline sahip olsun ve mobil cihazlarda sorunsuz çalışsın.
+
+5. Yönetici Paneli
+
+Uygulama için kapsamlı ve güvenli bir Yönetici Paneli oluştur.
+
+Yönetici panelinden aşağıdaki işlemler yapılabilsin:
+
+Kullanıcı Yönetimi
+
+- Tüm kayıtlı kullanıcıları görüntüleme.
+- Kullanıcı arama.
+- Kullanıcı profillerini inceleme.
+- Hesap askıya alma.
+- Hesap yeniden etkinleştirme.
+- Gerekli durumlarda hesap silme.
+
+Paylaşım Yönetimi
+
+- Tüm paylaşımları görüntüleme.
+- Kitapları görüntüleme.
+- Hikâyeleri görüntüleme.
+- Fotoğraf paylaşımlarını görüntüleme.
+- Paylaşımları düzenleme veya kaldırma.
+- Uygunsuz içerikleri inceleme.
+
+Yorum Yönetimi
+
+- Tüm yorumları görüntüleme.
+- Yorumları silme.
+- Gerekirse yorumları gizleme.
+
+Destek Merkezi
+
+- Destek taleplerini görüntüleme.
+- Şikâyetleri görüntüleme.
+- İletişim mesajlarını görüntüleme.
+- Kullanıcılara yönetici paneli üzerinden cevap verebilme.
+- Taleplerin durumunu "Bekliyor", "İşleme Alındı" ve "Çözüldü" olarak güncelleyebilme.
+
+İçerik Yönetimi
+
+- Bültenleri yönetme.
+- Duyuru yayınlama.
+- Günün Kitabı bölümünü yönetme.
+- Öne çıkan içerikleri belirleme.
+
+İstatistik Paneli
+
+Gerçek zamanlı olarak gösterilsin:
+
+- Toplam kullanıcı sayısı
+- Aktif kullanıcı sayısı
+- Toplam kitap sayısı
+- Toplam hikâye sayısı
+- Toplam paylaşım sayısı
+- Toplam yorum sayısı
+- Toplam beğeni sayısı
+- Günlük yeni kayıt sayısı
+- Bekleyen destek talepleri
+- Bekleyen şikâyetler
+
+Güvenlik
+
+- Yönetici paneline yalnızca yetkili yönetici hesapları giriş yapabilsin.
+- Tüm yönetici işlemleri kayıt altına alınsın (log sistemi).
+- Yönetici paneli güvenli kimlik doğrulaması ile korunsun.
+
+Tüm yeni özellikler mevcut uygulamanın tasarımını bozmadan entegre edilsin, mobil uyumlu olsun ve gerçek zamanlı çalışsın.

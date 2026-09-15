@@ -1,0 +1,1 @@
+CREATE INDEX "password_reset_tokens_email_created_id_idx" ON "password_reset_tokens" USING btree ("email","created_at" DESC NULLS FIRST,"id" DESC NULLS FIRST);

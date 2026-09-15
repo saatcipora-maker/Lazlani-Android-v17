@@ -1,0 +1,321 @@
+LAZLANİ – MOBİL KLAVYE / INPUT GÖRÜNÜRLÜĞÜ DÜZELTME KOMUTU
+
+Uygulamadaki tüm metin giriş alanlarında mobil klavye açıldığında yazı yazılan alanın klavyenin altında kalması sorununu tamamen düzelt.
+
+Bu sorunu sadece tek bir sayfada değil, uygulamanın tamamında kontrol et ve kalıcı olarak çöz.
+
+ANA SORUN
+
+Kullanıcı telefonda herhangi bir yazı alanına dokunduğunda mobil klavye açılıyor.
+
+Ancak klavye açıldıktan sonra:
+
+- Kullanıcının yazdığı metin görünmüyor.
+- Input / textarea klavyenin altında kalıyor.
+- Yazı yazılan alan ekrandan çıkıyor.
+- Kullanıcı ne yazdığını göremiyor.
+- Sayfa gerektiği kadar yukarı hareket etmiyor.
+- Bazı alanlarda klavye input'un üzerine geliyor.
+
+Bunların tamamını düzelt.
+
+---
+
+1. TÜM INPUT VE TEXTAREA ALANLARINI KONTROL ET
+
+Uygulama içerisindeki bütün yazı yazılan alanları tek tek kontrol et.
+
+Özellikle:
+
+- Paylaşım oluşturma alanı
+- Gönderi yazma alanı
+- Yorum yazma alanı
+- Cevap yazma alanı
+- Giriş yapma alanı
+- Kullanıcı adı / e-posta alanı
+- Şifre alanı
+- Kayıt olma alanları
+- Profil bilgileri
+- Kitap yazma alanları
+- Bölüm yazma alanları
+- Bülten oluşturma alanları
+- Mesajlaşma alanları
+- Sohbet alanları
+- Arama alanları
+- Modal içerisindeki inputlar
+- Popup içerisindeki inputlar
+- Bottom sheet içerisindeki inputlar
+
+ve uygulamada bulunan tüm diğer input, textarea ve contenteditable alanlarını kontrol et.
+
+Hiçbir yazı alanı klavyenin altında kalmamalıdır.
+
+---
+
+2. KLAVYE AÇILDIĞINDA INPUT OTOMATİK OLARAK GÖRÜNMELİ
+
+Kullanıcı herhangi bir input veya textarea alanına dokunduğunda:
+
+1. Mobil klavye açılmalı.
+2. Yazı yazılan alan otomatik olarak görünür konuma gelmeli.
+3. Gerekirse ekran / içerik yukarı doğru kaydırılmalı.
+4. Input klavyenin altında kalmamalı.
+5. Kullanıcı yazdığı metni her zaman görebilmeli.
+
+Örneğin kullanıcı yorum yazıyorsa:
+
+Yorum kutusu → Klavye açılır → Yorum kutusu otomatik yukarı çıkar → Kullanıcı yazdığı yazıyı tamamen görür.
+
+Aynı davranış uygulamadaki bütün yazı alanlarında uygulanmalıdır.
+
+---
+
+3. ŞİFRE ALANLARINI ÖZELLİKLE DÜZELT
+
+Giriş yaparken veya kayıt olurken şifre yazılan alanın klavyenin altında kalması sorununu kesinlikle düzelt.
+
+Kullanıcı:
+
+Şifre alanına dokunduğunda → Klavye açılır → Şifre input'u görünür kalır.
+
+Kullanıcı yazdığı karakterleri rahatça görebilmeli.
+
+Gerekirse form otomatik olarak yukarı kaydırılmalıdır.
+
+---
+
+4. YORUM YAZARKEN
+
+Yorum alanına dokunulduğunda:
+
+- Klavye açılmalı.
+- Yorum yazma alanı klavyenin üzerinde kalmalı.
+- Yazılan metin görünür olmalı.
+- Gönder butonu görünür kalmalı.
+- Kullanıcı uzun yorum yazsa bile textarea düzgün şekilde büyüyebilmeli veya kaydırılabilmeli.
+- Klavye yorum alanının üzerine binmemeli.
+
+Klavye kapatıldığında sayfa eski konumuna düzgün şekilde dönebilmeli.
+
+---
+
+5. PAYLAŞIM OLUŞTURURKEN
+
+Kullanıcı yeni paylaşım oluştururken yazı alanına dokunduğunda:
+
+Klavye açıldığında yazı yazılan belge / alan mutlaka görünür durumda olmalıdır.
+
+Özellikle:
+
+- Gönderi oluşturma
+- Fotoğraf ile paylaşım
+- Yazı paylaşımı
+- Bülten paylaşımı
+- Hikâye / kitap paylaşımı
+
+alanlarını kontrol et.
+
+Kullanıcı yazı yazarken yazdığı satırlar klavyenin altında kaybolmamalıdır.
+
+Uzun metinlerde kullanıcı yazdığı son satırı görebilmelidir.
+
+---
+
+6. MODAL VE POPUP'LARI KONTROL ET
+
+Eğer yazı alanları modal, popup veya bottom sheet içerisinde bulunuyorsa mobil klavye açıldığında modalın tamamı düzgün şekilde yeniden konumlandırılmalıdır.
+
+Şu hata kesinlikle olmamalı:
+
+Modal → Input → Klavye açılır → Input klavyenin altında kalır.
+
+Bunun yerine:
+
+Modal → Input → Klavye açılır → Modal / içerik gerektiği kadar yukarı hareket eder → Input görünür kalır.
+
+---
+
+7. MOBİL VIEWPORT SORUNUNU ÇÖZ
+
+Mobil tarayıcıların klavye açıldığında viewport yüksekliğini değiştirmesinden kaynaklanan sorunları dikkate al.
+
+Özellikle:
+
+- Android Chrome
+- Android WebView
+- iPhone Safari
+- iOS WebView
+
+üzerinde test et.
+
+Sadece "100vh" kullanarak sorunu geçici olarak gizleme.
+
+Gerekirse modern viewport birimlerini kullan:
+
+- "100dvh"
+- "100svh"
+- "100lvh"
+
+ve uygun durumda "window.visualViewport" API'sini kullan.
+
+Klavye açıldığında kullanılabilir gerçek ekran yüksekliğini dikkate al.
+
+---
+
+8. KEYBOARD-AWARE SCROLL SİSTEMİ
+
+Uygulamaya merkezi bir keyboard-aware input/scroll sistemi oluştur.
+
+Her input için birbirinden farklı geçici çözümler yazma.
+
+Ortak bir yapı oluştur ve tüm inputlarda kullan.
+
+Örneğin mantık şu şekilde çalışmalı:
+
+Input focus
+→ Klavye açılmasını algıla
+→ Görünür viewport'u hesapla
+→ Focus olan inputun ekran konumunu hesapla
+→ Klavye ile input arasında yeterli boşluk bırak
+→ Gerekirse container'ı / sayfayı yukarı kaydır
+→ Input tamamen görünür hale gelene kadar kontrol et.
+
+Input klavyenin altında kalıyorsa otomatik olarak tekrar konumlandır.
+
+---
+
+9. SAFE AREA DESTEĞİ
+
+iPhone gibi cihazlarda güvenli alanları da dikkate al.
+
+Gerekli yerlerde:
+
+"env(safe-area-inset-bottom)"
+
+kullan.
+
+Klavye ve alt navigasyon birbirinin üzerine binmemeli.
+
+---
+
+10. ALTTA SABİT INPUT OLAN ALANLAR
+
+Mesajlaşma, sohbet, yorum veya başka bir alanda input ekranın altında sabitse:
+
+- Klavye açıldığında input klavyenin üzerine düzgün şekilde taşınmalı.
+- Input görünür kalmalı.
+- Gönder butonu görünür kalmalı.
+- Mesaj / içerik alanı inputun altında kalmamalı.
+- Klavye kapandığında normal konumuna dönmeli.
+
+---
+
+11. SAYFAYI BOZMA
+
+Bu düzeltmeleri yaparken mevcut Lazlani tasarımını bozma.
+
+Korunması gerekenler:
+
+- Mor ana tasarım
+- Menü
+- Header
+- Profil sistemi
+- Paylaşımlar
+- Kitap sistemi
+- Bültenler
+- Sohbet
+- Yorum sistemi
+- Giriş / kayıt sistemi
+- Mevcut butonlar
+- Mevcut navigasyon
+
+Sadece klavye ve input davranışlarını profesyonel şekilde düzelt.
+
+---
+
+12. ÖNEMLİ: SADECE CSS İLE GEÇİŞTİRME
+
+Bu sorunu sadece "z-index", "position", "margin-bottom" veya rastgele "padding" ekleyerek geçici olarak çözme.
+
+Sorunun gerçek kaynağını tespit et.
+
+Özellikle:
+
+- viewport yüksekliği
+- keyboard resize
+- visual viewport
+- scroll container
+- fixed elementler
+- modal scroll
+- textarea scroll
+- safe area
+- mobile browser davranışı
+
+konularını birlikte değerlendir.
+
+---
+
+13. TEST SENARYOLARI
+
+Düzeltme tamamlandıktan sonra aşağıdaki işlemlerin tamamını test et:
+
+Giriş
+
+- E-posta / kullanıcı adı inputuna dokun.
+- Klavye açıldığında input görünür mü?
+- Şifre alanına geç.
+- Şifre inputu klavyenin altında kalıyor mu?
+
+Kayıt
+
+- Tüm kayıt alanlarını test et.
+- Klavye açıldığında aktif alan görünür mü?
+
+Yorum
+
+- Yorum yaz.
+- Uzun yorum yaz.
+- Yazının son satırı görünür mü?
+- Gönder butonu görünür mü?
+
+Paylaşım
+
+- Yeni paylaşım oluştur.
+- Uzun bir metin yaz.
+- Klavye açıkken yazılan son satır görünür mü?
+
+Bülten
+
+- Bülten oluştur.
+- Yazı alanına dokun.
+- Klavye açıldığında yazı alanı görünür mü?
+
+Kitap
+
+- Kitap oluştur.
+- Bölüm yaz.
+- Uzun metin yaz.
+- Yazılan son bölüm / satır klavyenin altında kalıyor mu?
+
+Sohbet
+
+- Sohbeti aç.
+- Mesaj yazma alanına dokun.
+- Klavye açıldığında mesaj kutusu görünür mü?
+- Mesaj gönderme butonu görünür mü?
+
+---
+
+14. SON KABUL KRİTERİ
+
+Bu görev tamamlanmış sayılmayacak eğer uygulamada tek bir input bile mobil klavye açıldığında klavyenin altında kalıyorsa.
+
+Amaç:
+
+Kullanıcı hangi yazı alanına dokunursa dokunsun, mobil klavye açıldığında aktif olarak yazı yazdığı alan ve yazdığı metin her zaman görünür olmalıdır.
+
+Bu sistemi uygulama genelinde merkezi ve sağlam bir şekilde uygula.
+
+Android + iOS + farklı ekran boyutları + farklı klavye yükseklikleri üzerinde responsive olarak çalışmasını sağla.
+
+Son olarak tüm uygulamayı baştan sona kontrol et, mevcut özellikleri bozmadığından emin ol ve klavye kaynaklı tüm input görünürlük problemlerini tamamen gider.

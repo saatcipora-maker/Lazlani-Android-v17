@@ -1,0 +1,249 @@
+LAZLANI Uygulaması – Yapay Zekâ Geliştirme Komutu
+
+Uygulama Adı: LAZLANI
+
+Modern, hızlı, güvenli, profesyonel ve kullanıcı dostu bir sosyal yazarlık platformu geliştirmeni istiyorum. Uygulamanın tasarımı premium kalitede, estetik, akıcı animasyonlara sahip ve mobil cihazlara tamamen uyumlu olsun.
+
+Genel Amaç
+
+LAZLANI, kullanıcıların tamamen kendilerine ait özgün kitaplar, hikâyeler, şiirler ve yazılar oluşturabilecekleri, paylaşabilecekleri, okuyabilecekleri ve birbirleriyle etkileşim kurabilecekleri kapsamlı bir sosyal edebiyat platformu olacaktır.
+
+Üyelik Sistemi
+
+- Kullanıcılar e-posta veya telefon numarası ile kayıt olabilsin.
+- Güvenli giriş sistemi oluştur.
+- Şifremi unuttum sistemi ekle.
+- Hesap doğrulama sistemi oluştur.
+- Kullanıcı bilgileri güvenli şekilde saklansın.
+
+Profil Sayfası
+
+Her kullanıcının kendisine ait özel bir profil sayfası olsun.
+
+Profil sayfasında:
+
+- Profil fotoğrafı yükleyebilsin.
+- Kapak fotoğrafı yükleyebilsin.
+- Profil açıklaması yazabilsin.
+- Kullanıcı adı belirleyebilsin.
+- Takipçi sayısı
+- Takip edilen sayısı
+- Beğeni sayısı
+- Paylaşım sayısı
+- Yazdığı kitap sayısı
+- Yazdığı hikâye sayısı
+- Yazdığı şiir sayısı görüntülensin.
+
+Tüm fotoğraflar mobil cihazdan seçilebilsin.
+
+Sosyal Paylaşım Sistemi
+
+Kullanıcılar kendi profilinde;
+
+- Yazı paylaşabilsin.
+- Fotoğraf paylaşabilsin.
+- Birden fazla fotoğraf paylaşabilsin.
+- Paylaşımlarını düzenleyebilsin.
+- Paylaşımlarını silebilsin.
+
+Diğer kullanıcılar ise;
+
+- Beğenebilsin.
+- Yorum yapabilsin.
+- Paylaşabilsin.
+- Kaydedebilsin.
+
+Yorumların altında;
+
+- Başka kullanıcılar cevap verebilsin.
+- Yorumlara beğeni bırakabilsin.
+- Alt yorum sistemi (thread) olsun.
+
+Kitap Sistemi
+
+Kullanıcılar;
+
+- Kitap oluşturabilsin.
+- Kitap kapağı yükleyebilsin.
+- Bölüm ekleyebilsin.
+- Bölüm düzenleyebilsin.
+- Bölüm silebilsin.
+- Taslak olarak kaydedebilsin.
+- Yayınlayabilsin.
+
+Diğer kullanıcılar;
+
+- Kitap okuyabilsin.
+- Kitabı beğenebilsin.
+- Yorum yapabilsin.
+- 5 yıldız üzerinden puan verebilsin.
+- Kitabı favorilere ekleyebilsin.
+- Daha sonra okumak için kaydedebilsin.
+
+Hikâye Sistemi
+
+Kitap sistemiyle aynı mantıkta çalışsın.
+
+- Hikâye oluşturma
+- Bölüm ekleme
+- Beğeni
+- Yorum
+- Puanlama
+- Kaydetme
+
+özellikleri eksiksiz olsun.
+
+Şiir Sistemi
+
+Kullanıcılar;
+
+- Şiir paylaşabilsin.
+- Şiirlerine kapak fotoğrafı ekleyebilsin.
+- Şiirler beğenilebilsin.
+- Yorum yapılabilsin.
+- Puanlanabilsin.
+- Kaydedilebilsin.
+
+Takip Sistemi
+
+Kullanıcılar;
+
+- Birbirini takip edebilsin.
+- Takipten çıkabilsin.
+- Profil ziyaret edebilsin.
+
+Ana sayfadaki içerikler takip edilen kişilere göre şekillensin.
+
+Bildirim Sistemi
+
+Gerçek zamanlı bildirim sistemi oluştur.
+
+Bildirimler;
+
+- Beğeni
+- Yorum
+- Yoruma cevap
+- Takip
+- Kitap puanı
+- Kitap yorumu
+- Hikâye yorumu
+- Şiir yorumu
+
+için ayrı ayrı çalışsın.
+
+Mesajlaşma Sistemi
+
+Kullanıcılar birbirine;
+
+- Metin mesajı
+- Fotoğraf
+- Emoji
+
+gönderebilsin.
+
+Okundu bilgisi olsun.
+
+Çevrimiçi durumu görüntülensin.
+
+Kitabı Öne Çıkar Sistemi
+
+Her kitabın üzerinde "Kitabı Öne Çıkar" isimli bir buton oluştur.
+
+Kullanıcı bu butona bastığında;
+
+- Yönetici paneline istek düşsün.
+- Yönetici isteği inceleyebilsin.
+- Onay veya reddedebilsin.
+
+Onaylanan kitaplar otomatik olarak uygulamanın ana sayfasındaki;
+
+- Önerilen Kitaplar
+- Keşfet
+
+bölümlerinde yayınlansın.
+
+Yönetici Paneli
+
+Kapsamlı bir Admin Panel oluştur.
+
+Yönetici;
+
+- Kullanıcıları yönetebilsin.
+- Kitapları yönetebilsin.
+- Hikâyeleri yönetebilsin.
+- Şiirleri yönetebilsin.
+- Paylaşımları yönetebilsin.
+- Gelen "Kitabı Öne Çıkar" isteklerini onaylayabilsin.
+- Kullanıcı engelleyebilsin.
+- İçerik silebilsin.
+- İstatistikleri görebilsin.
+- Raporlanan içerikleri inceleyebilsin.
+
+Arama Sistemi
+
+Gelişmiş arama oluştur.
+
+Arama yapılabilsin;
+
+- Kullanıcı
+- Kitap
+- Hikâye
+- Şiir
+- Etiket
+- Kategori
+
+üzerinden.
+
+Ana Sayfa
+
+Ana sayfada;
+
+- Önerilen Kitaplar
+- Popüler Hikâyeler
+- En Çok Okunanlar
+- Yeni Eklenenler
+- Editörün Seçimi
+- Trend İçerikler
+- Takip Ettiklerin
+
+bölümleri bulunsun.
+
+Tasarım
+
+Paylaşacağım referans uygulamanın tasarımını detaylı şekilde analiz et.
+
+Ancak birebir kopyalama.
+
+Referans tasarımı;
+
+- ilham kaynağı olarak kullan.
+
+Benzer kullanıcı deneyimini;
+
+- daha modern,
+- daha premium,
+- daha estetik,
+- daha hızlı,
+- daha akıcı,
+- daha profesyonel,
+- daha kullanışlı
+
+şekilde yeniden tasarla.
+
+Teknik Özellikler
+
+- Modern yazılım mimarisi kullan.
+- Hızlı yükleme süreleri sağla.
+- Güvenlik ön planda olsun.
+- SQL Injection, XSS, CSRF gibi saldırılara karşı koruma ekle.
+- Tüm sayfalar mobil uyumlu olsun.
+- Performans optimizasyonu yap.
+- Temiz ve ölçeklenebilir kod yaz.
+- Modüler mimari kullan.
+- Kodlar açıklamalı ve sürdürülebilir olsun.
+
+Sonuç
+
+LAZLANI uygulamasını; sosyal medya, dijital kütüphane, yazarlık platformu ve topluluk deneyimini tek çatı altında birleştiren, günümüz standartlarının üzerinde, premium kaliteye sahip, modern, hızlı, güvenli ve kullanıcı deneyimi açısından üst düzey bir platform olarak geliştir.
+
+Ben daha sonra referans uygulamanın ekran görüntülerini paylaşacağım. O ekranları ayrıntılı analiz ederek aynı mantığı koru ancak tasarımı daha şık, daha kullanışlı ve daha profesyonel hale getir.

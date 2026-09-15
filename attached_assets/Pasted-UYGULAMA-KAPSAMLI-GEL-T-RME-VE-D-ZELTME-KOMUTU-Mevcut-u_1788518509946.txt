@@ -1,0 +1,479 @@
+UYGULAMA KAPSAMLI GELİŞTİRME VE DÜZELTME KOMUTU
+
+Mevcut uygulamanın hiçbir mevcut özelliğini silmeden, bozmadan veya devre dışı bırakmadan aşağıdaki tüm özellikleri eksiksiz şekilde geliştir ve gerçekten çalışan bir sistem olarak uygula.
+
+1. TÜM KİTAP KAPAKLARINI STANDARTLAŞTIR
+
+Uygulamanın tamamında bulunan bütün kitap kapak fotoğrafları, Ana Sayfadaki kitap kapaklarının tasarım ve görünüm mantığıyla tamamen aynı şekilde gösterilsin.
+
+Bu kural şunların tamamında geçerli olsun:
+
+- Ana sayfa
+- Tüm kitaplar
+- Tüm yazarlar
+- Kitap detay sayfası
+- Yazar profilindeki kitaplar
+- Arama sonuçları
+- Kategori sayfaları
+- Önerilen kitaplar
+- Yeni bölüm yayınlanan kitaplar
+- Kullanıcının kitapları
+- Yönetim panelindeki kitap önizlemeleri
+- Bildirimlerden açılan kitaplar
+- Her türlü kitap listesi ve kitap kartı
+
+Ana Sayfadaki kapak görünümü tek standart tasarım olarak kabul edilsin.
+
+Bir kitap farklı bir sayfada görüntülendiğinde farklı boyut, farklı çerçeve, farklı oran veya farklı tasarım kullanılmasın.
+
+Kitap kapaklarının görüntü oranı bozulmasın, fotoğraflar ezilmesin veya gereksiz şekilde kırpılmasın.
+
+Mevcut kitap kapağı tasarımında bulunan yazar adı, kategori ve diğer görsel kurallar aynen korunsun.
+
+---
+
+2. TÜM YAZARLAR – GERÇEK ZAMANLI YENİ BÖLÜM SİSTEMİ
+
+“Tüm Yazarlar” bölümünü gerçek zamanlı çalışan bir sisteme dönüştür.
+
+Bir yazar kendi kitabına yeni bölüm yayınladığında:
+
+1. Bölüm veritabanına kaydedilsin.
+2. Bölüm yayınlanır yayınlanmaz sistem tarafından gerçek zamanlı olarak algılansın.
+3. Tüm kullanıcılar yeni bölümün yayınlandığını görebilsin.
+4. Kitabın ilgili bölüm sayısı anında güncellensin.
+5. Kitap detay sayfası gerçek zamanlı güncellensin.
+6. Yazarın kitap sayfası gerçek zamanlı güncellensin.
+7. Ana sayfada gerekiyorsa “Yeni Bölüm” etiketi gösterilsin.
+8. Kullanıcılara yeni bölüm bildirimi gönderilsin.
+
+Sayfa yenilemeye gerek kalmadan yeni bölüm bilgisi kullanıcı ekranına ulaşsın.
+
+Gerçek zamanlı sistem bağlantısı koparsa otomatik yeniden bağlanma mekanizması oluştur.
+
+---
+
+3. YENİ BÖLÜM BİLDİRİMLERİ
+
+Bir yazar yeni bölüm yayınladığında sistem kullanıcılara bildirim gönderebilsin.
+
+Bildirim içerisinde:
+
+- Kitap adı
+- Yazar adı
+- “Yeni bölüm yayınlandı” bilgisi
+- Bölüm numarası veya bölüm adı
+- Kitap kapağı
+
+gösterilsin.
+
+Kullanıcı bildirime tıkladığında doğrudan ilgili kitabın yeni bölümüne yönlendirilsin.
+
+Bildirim sistemi gerçek zamanlı çalışsın.
+
+Aynı bölüm için aynı kullanıcıya gereksiz şekilde tekrar tekrar bildirim gönderilmesini engelle.
+
+Bildirim okunduğunda okunmamış bildirim sayısı doğru şekilde güncellensin.
+
+---
+
+4. KİTAP ÜZERİNDE “ÖNER” BUTONU
+
+Tüm kitap yazarlarının kendi kitaplarını uygulama içerisinde ücretli olarak önerebilmesi için kitap üzerinde “Öner” butonu oluştur.
+
+“Öner” butonu kitap kartında ve/veya kitap detay sayfasında görünür şekilde yer alsın.
+
+Butona basıldığında kullanıcıya öneri süresi seçenekleri gösterilsin:
+
+- 3 Gün
+- 5 Gün
+- 1 Hafta
+- 1 Ay
+
+Her seçeneğin yanında otomatik olarak hesaplanan fiyat gösterilsin.
+
+---
+
+5. ÖNERİ FİYATLANDIRMA SİSTEMİ
+
+Öneri fiyatları sistem tarafından otomatik hesaplanabilsin.
+
+Fiyatlandırma:
+
+- Minimum fiyat: 50 TL
+- Maksimum fiyat: 100 TL
+
+olacak şekilde yapılandırılsın.
+
+Öneri süresine göre fiyat otomatik belirlensin.
+
+Varsayılan fiyatlandırmayı şu şekilde uygula:
+
+- 3 Gün → 50 TL
+- 5 Gün → 60 TL
+- 1 Hafta → 75 TL
+- 1 Ay → 100 TL
+
+Bu fiyatlar sabit kod içine gömülmesin.
+
+Yönetim panelinden yönetilebilir bir fiyatlandırma sistemi oluştur.
+
+Yönetici daha sonra:
+
+- Süreleri
+- Fiyatları
+- Minimum fiyatı
+- Maksimum fiyatı
+
+değiştirebilsin.
+
+Fiyat değiştirildiğinde yeni taleplerde otomatik olarak güncel fiyat kullanılsın.
+
+---
+
+6. ÖNERİ TALEBİ OLUŞTURMA
+
+Kullanıcı kitabı için bir öneri paketi seçtiğinde:
+
+- Kitap ID
+- Kitap adı
+- Yazar ID
+- Yazar adı
+- Seçilen süre
+- Başlangıç tarihi
+- Bitiş tarihi
+- Ücret
+- Talep tarihi
+- Talep durumu
+
+veritabanına kaydedilsin.
+
+Talep başlangıçta:
+
+“Yönetici Onayı Bekliyor”
+
+durumunda olsun.
+
+Kullanıcı talep oluşturduğunda yönetim paneline anında yeni talep bildirimi düşsün.
+
+---
+
+7. YÖNETİM PANELİ – ÖNERİ TALEPLERİ
+
+Yönetim paneline özel:
+
+“Kitap Öneri Talepleri”
+
+bölümü ekle.
+
+Yönetici burada bütün öneri taleplerini görebilsin.
+
+Her talepte:
+
+- Kitap kapağı
+- Kitap adı
+- Yazar adı
+- Kullanıcı/yazar bilgisi
+- Öneri süresi
+- Ücret
+- Talep tarihi
+- Başlangıç/bitiş tarihi
+- Talep durumu
+
+gösterilsin.
+
+Yönetici iki işlem yapabilsin:
+
+ONAYLA
+
+Yönetici “Onayla” dediğinde:
+
+- Talep onaylansın.
+- Kitap önerilen kitaplar sistemine eklensin.
+- Belirlenen başlangıç tarihinde öneri aktif hale gelsin.
+- Kitap Ana Sayfadaki “Önerilen Kitaplar” alanında gösterilsin.
+- Kitap, belirlenen süre boyunca önerilen kitaplar arasında kalsın.
+- Süre dolduğunda otomatik olarak önerilen kitaplar alanından çıkarılsın.
+- Kitabın normal kitap olarak uygulamadaki varlığı devam etsin.
+
+REDDET
+
+Yönetici “Reddet” dediğinde:
+
+- Talep reddedilsin.
+- Önerilen kitaplar bölümüne kesinlikle eklenmesin.
+- Talep durumu “Reddedildi” olarak kaydedilsin.
+- Kullanıcı/yazar talebinin reddedildiğini görebilsin.
+
+Mümkünse yönetici reddetme sırasında bir red nedeni yazabilsin.
+
+---
+
+8. ÖNERİLEN KİTAPLARIN ANA SAYFADA GÖSTERİLMESİ
+
+Onaylanan kitaplar Ana Sayfadaki “Önerilen Kitaplar” bölümünde gösterilsin.
+
+Önerilen kitap:
+
+- Ana Sayfadaki kitap kapağı tasarımıyla tamamen aynı olsun.
+- Kitap kapağı bozulmasın.
+- Kitabın öneri süresi aktif olduğu sürece görünür olsun.
+- Süresi dolduğunda otomatik olarak kaldırılmış olsun.
+
+Önerilen kitapların sıralaması sistem tarafından yönetilebilir olsun.
+
+Yönetim panelinden gerekirse önerilen kitapların öncelik sırası değiştirilebilsin.
+
+---
+
+9. ÖDEME VE ONAY AKIŞI
+
+Öneri ücretli olduğu için güvenli ödeme sistemi oluştur.
+
+Ödeme başarılı olmadan öneri talebi aktif hale gelmesin.
+
+Ödeme durumu ile yönetici onay durumunu birbirinden ayrı tut:
+
+- Ödeme Bekleniyor
+- Ödeme Başarılı
+- Ödeme Başarısız
+- Yönetici Onayı Bekliyor
+- Onaylandı
+- Reddedildi
+- Aktif
+- Süresi Doldu
+
+gibi durumlar kullanılabilsin.
+
+Önemli: Ödeme işlemlerinde kart bilgileri veya hassas ödeme verileri uygulamanın kendi veritabanında saklanmasın. Güvenli ve uygun ödeme altyapısı kullan.
+
+---
+
+10. TOPLULUK SOHBETİ – KLAVYE VE MESAJ YAZMA SORUNUNU TAMAMEN ÇÖZ
+
+Uygulamadaki Topluluk Sohbeti bölümünde kullanıcılar mesaj yazamıyor çünkü mesaj yazma alanı ekranın altında kalıyor.
+
+Bu problemi tamamen çöz.
+
+Mesaj yazma alanı:
+
+- Ekranın altında sabit ve erişilebilir olsun.
+- Android cihazlarda düzgün çalışsın.
+- Küçük ekranlarda düzgün çalışsın.
+- Büyük ekranlarda düzgün çalışsın.
+- Farklı ekran çözünürlüklerinde düzgün çalışsın.
+- Dikey ekranda düzgün çalışsın.
+- Klavye açıldığında mesaj yazma alanı klavyenin arkasında kalmasın.
+- Klavye açıldığında sohbet ekranı otomatik olarak uygun şekilde yeniden boyutlandırılsın.
+- Kullanıcı yazı alanını her zaman görebilsin.
+- Gönder butonu klavyenin arkasında kalmasın.
+- Son mesaja ulaşmak için gereksiz kaydırma gerekmemeli.
+
+Kullanıcı mesaj yazmaya başladığında mesaj giriş alanı görünür kalmalı.
+
+Klavye kapandığında sohbet ekranı normal boyutuna dönmeli.
+
+Farklı Android cihaz ve ekran oranlarında responsive şekilde çalışmalı.
+
+---
+
+11. TOPLULUK SOHBETİ KULLANICI DENEYİMİ
+
+Mesaj yazma alanında:
+
+“Mesaj yaz...”
+
+placeholder'ı bulunabilir.
+
+Gönder butonu aktif ve kolay erişilebilir olsun.
+
+Mesaj gönderildiğinde:
+
+- Mesaj gerçek zamanlı olarak sohbete düşsün.
+- Kullanıcı kendi gönderdiği mesajı anında görsün.
+- Diğer kullanıcılar da mesajı gerçek zamanlı görsün.
+- Sayfayı yenilemeye gerek kalmasın.
+
+Yeni mesaj geldiğinde sohbet sistemi gerçek zamanlı güncellensin.
+
+---
+
+12. RESPONSIVE TASARIM KURALI
+
+Tüm uygulama mobil öncelikli ve responsive olarak çalışmalı.
+
+Özellikle:
+
+- Android telefonlar
+- Küçük ekranlı telefonlar
+- Büyük ekranlı telefonlar
+- Farklı ekran oranları
+- Farklı çözünürlükler
+- Sistem yazı boyutu değişiklikleri
+- Ekran döndürme durumları
+- Sanal klavye açık/kapalı durumları
+
+test edilerek düzenlenmeli.
+
+Hiçbir buton, input, kitap kapağı, menü veya mesaj alanı ekranın dışına taşmamalı.
+
+---
+
+13. GERÇEK ZAMANLI VERİ SİSTEMİ
+
+Yeni bölüm, mesaj, bildirim, öneri talebi, öneri onayı ve benzeri işlemlerde mümkün olan her yerde gerçek zamanlı veri güncellemesi kullan.
+
+Kullanıcının sayfayı sürekli yenilemesine ihtiyaç bırakma.
+
+Gerçek zamanlı bağlantı kesilirse:
+
+- bağlantıyı algıla,
+- otomatik yeniden bağlan,
+- veri senkronizasyonunu gerçekleştir,
+- kullanıcı verilerini kaybetme.
+
+---
+
+14. YÖNETİCİ YETKİLERİ
+
+En üst düzey yönetici tüm sistem üzerinde tam yetkiye sahip olsun.
+
+Yönetici:
+
+- Öneri taleplerini görüntüleyebilsin.
+- Onaylayabilsin.
+- Reddedebilsin.
+- Fiyatları değiştirebilsin.
+- Öneri sürelerini değiştirebilsin.
+- Aktif önerileri görebilsin.
+- Süresi dolan önerileri görebilsin.
+- Önerilen kitapları manuel olarak kaldırabilsin.
+- Önerilen kitapların sırasını değiştirebilsin.
+- Yeni bölüm sistemini takip edebilsin.
+- Bildirim sistemini yönetebilsin.
+- Topluluk sohbetini yönetebilsin.
+
+Mevcut yönetici yetki sistemi varsa bunu bozma; yeni özellikleri mevcut yetki mimarisine entegre et.
+
+---
+
+15. VERİTABANI VE GÜVENLİK
+
+Tüm yeni sistemleri düzgün ilişkisel veri yapısıyla oluştur.
+
+Öneri sistemi için gerekli tablolar/koleksiyonlar oluştur.
+
+Örneğin:
+
+- book_promotions
+- promotion_requests
+- promotion_pricing
+- notifications
+- chapters
+
+gibi uygun veri yapıları kullanılabilir.
+
+Ancak mevcut veritabanı yapısını kontrol et ve aynı işlevi yapan mevcut tablolar varsa gereksiz yeni tablolar oluşturma.
+
+Kullanıcıların başka kullanıcıların öneri taleplerini değiştirmesini engelle.
+
+Sadece yetkili yönetici öneri taleplerini onaylayabilsin veya reddedebilsin.
+
+Kullanıcı kendi kitabı dışında başka bir kitabı sahipliği olmadan ücretli olarak önerememeli.
+
+Tüm kritik işlemleri sunucu tarafında doğrula.
+
+---
+
+16. BİLDİRİM MERKEZİ
+
+Yeni bölüm yayınlandığında ilgili bildirimler bildirim merkezine düşsün.
+
+Öneri talebi oluşturulduğunda kullanıcıya durum bildirimi gönderilebilsin.
+
+Öneri yönetici tarafından onaylandığında kullanıcıya:
+
+“Kitabınız öneri için onaylandı.”
+
+bildirimi gönder.
+
+Reddedildiğinde:
+
+“Kitabınızın öneri talebi reddedildi.”
+
+bildirimi gönder.
+
+Bildirimlerin okunma durumu gerçek zamanlı güncellensin.
+
+---
+
+17. MEVCUT ÖZELLİKLERİ KORU
+
+Bu geliştirmeleri yaparken uygulamada şu anda çalışan hiçbir özelliği kaldırma.
+
+Mevcut:
+
+- Kullanıcı sistemi
+- Kitap sistemi
+- Yazar sistemi
+- Bölüm sistemi
+- Ana sayfa
+- Profil sistemi
+- Bildirim sistemi
+- Beğeni sistemi
+- Yorum sistemi
+- Paylaşım sistemi
+- Sohbet sistemi
+- Premium sistemi
+- Yönetim paneli
+- Tema sistemi
+- Dil sistemi
+- Diğer mevcut özellikler
+
+bozulmadan korunmalı.
+
+Yeni özellikleri mevcut sistemlerle entegre et.
+
+---
+
+18. SON TEST VE HATA KONTROLÜ
+
+Kodlamayı tamamladıktan sonra bütün sistemi test et.
+
+Özellikle şu senaryoları tek tek test et:
+
+1. Yazar yeni bölüm yayınlıyor.
+2. Tüm kullanıcıların ekranında yeni bölüm görünüyor.
+3. Kullanıcılara bildirim geliyor.
+4. Bildirime tıklanınca doğru kitaba/bölüme gidiliyor.
+5. Yazar kitabında “Öner” butonuna basıyor.
+6. 3 gün / 5 gün / 1 hafta / 1 ay seçenekleri açılıyor.
+7. Fiyatlar doğru gösteriliyor.
+8. Öneri talebi oluşturuluyor.
+9. Yönetim paneline talep geliyor.
+10. Yönetici talebi onaylıyor.
+11. Onaylanan kitap Önerilen Kitaplar bölümünde görünüyor.
+12. Belirlenen süre sonunda kitap otomatik olarak önerilerden kaldırılıyor.
+13. Yönetici talebi reddedebiliyor.
+14. Kullanıcı red durumunu görebiliyor.
+15. Topluluk sohbetine giriliyor.
+16. Mesaj yazma alanına klavye açıldığında erişilebiliyor.
+17. Gönder butonu klavyenin arkasında kalmıyor.
+18. Mesaj gerçek zamanlı gönderiliyor.
+19. Diğer kullanıcı mesajı gerçek zamanlı görüyor.
+20. Farklı Android ekranlarında hiçbir UI öğesi ekranın altında kalmıyor.
+21. Tüm kitap kapakları uygulamanın her yerinde Ana Sayfadaki standart görünümle aynı oluyor.
+
+Herhangi bir hata tespit edilirse sadece hatayı gizleme; hatanın temel nedenini bul ve kalıcı olarak düzelt.
+
+SON TALİMAT
+
+Bu özelliklerin hiçbirini sadece görsel/demo olarak oluşturma.
+
+Butonlar gerçekten çalışmalı, veriler gerçekten kaydedilmeli, yönetici onayı gerçekten uygulanmalı, süreler gerçekten takip edilmeli, bildirimler gerçekten gönderilmeli, gerçek zamanlı güncellemeler gerçekten çalışmalı ve sohbet mesaj yazma alanı tüm desteklenen cihazlarda sorunsuz kullanılabilmelidir.
+
+Uygulamayı üretime hazır, güvenli, mobil uyumlu, responsive ve hatasız şekilde geliştir.
+
+Kod içerisinde gereksiz örnek/demo verileri bırakma.
+
+Mevcut özellikleri bozmadan önce mevcut mimariyi analiz et, ardından yeni sistemleri mevcut yapıya güvenli şekilde entegre et.

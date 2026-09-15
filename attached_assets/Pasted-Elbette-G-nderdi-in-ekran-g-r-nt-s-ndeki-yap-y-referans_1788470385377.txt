@@ -1,0 +1,263 @@
+Elbette. Gönderdiğin ekran görüntüsündeki yapıyı referans alarak bunu doğrudan uygulamayı geliştiren yapay zekâya verebileceğin net ve kapsamlı bir komut haline getirdim:
+
+
+---
+
+📱 UYGULAMA DÜZELTME VE MOBİL UYUMLULUK KOMUTU
+
+Gönderdiğim ekran görüntüsünü birebir referans alarak aşağıdaki düzenlemeleri uygula. Mevcut tasarımı bozma; yalnızca belirttiğim alanlarda düzenleme yap. Tüm değişiklikler Android telefonlar, küçük ve büyük ekranlı mobil cihazlar ve farklı ekran oranlarında responsive çalışmalıdır.
+
+1. SOHBET MESAJ YAZMA ALANI
+
+Sohbet ekranının en altında bulunan mesaj yazma bölümünü yaklaşık 3 cm yukarı taşı.
+
+Mesaj yazma alanı ekranın en altında kaybolmayacak.
+
+Mesaj yazma kutusu sürekli erişilebilir ve görünür olacak.
+
+Alt Android navigasyon çubuğunun arkasında kalmayacak.
+
+Mesaj yazma alanı ekranın altına yapışıp görünmez hale gelmeyecek.
+
+Görseldeki mevcut mesaj yazma alanının tasarımını mümkün olduğunca koru.
+
+Sadece konumunu düzelt.
+
+
+2. KLAVYE AÇILDIĞINDA
+
+Bu özellikle çok önemli:
+
+Kullanıcı mesaj yazma kutusuna dokunduğunda Android klavyesi açılırsa:
+
+Mesaj yazma alanı kesinlikle klavyenin arkasında kalmayacak.
+
+Klavyenin açılmasıyla birlikte:
+
+Sohbet ekranı otomatik olarak yukarı doğru yeniden konumlandırılacak.
+
+Mesaj yazma kutusu klavyenin hemen üzerinde görünür kalacak.
+
+Kullanıcı yazdığı mesajı ve mesaj yazma alanını görebilecek.
+
+Klavye açıldığında sohbet ekranı bozulmayacak.
+
+Mesaj yazma alanı ekranın altından kaybolmayacak.
+
+Son mesajlara otomatik olarak uygun şekilde scroll yapılabilecek.
+
+Klavye kapatıldığında sohbet ekranı tekrar normal konumuna dönecek.
+
+
+Android adjustResize / keyboard insets / safe-area mantığını doğru şekilde kullan.
+
+Özellikle şu hatanın oluşmasına izin verme:
+
+> Kullanıcı mesaj yazma alanına tıklar → klavye açılır → mesaj yazma alanı klavyenin altında kalır ve kullanıcı yazdığı yeri göremez.
+
+
+
+Bu sorun tamamen giderilecek.
+
+3. SOHBET EKRANINDA ALT ALAN
+
+Mesaj yazma alanının bulunduğu alt bölüm:
+
+Safe area'yı dikkate alacak.
+
+Android sistem navigasyon alanıyla çakışmayacak.
+
+Klavye açıkken klavyenin üzerine taşınacak.
+
+Küçük ekranlı telefonlarda da tamamen görünür olacak.
+
+Yatay/dikey ekran değişimlerinde düzgün çalışacak.
+
+
+3 cm yukarı taşıma sabit bir cihaz pikseli olarak değil, responsive bir mesafe mantığıyla uygulanmalı. Farklı ekranlarda aynı görsel sonucu verecek şekilde ayarla.
+
+
+---
+
+🏠 4. ANA SAYFADAN SOHBET BUTONUNU KALDIR
+
+Uygulamanın ana sayfasında bulunan sohbet butonunu tamamen kaldır.
+
+Ana sayfada sohbet butonu:
+
+görünmeyecek,
+
+boş alan bırakmayacak,
+
+tıklanabilir gizli bir alan olmayacak,
+
+mobil ve masaüstü görünümünde gösterilmeyecek.
+
+
+Sohbet özelliği uygulamanın diğer gerekli bölümlerinden çalışmaya devam edecek; sadece ana sayfadaki sohbet butonu kaldırılacak.
+
+
+---
+
+🏠 5. ANA SAYFA SADECE KİTAPLAR
+
+Ana sayfanın içeriğini sadeleştir.
+
+Ana sayfada yalnızca Kitaplar bölümü/kategorisi yer alacak.
+
+Ana sayfadan aşağıdaki içerikleri kaldır:
+
+Sohbet butonu
+
+Sohbet mesajları
+
+Bültenlerde görünen yazılmış mesajlar
+
+Kullanıcıların sohbet mesajları
+
+Ana sayfanın en altında görünen mesaj listeleri
+
+Kitaplarla ilgisi olmayan diğer sohbet içerikleri
+
+
+Ana sayfa aşağı doğru kaydırıldığında da kullanıcıların yazdığı sohbet mesajları kesinlikle görünmeyecek.
+
+
+---
+
+📚 6. ANA SAYFA YAPISI
+
+Ana sayfanın temel amacı kitapları göstermek olacak.
+
+Ana sayfada:
+
+📚 KİTAPLAR
+
+kategorisi/bölümü bulunacak.
+
+Kitaplar dışında ana sayfaya sohbet veya mesaj akışı ekleme.
+
+Bültenler bölümünde veya ana sayfanın alt kısmında otomatik olarak sohbet mesajlarının görünmesini de tamamen engelle.
+
+
+---
+
+🚫 7. BÜLTENLERDEKİ MESAJLARI ANA SAYFADAN KALDIR
+
+Şu anda ana sayfanın en altında kullanıcıların yazdığı mesajlar/bülten içerikleri görünüyorsa:
+
+Bunların ana sayfada gösterilmesini tamamen kaldır.
+
+Kitaplar bölümünün altına:
+
+sohbet mesajları,
+
+kullanıcı mesajları,
+
+bülten mesajları,
+
+mesaj akışı
+
+
+eklenmeyecek.
+
+Ana sayfanın sonunda kitap içerikleri bittikten sonra mesaj listesi başlamayacak.
+
+
+---
+
+🔧 8. ÖNEMLİ KORUMA KURALI
+
+Bu değişiklikleri yaparken uygulamanın mevcut:
+
+kullanıcı hesaplarını,
+
+kitaplarını,
+
+kitap kapaklarını,
+
+profil sistemini,
+
+sohbet sistemini,
+
+mesaj gönderme sistemini,
+
+bildirim sistemini,
+
+admin panelini,
+
+diğer mevcut özelliklerini
+
+
+bozma.
+
+Sadece istediğim UI/UX düzenlemelerini gerçekleştir.
+
+
+---
+
+✅ SONUÇ
+
+Değişikliklerden sonra:
+
+Sohbet ekranı:
+
+Mesajlar → Mesaj yazma alanı yaklaşık 3 cm yukarıda → Klavye açıldığında mesaj yazma alanı klavyenin üzerinde görünür
+
+Ana sayfa:
+
+Kitaplar
+
+ve yalnızca kitaplarla ilgili içerikler gösterilecek.
+
+Ana sayfada:
+
+❌ Sohbet butonu
+❌ Sohbet mesajları
+❌ Bülten mesajları
+❌ Sayfanın altında kullanıcı mesajları
+
+olmayacak.
+
+KRİTİK TEST
+
+Değişiklikleri tamamladıktan sonra özellikle Android mobil cihazlarda test et:
+
+1. Ana sayfayı aç.
+
+
+2. Sadece kitapların göründüğünü kontrol et.
+
+
+3. Ana sayfada sohbet butonunun olmadığını kontrol et.
+
+
+4. Sayfanın en altında mesajların görünmediğini kontrol et.
+
+
+5. Sohbet ekranına gir.
+
+
+6. Mesaj yazma alanının yaklaşık 3 cm yukarı taşındığını kontrol et.
+
+
+7. Mesaj yazma alanına dokun.
+
+
+8. Klavyeyi aç.
+
+
+9. Klavye açıkken mesaj yazma alanının hâlâ tamamen görünür olduğunu doğrula.
+
+
+10. Uzun mesaj yazıp gönder.
+
+
+11. Klavyeyi kapat.
+
+
+12. Sohbet ekranının tekrar düzgün konumlandığını kontrol et.
+
+
+
+Hiçbir durumda mesaj yazma alanı klavyenin arkasında veya ekranın dışında kalmamalıdır.

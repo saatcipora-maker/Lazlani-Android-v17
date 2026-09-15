@@ -1,0 +1,118 @@
+LAZLANİ – SOHBET BUTONU VE TAM EKRAN SOHBET ENTEGRASYON KOMUTU
+
+Mevcut Lazlani uygulamasındaki “Sohbet” butonunu, aşağıdaki Minnit sohbet adresine entegre et:
+
+"Lazlani Minnit Sohbeti" (https://reference-url-citation.invalid/1)
+
+1. SOHBET BUTONU
+
+Mevcut tasarımın genel yapısını ve simetrisini bozma.
+
+- “Sohbet” butonu mevcut menüde düzgün ve simetrik şekilde yer alsın.
+- Kullanıcı “Sohbet” butonuna tıkladığında Lazlani sohbet alanı açılsın.
+- Sohbet ayrı bir küçük pencere, dar kutu veya sayfanın içinde sıkışmış bir iframe olarak görünmesin.
+- Sohbet açıldığında tam ekran sohbet arayüzü olarak gösterilsin.
+
+2. TAM EKRAN SOHBET
+
+Sohbet açıldığı anda:
+
+- Sohbet alanı ekranın tamamını kaplasın.
+- Sağda, solda, üstte veya altta gereksiz boşluk bırakma.
+- Mobil cihazlarda da tam ekran ve responsive çalışsın.
+- Telefon, tablet ve bilgisayarda ekran boyutuna otomatik uyum sağlasın.
+- Sohbet içeriği ekranın dışına taşmasın.
+- Yatay kaydırma oluşmasın.
+- Header, mesaj alanı ve mesaj yazma alanı düzgün şekilde hizalansın.
+- Kullanıcının sohbet ekranına girdiğinde doğrudan aktif sohbet içeriğini görebilmesi sağlansın.
+
+3. MESAJ YAZMA ALANI
+
+En önemli gereksinim:
+
+Sohbet ekranının en altında bulunan mesaj yazma / mesaj gönderme alanı tüm kullanıcılar tarafından görünür ve erişilebilir olmalıdır.
+
+Bunun için:
+
+- Mesaj yazma kutusunu ekranın en altında sabit ve düzgün konumlandır.
+- Mesaj yazma alanı hiçbir kullanıcıda ekranın altında kaybolmasın.
+- Klavye açıldığında mobil cihazlarda mesaj yazma alanı klavyenin altında kalmasın.
+- Mesaj gönderme butonu her zaman görünür ve kullanılabilir olsun.
+- Mesaj yazma alanı sohbet mesajlarının üzerine hatalı şekilde binmesin.
+- Mesaj listesi ile mesaj yazma alanı arasında doğru bir responsive yapı oluştur.
+- Kullanıcı uzun sohbet geçmişinde yukarı/aşağı kaydırsa bile mesaj yazma alanı kullanılabilir durumda kalsın.
+
+4. RESPONSIVE VE SİMETRİ
+
+Tasarımı bütün cihazlarda kontrol et:
+
+Mobil:
+
+- iPhone ve Android ekranlarına uyumlu.
+- Küçük ekranlarda taşma olmayacak.
+- Klavye açıldığında mesaj kutusu görünür kalacak.
+- Butonlar parmakla rahat kullanılabilecek büyüklükte olacak.
+
+Tablet:
+
+- Sohbet alanı ekranı dengeli şekilde dolduracak.
+
+Masaüstü:
+
+- Sohbet alanı tam ekran çalışacak.
+- İçerik sağa/sola kaymayacak.
+- Gereksiz boşluk bırakılmayacak.
+
+5. MEVCUT LAZLANİ TASARIMINI KORU
+
+Sohbet entegrasyonunu yaparken Lazlani'nin mevcut:
+
+- Mor ana tasarımını,
+- Menü yapısını,
+- Header yapısını,
+- Kullanıcı profil sistemini,
+- Diğer butonlarını,
+- Sayfa düzenini
+
+bozma.
+
+Sadece Sohbet butonunun işlevini ve açılan sohbet ekranını profesyonel şekilde düzenle.
+
+6. TEKNİK GEREKSİNİMLER
+
+Minnit sohbetini mevcut uygulamaya güvenli ve düzgün şekilde entegre et.
+
+Sohbet açıldığında:
+
+Sohbet butonu → Lazlani Minnit sohbeti → Tam ekran sohbet → Mesaj listesi → En altta sabit mesaj yazma alanı
+
+akışı eksiksiz çalışmalıdır.
+
+Iframe veya uygun entegrasyon yöntemi kullanılıyorsa:
+
+- "width: 100%"
+- "height: 100%"
+- "position" ve "overflow" değerlerini responsive yapıya uygun ayarla.
+- Mobil viewport sorunlarını dikkate al.
+- Sohbet ekranının sayfanın altında kesilmesini engelle.
+- Gereksiz scrollbar oluşmasını engelle.
+- Mesaj yazma alanının görünürlüğünü garanti altına al.
+
+7. SON KONTROL
+
+Entegrasyon tamamlandıktan sonra aşağıdaki senaryoları test et:
+
+1. Kullanıcı Sohbet butonuna tıklıyor → sohbet açılıyor.
+2. Sohbet tam ekran açılıyor.
+3. Sohbet mesajları düzgün görünüyor.
+4. En alttaki mesaj yazma alanı görünüyor.
+5. Mesaj yazılabiliyor.
+6. Mesaj gönderilebiliyor.
+7. Mobil klavye açıldığında mesaj kutusu kaybolmuyor.
+8. Telefon ekranında yatay taşma oluşmuyor.
+9. Tablet ekranında düzgün görünüyor.
+10. Masaüstünde tam ekran ve simetrik görünüyor.
+11. Sohbetten çıkış/geri dönüş işlemi mevcut Lazlani navigasyonunu bozmuyor.
+12. Hiçbir mevcut Lazlani özelliği bu entegrasyondan dolayı bozulmuyor.
+
+Sonuç: Bana sadece çalışan, responsive, simetrik ve hatasız şekilde entegre edilmiş Lazlani sohbet sistemini hazırla. Özellikle tam ekran sohbet ve tüm kullanıcıların görebileceği en alttaki mesaj yazma alanı kesinlikle eksiksiz çalışmalıdır.

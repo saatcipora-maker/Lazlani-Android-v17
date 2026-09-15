@@ -1,0 +1,541 @@
+🔴 UYGULAMA İÇİN ZORUNLU GELİŞTİRME VE SİSTEM KOMUTU
+
+BU KOMUTTA BELİRTİLEN TÜM ÖZELLİKLERİ EKSİKSİZ UYGULA. HİÇBİR ÖZELLİĞİ ATLAMA, KALDIRMA, DEVRE DIŞI BIRAKMA VEYA SADECE GÖRSEL OLARAK EKLEME. TÜM BUTONLAR VE TÜM SİSTEMLER GERÇEKTEN ÇALIŞIR DURUMDA OLMALIDIR.
+
+1. KEŞFET VE ARAMA MOTORU
+
+Uygulamanın içerisinde tamamen çalışan bir Keşfet / Arama sistemi oluştur.
+
+Kullanıcı araması
+
+- Tüm kullanıcılar uygulama içerisindeki Keşfet bölümünden birbirlerini arayabilsin.
+- Kullanıcı adıyla arama yapılabilsin.
+- Kullanıcıların profil bilgileri arama sonuçlarında gösterilsin.
+- Arama sonuçları gerçek veritabanındaki kullanıcılarla eşleşsin.
+- Sahte, örnek veya statik kullanıcı sonuçları gösterme.
+- Kullanıcı arama sistemi hızlı ve hatasız çalışsın.
+
+Kitap araması
+
+Keşfet bölümünde ayrıca Kitaplar arama sistemi oluştur.
+
+Kullanıcı:
+
+- Kitap adına göre,
+- Yazar adına göre,
+- Gerekirse kategoriye göre
+
+kitap arayabilsin.
+
+Arama sonucunda gerçek kullanıcıların yazdığı ve sistemde bulunan kitaplar gösterilsin.
+
+Bir kitaba tıklandığında:
+
+- Kitap kapağı,
+- Kitap adı,
+- Yazar adı,
+- Kitap bölümleri,
+- Okuma bilgileri,
+- Beğeni bilgileri,
+- Yorumlar,
+- Öneri butonu
+
+görüntülenebilsin.
+
+Arama sistemi yalnızca tasarım olarak değil, gerçek veritabanına bağlı çalışan bir sistem olmalıdır.
+
+---
+
+2. TÜM PAYLAŞIMLAR GERÇEK ZAMANLI ÇALIŞACAK
+
+Uygulamadaki kullanıcı paylaşımlarını gerçek zamanlı sisteme bağla.
+
+Bir kullanıcı paylaşım yaptığında:
+
+1. Paylaşım veritabanına kaydedilecek.
+2. Gerekli yönetici/onay sistemi çalışacak.
+3. Onaylanması gereken içerik yönetici paneline düşecek.
+4. Yönetici onay verdiğinde içerik yayınlanacak.
+5. Yayınlanan içerik diğer kullanıcıların ekranlarında gerçek zamanlı olarak görünmeli.
+6. Kullanıcının uygulamayı kapatıp açması gerekmemeli.
+7. Sayfayı sürekli yenilemek gerekmemeli.
+
+WebSocket / realtime database / uygun gerçek zamanlı altyapı hangisi kullanılıyorsa güvenilir şekilde uygula.
+
+---
+
+3. YORUMLAR GERÇEK ZAMANLI İŞLEYECEK
+
+Tüm yorum sistemini gerçek zamanlı yap.
+
+Bir kullanıcı yorum yazdığında:
+
+- Yorum veritabanına kaydedilecek.
+- Gerekli onay sürecinden geçecek.
+- Onaylandıktan sonra ilgili paylaşımın altında görünecek.
+- Diğer kullanıcıların ekranında gerçek zamanlı güncellenecek.
+- Yorum sayısı anında güncellenecek.
+
+Aynı yorumun iki kez kaydedilmesini engelle.
+
+Hatalı bağlantı veya internet kesintisi durumlarında veri kaybını önle.
+
+---
+
+4. BEĞENİLER GERÇEK ZAMANLI OLACAK
+
+Tüm beğeni sistemini gerçek zamanlı yap.
+
+Kullanıcı bir paylaşımı veya kitabı beğendiğinde:
+
+- Beğeni anında veritabanına kaydedilsin.
+- Beğeni sayısı gerçek zamanlı güncellensin.
+- Diğer kullanıcıların ekranları gerçek zamanlı güncellensin.
+- Aynı kullanıcı aynı içeriği sınırsız şekilde beğenememeli.
+- Beğeniyi geri çekme sistemi düzgün çalışmalı.
+- Uygulama yeniden açıldığında gerçek beğeni durumu korunmalı.
+
+---
+
+5. OKUMA SAYILARI GERÇEK ZAMANLI OLACAK
+
+Kitapların okuma/ görüntülenme sayısını gerçek zamanlı takip et.
+
+Bir kullanıcı kitabı okumaya başladığında sistem gerekli okuma kaydını oluşturmalı.
+
+- Okuma sayısı veritabanından alınmalı.
+- Sayılar gerçek zamanlı güncellenmeli.
+- Aynı kullanıcının aynı kitabı sürekli açarak haksız şekilde sınırsız okuma üretmesini engelleyecek uygun bir mantık kullanılmalı.
+- Kitap sahibi ve yöneticiler gerçek istatistikleri görebilmeli.
+
+---
+
+6. KİTAP YAZMA SİSTEMİ
+
+Tüm kitap yazarları uygulama içerisinde kitap oluşturabilsin.
+
+Yazar:
+
+- Kitap adı,
+- Kitap açıklaması,
+- Kategori,
+- Kapak fotoğrafı,
+- Bölümler
+
+oluşturabilsin.
+
+Kitap oluşturulduğunda doğrudan herkesin karşısına yayınlama.
+
+Sistemde gerekli kitap onay mekanizmasını uygula.
+
+---
+
+7. KİTAP BÖLÜMLERİ YÖNETİMİ
+
+Kitap yazarları kendi kitaplarına bölüm ekleyebilsin.
+
+Yazar yeni bir bölüm yazdığında:
+
+- Bölüm veritabanına kaydedilsin.
+- Bölüm yönetici panelinde Onay Bekliyor durumuna düşsün.
+- Yönetici panelinde bölümün tamamı incelenebilsin.
+- Yönetici ONAYLA dediğinde bölüm yayınlansın.
+- Yönetici REDDET dediğinde bölüm yayınlanmasın.
+- Gerekirse red nedeni kaydedilebilsin.
+- Onaylanan bölüm gerçek zamanlı olarak kitabın içerisinde yayınlansın.
+
+Yönetici onayı verilmeden kitap bölümü normal kullanıcılar tarafından yayınlanmış şekilde gösterilmeyecek.
+
+---
+
+8. KİTAP ONAY SİSTEMİ
+
+Yeni oluşturulan kitaplar için de yönetici onay mekanizması oluştur.
+
+Yönetici panelinde:
+
+Kitap Onayları
+
+alanı bulunmalı.
+
+Her kitap için:
+
+- Kitap adı,
+- Yazar,
+- Kategori,
+- Kapak,
+- Açıklama,
+- Oluşturulma tarihi,
+- Bölüm bilgileri,
+- Durum
+
+görülebilmeli.
+
+Yönetici:
+
+ONAYLA
+
+ve
+
+REDDET
+
+butonlarını kullanabilmeli.
+
+Onaylanan kitap uygulamada yayınlanmalı.
+
+---
+
+9. KİTAPLARDA "ÖNER" BUTONU
+
+Tüm yayınlanmış kitapların üzerinde ÖNER butonu bulunmalı.
+
+Bu buton:
+
+- Kitabın yazarı tarafından görülebilmeli.
+- Diğer kullanıcılar tarafından da görülebilmeli.
+- Kullanıcı butona bastığında kitabı önerme talebi oluşturulmalı.
+
+Öneri sistemi gerçek veritabanına bağlı olmalı.
+
+---
+
+10. KİTAP ÖNERİSİNİ YÖNETİCİ PANELİNE GÖNDER
+
+Bir kullanıcı veya kitap yazarı ÖNER butonuna bastığında:
+
+1. Sistem öneri talebi oluşturacak.
+2. Kitabın ID'si kaydedilecek.
+3. Kitap adı kaydedilecek.
+4. Yazar bilgisi kaydedilecek.
+5. Öneriyi gönderen kullanıcının bilgisi kaydedilecek.
+6. Tarih ve saat kaydedilecek.
+7. Talep yönetici paneline düşecek.
+8. Talebin durumu Beklemede olacak.
+
+Yönetici panelinde ayrı bir:
+
+"KİTAP ÖNERİLERİ"
+
+bölümü oluştur.
+
+---
+
+11. AYLIK 100 TL ÜCRET BİLDİRİMİ
+
+Kitap önerme sisteminde kullanıcıya açık ve anlaşılır şekilde:
+
+"Kitap önerme hizmeti aylık 100 TL'dir."
+
+bilgisi gösterilsin.
+
+Kullanıcı ÖNER butonuna bastığında, ücretlendirme bilgisi gösterilsin.
+
+Ancak 100 TL ücret bilgisini yalnızca ekranda yazı olarak göstermekle yetinme.
+
+Eğer uygulamada ödeme sistemi kullanılacaksa:
+
+- Abonelik durumu,
+- Ödeme durumu,
+- Başlangıç tarihi,
+- Bitiş tarihi,
+- Aktif/pasif durum,
+- Ödeme başarısızlığı
+
+gibi durumlar güvenli şekilde yönetilmeli.
+
+Ödeme alınmadan ücretli hizmet aktif olarak kabul edilmemeli.
+
+---
+
+12. YÖNETİCİ PANELİ
+
+Yönetici panelini tamamen işlevsel hale getir.
+
+Yönetici panelinde en az aşağıdaki bölümler bulunmalı:
+
+Kullanıcı Yönetimi
+
+- Kullanıcıları görüntüle
+- Kullanıcı ara
+- Kullanıcı durumunu yönet
+- Gerekli yetkilendirmeleri yönet
+
+Paylaşım Yönetimi
+
+- Bekleyen paylaşımlar
+- Onayla
+- Reddet
+- İçerik durumunu görüntüle
+
+Kitap Yönetimi
+
+- Kitapları görüntüle
+- Kitap onayla
+- Kitap reddet
+- Kitap durumunu değiştir
+
+Bölüm Yönetimi
+
+- Bekleyen bölümler
+- Bölümü görüntüle
+- Onayla
+- Reddet
+
+Kitap Önerileri
+
+- Gelen önerileri görüntüle
+- Öneriyi incele
+- Onayla
+- Reddet
+- Önerinin durumunu değiştir
+
+Ödeme / Abonelik
+
+- Aktif abonelikler
+- Süresi dolan abonelikler
+- Ödeme durumları
+- Abonelik başlangıç/bitiş tarihleri
+
+---
+
+13. GERÇEK ZAMANLI YÖNETİCİ BİLDİRİMLERİ
+
+Yöneticiye yeni bir işlem geldiğinde yönetici panelinde gerçek zamanlı bildirim oluştur.
+
+Örneğin:
+
+"Yeni kitap onayı bekliyor."
+
+"Yeni bölüm onayı bekliyor."
+
+"Yeni kitap önerisi geldi."
+
+"Yeni paylaşım onayı bekliyor."
+
+gibi bildirimler anında oluşmalı.
+
+Yönetici sayfayı yenilemeden yeni işlemleri görebilmeli.
+
+---
+
+14. DURUM SİSTEMİ
+
+Her işlem için net durum sistemi kullan.
+
+Örneğin:
+
+- Beklemede
+- Onaylandı
+- Reddedildi
+- Ödeme Bekleniyor
+- Aktif
+- Süresi Doldu
+
+Durumlar veritabanında tutulmalı.
+
+Frontend yalnızca görsel olarak durum göstermemeli; backend tarafında da işlem güvenliği sağlanmalı.
+
+---
+
+15. YETKİLENDİRME VE GÜVENLİK
+
+Çok önemli:
+
+Normal kullanıcı yönetici işlemlerini yapamaz.
+
+Normal kullanıcı:
+
+- Kitap onaylayamaz.
+- Bölüm onaylayamaz.
+- Paylaşım onaylayamaz.
+- Öneri onaylayamaz.
+- Ücret/abonelik durumunu değiştiremez.
+- Başka kullanıcıların yönetici bilgilerine erişemez.
+
+Bu yetkiler yalnızca güvenli backend yetkilendirmesiyle korunmalı.
+
+Sadece butonları gizlemek güvenlik olarak kabul edilmeyecek.
+
+---
+
+16. VERİTABANI KURALLARI
+
+Tüm veriler gerçek veritabanına bağlanmalı.
+
+Örnek kayıt yapıları:
+
+Users
+
+- id
+- username
+- profilePhoto
+- createdAt
+- status
+
+Books
+
+- id
+- authorId
+- title
+- description
+- category
+- coverImage
+- status
+- createdAt
+
+Chapters
+
+- id
+- bookId
+- authorId
+- title
+- content
+- status
+- createdAt
+
+Posts
+
+- id
+- userId
+- content
+- status
+- createdAt
+
+Comments
+
+- id
+- postId
+- userId
+- content
+- status
+- createdAt
+
+Likes
+
+- id
+- contentId
+- userId
+- createdAt
+
+Reads
+
+- id
+- bookId
+- userId
+- createdAt
+
+BookRecommendations
+
+- id
+- bookId
+- requesterId
+- status
+- createdAt
+
+Subscriptions
+
+- id
+- userId
+- status
+- startDate
+- endDate
+- paymentStatus
+
+Bu yapıyı kullanılan teknolojiye uygun şekilde optimize et.
+
+---
+
+17. GERÇEK ZAMANLI SENKRONİZASYON
+
+Aşağıdaki bütün işlemler gerçek zamanlı senkronize edilmelidir:
+
+✅ Kullanıcılar
+✅ Paylaşımlar
+✅ Yorumlar
+✅ Beğeniler
+✅ Okuma sayıları
+✅ Kitaplar
+✅ Kitap bölümleri
+✅ Yönetici onayları
+✅ Kitap önerileri
+✅ Bildirimler
+✅ Abonelik durumları
+
+Bir kullanıcı işlem yaptığında diğer yetkili kullanıcıların ekranlarında gerekli bilgiler gecikmeden güncellenmeli.
+
+---
+
+18. HATA YÖNETİMİ
+
+Sistemi sadece başarılı işlem için kodlama.
+
+Her işlemde:
+
+- İnternet kesintisi,
+- Sunucu hatası,
+- Yetkisiz işlem,
+- Geçersiz veri,
+- Çift tıklama,
+- Aynı kaydın tekrar gönderilmesi,
+- Ödeme başarısızlığı,
+- Oturum süresinin dolması
+
+gibi durumları kontrol et.
+
+Kullanıcıya anlaşılır Türkçe hata mesajları göster.
+
+---
+
+19. TÜM BUTONLAR GERÇEKTEN ÇALIŞACAK
+
+Uygulamadaki hiçbir buton yalnızca tasarım amacıyla bulunmayacak.
+
+Özellikle:
+
+ARA
+
+KİTABI BUL
+
+ÖNER
+
+ONAYLA
+
+REDDET
+
+BEĞEN
+
+YORUM YAP
+
+OKU
+
+ABONE OL
+
+YÖNETİCİ PANELİ
+
+butonlarının tamamı gerçek işlevlere bağlı olacak.
+
+---
+
+20. TÜRKÇE ARAYÜZ
+
+Bu sistemde eklenen bütün yeni ekranlar, butonlar, bildirimler, hata mesajları ve yönetici paneli Türkçe olacak.
+
+Kullanıcıya teknik hata kodlarını doğrudan gösterme.
+
+---
+
+🔴 SON VE ZORUNLU TALİMAT
+
+BU SİSTEMİ DEMO, MOCKUP, SAHTE VERİ VEYA SADECE FRONTEND OLARAK YAPMA.
+
+Tüm özellikleri gerçek backend + gerçek veritabanı + gerçek kimlik doğrulama + gerçek yetkilendirme + gerçek zamanlı veri akışı ile birbirine bağla.
+
+Kodlamayı tamamladıktan sonra bütün özelliklerin birbiriyle uyumlu çalıştığını kontrol et.
+
+Özellikle şu akışı uçtan uca test et:
+
+Kullanıcı → Kitap oluşturur → Yönetici paneline düşer → Yönetici onaylar → Kitap yayınlanır → Kullanıcılar Keşfet'te kitabı bulur → Kitabı okur → Okuma sayısı güncellenir → Beğenir → Beğeni gerçek zamanlı güncellenir → Yorum yapar → Yorum gerçek zamanlı güncellenir → Kullanıcı/yazar ÖNER butonuna basar → Aylık 100 TL bilgisi gösterilir → Gerekli abonelik/ödeme işlemi tamamlanır → Öneri yönetici paneline düşer → Yönetici inceler → Onaylar veya reddeder → Sistem sonucu gerçek zamanlı olarak ilgili kullanıcıya bildirir.
+
+Bu zincirin herhangi bir noktasında kopukluk, sahte veri, çalışmayan buton, yenileme gereksinimi veya yetki açığı bırakma.
+
+Uygulama üretime hazır, güvenli, mobil uyumlu, hatasız ve sürdürülebilir şekilde çalışmalıdır.

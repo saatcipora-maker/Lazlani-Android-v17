@@ -1,0 +1,787 @@
+Elbette. Aşağıdaki metni doğrudan uygulamanı geliştiren Yapay Zekâ kodlama botuna ana geliştirme komutu olarak verebilirsin. Özellikle mevcut sistemi tamamen incelemesini, sorunları tek tek tespit edip düzeltmesini ve uygulamayı gerçek bir sosyal kitap platformu haline getirmesini istedim.
+
+KİTAP PLATFORMU – TAM ÇALIŞAN SOSYAL MEDYA PLATFORMU GELİŞTİRME KOMUTU
+
+Mevcut uygulamayı baştan sona analiz et ve uygulamadaki tüm eksikleri, hataları, bağlantı problemlerini, veritabanı problemlerini, kullanıcılar arası görünürlük sorunlarını ve sosyal özelliklerdeki eksiklikleri tek tek tespit ederek düzelt.
+
+Amacın yalnızca birkaç hatayı düzeltmek değil; uygulamayı gerçek kullanıcıların kullanabileceği, güvenli, stabil, ölçeklenebilir ve Google Play Store'dan indirilebilecek seviyede tam çalışan bir sosyal kitap platformu haline getirmektir.
+
+Mevcut çalışan özellikleri gereksiz yere bozma. Önce mevcut kodu, veritabanı yapısını, API'leri, authentication sistemini, frontend'i, backend'i ve kullanıcı akışlarını analiz et. Daha sonra sorunları önem sırasına göre düzelt.
+
+---
+
+1. EN ÖNEMLİ SORUN – KULLANICILARIN PAYLAŞIMLARI TÜM KULLANICULARA GÖRÜNMELİ
+
+Şu anda bir kullanıcının paylaştığı kitabı veya bülten/mesajı başka kullanıcılar göremiyor.
+
+BU SORUNU TAMAMEN ÇÖZ.
+
+Bir kullanıcı:
+
+- kitap paylaştığında,
+- kitap bölümü paylaştığında,
+- bülten yayınladığında,
+- mesaj/gönderi yayınladığında,
+- profilinde herkese açık içerik paylaştığında,
+
+bu içerik doğru gizlilik ayarına sahipse diğer kullanıcıların ana akışında ve ilgili keşfet alanlarında görünmelidir.
+
+Örneğin:
+
+Kullanıcı A → Kitap paylaşır.
+
+Kullanıcı B → Uygulamaya girer.
+
+Kullanıcı B, Kullanıcı A'nın herkese açık kitabını görebilmelidir.
+
+Kullanıcı C de aynı kitabı görebilmelidir.
+
+Bu sistem yalnızca paylaşımı yapan kullanıcının hesabında çalışan lokal bir yapı olmamalıdır.
+
+---
+
+2. GERÇEK SOSYAL MEDYA AKIŞI OLUŞTUR
+
+Uygulamaya gerçek bir sosyal feed sistemi ekle veya mevcut feed sistemini düzelt.
+
+Ana sayfada:
+
+- Kullanıcıların paylaşımları
+- Kitaplar
+- Yeni yayınlanan içerikler
+- Bültenler
+- Takip edilen kullanıcıların içerikleri
+- Keşfet içerikleri
+
+görülebilmelidir.
+
+Feed verileri gerçek veritabanından alınmalıdır.
+
+Örnek:
+
+User A → Kitap yayınladı.
+
+Backend → Kitabı veritabanına kaydeder.
+
+Feed API → Yayını uygun kullanıcılara getirir.
+
+Frontend → Yayını ekranda gösterir.
+
+Bu zincirin tamamını test et.
+
+---
+
+3. KULLANICILAR BİRBİRLERİNİ ARAYABİLMELİ
+
+Uygulamaya çalışan bir kullanıcı arama sistemi oluştur.
+
+Kullanıcı:
+
+- kullanıcı adı,
+- ad,
+- soyad,
+- profil adı
+
+ile başka kullanıcıları arayabilmelidir.
+
+Örneğin:
+
+Arama kutusuna:
+
+"Ahmet"
+
+yazıldığında Ahmet isimli veya kullanıcı adında Ahmet bulunan kullanıcılar listelenmelidir.
+
+Arama:
+
+- hızlı,
+- doğru,
+- case-insensitive,
+- Türkçe karakterleri destekleyen,
+- büyük kullanıcı sayısında çalışabilecek
+
+bir yapıda olmalıdır.
+
+---
+
+4. TÜM KULLANICULAR BİRBİRLERİNİ BULUP TAKİP EDEBİLMELİ
+
+Bu özellik kesinlikle gerçek backend/veritabanı bağlantısıyla çalışmalıdır.
+
+Kullanıcı profilinde:
+
+"Takip Et"
+
+butonu bulunmalıdır.
+
+Bir kullanıcı başka bir kullanıcıyı takip ettiğinde:
+
+- takip ilişkisi veritabanına kaydedilmeli,
+- takipçi sayısı güncellenmeli,
+- takip edilen sayısı güncellenmeli,
+- buton "Takip Ediliyor" durumuna geçmeli,
+- uygulama kapatılıp açıldığında takip durumu korunmalı.
+
+Takibi bırakma sistemi de çalışmalıdır.
+
+Örnek:
+
+A → B'yi takip eder.
+
+B'nin:
+
+Takipçi sayısı +1
+
+A'nın:
+
+Takip edilen sayısı +1
+
+olmalıdır.
+
+A → B'yi takipten çıkarırsa değerler tekrar doğru şekilde güncellenmelidir.
+
+---
+
+5. TAKİPÇİLER VE TAKİP EDİLENLER LİSTESİ
+
+Her kullanıcı profilinde:
+
+- Takipçiler
+- Takip edilenler
+
+alanları bulunmalıdır.
+
+Kullanıcı bu listelere tıkladığında gerçek kullanıcıları görmelidir.
+
+Her kullanıcı:
+
+- profil fotoğrafını,
+- kullanıcı adını,
+- takip durumunu
+
+görebilmelidir.
+
+---
+
+6. KULLANICI PROFİL SİSTEMİ
+
+Her kullanıcının gerçek bir sosyal profil sayfası olmalıdır.
+
+Profil:
+
+- Profil fotoğrafı
+- Kullanıcı adı
+- Ad
+- Biyografi
+- Takipçi sayısı
+- Takip edilen sayısı
+- Paylaşımlar
+- Kitaplar
+- Bültenler
+
+içermelidir.
+
+Kullanıcı başka bir kişinin profiline girdiğinde o kişinin herkese açık içeriklerini görebilmelidir.
+
+---
+
+7. KİTAP PAYLAŞIM SİSTEMİ
+
+Bir kullanıcı kitap yayınladığında kitap:
+
+- veritabanına kaydedilmeli,
+- sahibinin profilinde görünmeli,
+- ana feed'e düşmeli,
+- keşfet bölümünde görünebilmeli,
+- diğer kullanıcılar tarafından bulunabilmeli.
+
+Kitabın sahibi doğru şekilde ilişkilendirilmelidir.
+
+Her kitap için:
+
+- kitap adı,
+- açıklama,
+- yazar/kullanıcı,
+- kapak görseli,
+- kategori,
+- yayın tarihi,
+- görüntülenme,
+- beğeni,
+- yorum
+
+gibi alanlar gerekiyorsa düzgün şekilde çalışmalıdır.
+
+---
+
+8. BÜLTEN SİSTEMİ
+
+Kullanıcı bülten yayınladığında:
+
+Bülten yalnızca yayınlayan kullanıcının ekranında görünmemelidir.
+
+Bülten:
+
+- veritabanına kaydedilmeli,
+- uygun feed sorgusuna dahil edilmeli,
+- diğer kullanıcılar tarafından görüntülenebilmeli,
+- profil sayfasında görünmeli,
+- keşfet alanında bulunabilmeli.
+
+---
+
+9. BEĞENİ SİSTEMİ
+
+Paylaşımlara gerçek Like sistemi ekle/düzelt.
+
+Kullanıcı:
+
+❤️ Beğen
+
+butonuna bastığında:
+
+- beğeni veritabanına kaydedilmeli,
+- toplam beğeni sayısı artmalı,
+- buton durumu değişmeli.
+
+Tekrar bastığında:
+
+- beğeni kaldırılmalı,
+- sayı azalmalı.
+
+Aynı kullanıcı aynı içeriği birden fazla kez beğenememeli.
+
+---
+
+10. YORUM SİSTEMİ
+
+Kitap ve gönderilere yorum yapılabilmeli.
+
+Yorum:
+
+- gerçek kullanıcı hesabıyla ilişkilendirilmeli,
+- veritabanına kaydedilmeli,
+- diğer kullanıcılar tarafından görülebilmeli,
+- kullanıcı yorumunu silebilmeli,
+- gerekli yetki kontrolleri yapılmalı.
+
+---
+
+11. KULLANICI TAKİP AKIŞI
+
+Takip edilen kullanıcıların içerikleri kullanıcının ana akışında gösterilmelidir.
+
+Örneğin:
+
+A → B'yi takip ediyor.
+
+B → yeni kitap yayınlıyor.
+
+A → ana sayfaya girdiğinde B'nin yeni kitabını görebiliyor.
+
+Ancak içerik herkese açıksa keşfet bölümünde diğer kullanıcılar da görebilmelidir.
+
+---
+
+12. KEŞFET BÖLÜMÜ
+
+Gerçek bir keşfet sistemi oluştur.
+
+Keşfet bölümünde:
+
+- yeni kitaplar,
+- popüler kitaplar,
+- yeni kullanıcılar,
+- popüler kullanıcılar,
+- bültenler,
+- yeni gönderiler
+
+gösterilebilmeli.
+
+Bu içerikler gerçek veritabanından gelmelidir.
+
+Demo veya sahte statik veri kullanılmamalıdır.
+
+---
+
+13. BİLDİRİM SİSTEMİ
+
+Kullanıcı:
+
+- takip edildiğinde,
+- kitabı beğenildiğinde,
+- gönderisi beğenildiğinde,
+- yorum aldığında,
+- yorumuna cevap geldiğinde
+
+bildirim alabilmelidir.
+
+Bildirimler gerçek veritabanına kaydedilmeli.
+
+Okundu/okunmadı durumu bulunmalıdır.
+
+---
+
+14. VERİTABANI KONTROLÜ
+
+Veritabanını baştan sona incele.
+
+Özellikle:
+
+- users
+- profiles
+- books
+- posts
+- newsletters
+- follows
+- followers
+- likes
+- comments
+- notifications
+
+gibi tabloların/collection'ların doğru ilişkilerle çalıştığından emin ol.
+
+Foreign key veya ilişkisel bağlantılar varsa kontrol et.
+
+Bir kullanıcının ID'si ile yayınladığı kitap arasında doğru ilişki kurulmalı.
+
+---
+
+15. AUTHENTICATION
+
+Kullanıcı sistemi güvenli şekilde çalışmalı.
+
+Kontrol et:
+
+- kayıt olma,
+- giriş yapma,
+- çıkış yapma,
+- şifre sıfırlama,
+- oturumun korunması,
+- token/session yönetimi,
+- kullanıcı ID doğrulaması.
+
+Kullanıcı giriş yaptıktan sonra uygulama kapatılıp tekrar açıldığında gerekiyorsa oturum korunmalıdır.
+
+---
+
+16. YETKİLENDİRME VE GÜVENLİK
+
+Frontend'deki kontroller yeterli kabul edilmemelidir.
+
+Backend tarafında da:
+
+- kullanıcı yetkisi,
+- içerik sahibi kontrolü,
+- takip işlemi yetkisi,
+- silme yetkisi,
+- düzenleme yetkisi
+
+kontrol edilmelidir.
+
+Bir kullanıcı başka bir kullanıcının kitabını veya profil verisini yetkisiz şekilde değiştirememelidir.
+
+---
+
+17. GİZLİLİK SİSTEMİ
+
+Kullanıcı içerik paylaşırken gerekiyorsa:
+
+- Herkese Açık
+- Takipçiler
+- Özel
+
+gibi gizlilik seçenekleri oluştur.
+
+"Herkese Açık" içerik tüm kullanıcılar tarafından görülebilmeli.
+
+"Takipçiler" içeriği yalnızca takipçiler görebilmeli.
+
+"Özel" içerik sahibi dışında görüntülenememeli.
+
+Bu kontroller backend seviyesinde de uygulanmalıdır.
+
+---
+
+18. PAGINATION / PERFORMANS
+
+Çok fazla kullanıcı ve kitap olduğunda uygulama yavaşlamamalıdır.
+
+Feed sisteminde:
+
+- pagination,
+- infinite scroll,
+- uygun indexler,
+- optimize edilmiş sorgular
+
+kullan.
+
+İlk açılışta milyonlarca kaydı aynı anda çekme.
+
+---
+
+19. HATA YÖNETİMİ
+
+Uygulamada kullanıcıya anlamsız teknik hata mesajları gösterme.
+
+Örneğin:
+
+"500 Internal Server Error"
+
+yerine kullanıcı dostu mesaj göster.
+
+Ancak geliştirici tarafında gerçek hata loglanmalıdır.
+
+Network hataları, veritabanı hataları ve authentication hataları düzgün şekilde ele alınmalıdır.
+
+---
+
+20. OFFLINE / NETWORK DURUMLARI
+
+İnternet bağlantısı kesildiğinde uygulama çökmemeli.
+
+Kullanıcıya:
+
+"İnternet bağlantınızı kontrol edin."
+
+gibi anlaşılır mesaj göster.
+
+---
+
+21. BOŞ DURUMLAR
+
+Örneğin kullanıcı hiç takip etmiyorsa:
+
+"Henüz takip ettiğiniz kullanıcı bulunmuyor."
+
+gibi düzgün empty-state ekranları göster.
+
+Aynı şekilde:
+
+- kitap yoksa,
+- bülten yoksa,
+- bildirim yoksa,
+- yorum yoksa,
+- takipçi yoksa
+
+uygun ekran göster.
+
+---
+
+22. UI / UX
+
+Uygulamanın tamamını profesyonel bir sosyal kitap platformu görünümüne getir.
+
+Navigasyon anlaşılır olmalı.
+
+Ana bölümler örneğin:
+
+Ana Sayfa
+Keşfet
+Kitaplar
+Bültenler
+Bildirimler
+Profil
+
+şeklinde düzenlenebilir.
+
+Mevcut tasarım iyiyse gereksiz yere değiştirme; ancak çalışmayan veya kullanıcı deneyimini bozan alanları düzelt.
+
+---
+
+23. MOBİL UYUMLULUK
+
+Uygulama Android telefonlarda farklı ekran boyutlarında düzgün çalışmalıdır.
+
+Kontrol et:
+
+- küçük ekran,
+- büyük ekran,
+- farklı çözünürlükler,
+- klavye açılması,
+- ekran döndürme gerekiyorsa,
+- scroll davranışları,
+- butonların dokunma alanları.
+
+---
+
+24. GOOGLE PLAY STORE HAZIRLIĞI
+
+Uygulamayı production seviyesine getir.
+
+Kontrol et:
+
+- release build,
+- uygulama adı,
+- application ID/package name,
+- app icon,
+- splash screen,
+- gerekli izinler,
+- internet izinleri,
+- güvenlik,
+- crash kontrolü,
+- release configuration,
+- version code,
+- version name.
+
+Uygulama Google Play Store'a yüklenebilecek production build oluşturabilecek durumda olmalıdır.
+
+---
+
+25. TEST SİSTEMİ
+
+Kod yazmakla yetinme.
+
+Her önemli özelliği gerçek kullanıcı senaryosu ile test et.
+
+En az iki farklı test kullanıcısı oluştur:
+
+USER A
+USER B
+
+Test:
+
+1. A kayıt olur.
+2. B kayıt olur.
+3. A profilini oluşturur.
+4. B profilini oluşturur.
+5. A, B'yi arar.
+6. A, B'yi takip eder.
+7. B, A'yı takip eder.
+8. A kitap yayınlar.
+9. B A'nın kitabını görür.
+10. B kitabı beğenir.
+11. A beğeniyi görür.
+12. B yorum yapar.
+13. A yorumu görür.
+14. A bülten yayınlar.
+15. B bülteni görür.
+16. A'nın takipçi sayısı kontrol edilir.
+17. B'nin takip edilen sayısı kontrol edilir.
+18. Uygulama kapatılır.
+19. Tekrar açılır.
+20. Verilerin kaybolmadığı kontrol edilir.
+
+---
+
+26. ÇOK ÖNEMLİ – VERİLER SADECE TEK KULLANICIYA ÖZEL KALMAMALI
+
+Mevcut uygulamadaki en önemli problemi özellikle araştır.
+
+Bir kullanıcının oluşturduğu içerik yalnızca o kullanıcının ekranında görünüyorsa bunun nedenini bul.
+
+Şunları tek tek kontrol et:
+
+- yanlış user_id filtresi,
+- yanlış database query,
+- yanlış API endpoint,
+- frontend'de yanlış filtre,
+- authentication problemi,
+- authorization problemi,
+- database security rules,
+- RLS policy,
+- collection/query problemi,
+- cache problemi,
+- state management problemi,
+- pagination problemi.
+
+Sorunun kaynağını bul ve kalıcı olarak düzelt.
+
+---
+
+27. SAHTE VERİ KULLANMA
+
+Production sisteminde sahte kitaplar, sahte kullanıcılar veya sahte takip ilişkileri kullanma.
+
+Tüm sosyal etkileşimler gerçek kullanıcı verileriyle çalışmalıdır.
+
+---
+
+28. VERİTABANI GÜVENLİĞİ
+
+Eğer kullanılan sistemde RLS/security rules/policies bulunuyorsa bunları incele.
+
+Özellikle kullanıcıların:
+
+- herkese açık içerikleri okuyabilmesi,
+- kendi içeriklerini oluşturabilmesi,
+- kendi içeriklerini düzenleyebilmesi,
+- kendi içeriklerini silebilmesi,
+- takip ilişkisi oluşturabilmesi,
+- beğeni oluşturabilmesi,
+- yorum oluşturabilmesi
+
+için doğru güvenlik kurallarını oluştur.
+
+Ancak bir kullanıcı başka kullanıcının özel verilerine erişememelidir.
+
+---
+
+29. API KONTROLÜ
+
+Frontend ve backend arasındaki bütün API çağrılarını kontrol et.
+
+Her endpoint için:
+
+- request,
+- response,
+- authentication,
+- authorization,
+- error handling,
+- status code
+
+kontrolü yap.
+
+Bozuk veya kullanılmayan endpointleri düzelt.
+
+---
+
+30. UYGULAMAYI BAŞTAN SONA DENETLE
+
+Şu bölümlerin tamamını tek tek kontrol et:
+
+Kayıt
+Giriş
+Profil
+Profil düzenleme
+Kullanıcı arama
+Kullanıcı profiline girme
+Takip etme
+Takipten çıkma
+Takipçiler
+Takip edilenler
+Kitap oluşturma
+Kitap yayınlama
+Kitap görüntüleme
+Kitap düzenleme
+Kitap silme
+Bülten oluşturma
+Bülten yayınlama
+Gönderiler
+Beğeniler
+Yorumlar
+Bildirimler
+Ana sayfa
+Keşfet
+Arama
+Ayarlar
+Çıkış
+Şifre işlemleri
+
+Her özelliğin gerçekten çalıştığını doğrula.
+
+---
+
+31. KOD KALİTESİ
+
+Kod içerisinde:
+
+- gereksiz tekrarları,
+- kullanılmayan kodları,
+- bozuk importları,
+- hatalı state yönetimini,
+- memory leak risklerini,
+- race condition problemlerini,
+- null/undefined hatalarını,
+- yanlış async işlemlerini
+
+tespit et ve düzelt.
+
+---
+
+32. KRİTİK KURAL
+
+Bana sadece:
+
+"Tamamlandı."
+
+deme.
+
+Önce projeyi analiz et.
+
+Bulduğun sorunları kategorilere ayır:
+
+CRITICAL
+HIGH
+MEDIUM
+LOW
+
+Ardından sorunları tek tek düzelt.
+
+Her düzeltmeden sonra ilgili sistemi test et.
+
+Bir özelliği düzeltirken başka çalışan özellikleri bozma.
+
+---
+
+33. SON KONTROL
+
+Tüm geliştirmeler tamamlandıktan sonra uygulamayı production mantığıyla tekrar test et.
+
+Özellikle iki farklı kullanıcının birbirini:
+
+- arayabilmesi,
+- bulabilmesi,
+- takip edebilmesi,
+- takipten çıkarabilmesi,
+- kitaplarını görebilmesi,
+- bültenlerini görebilmesi,
+- gönderilerini görebilmesi,
+- beğeni yapabilmesi,
+- yorum yapabilmesi
+
+kesinlikle çalışmalıdır.
+
+---
+
+34. SON HEDEF
+
+Bu uygulama basit bir kitap okuma uygulaması olarak kalmayacak.
+
+Hedef:
+
+GERÇEK BİR SOSYAL KİTAP PLATFORMU
+
+Kullanıcılar:
+
+- hesap oluşturacak,
+- birbirlerini arayacak,
+- birbirlerini bulacak,
+- takip edecek,
+- kitap paylaşacak,
+- bülten yayınlayacak,
+- gönderi paylaşacak,
+- beğenecek,
+- yorum yapacak,
+- bildirim alacak,
+- keşfet bölümünde yeni kullanıcılar ve kitaplar bulacak,
+- kendi profillerini oluşturacak.
+
+Tüm bu sistemler gerçek backend + gerçek veritabanı ile çalışacak.
+
+SON TALİMAT
+
+Projeyi yalnızca görsel olarak tamamlanmış kabul etme.
+
+Fonksiyonel olarak tamamen çalışan bir uygulama haline getir.
+
+Kodun her bölümünü mevcut proje mimarisine uygun şekilde uygula.
+
+Mevcut özellikleri koru.
+
+Kullanıcı verilerini kaybetme.
+
+Veritabanı migration gerekiyorsa güvenli migration oluştur.
+
+Mevcut production verilerini bozma.
+
+Tüm kritik işlemleri test et.
+
+Uygulamada tespit ettiğin hataları tek tek düzelt.
+
+Son aşamada:
+
+BUILD → TEST → DEBUG → TEST → PRODUCTION BUILD
+
+döngüsünü uygula.
+
+Amaç, gerçek kullanıcıların Google Play Store üzerinden indirip kullanabileceği, kullanıcıların birbirini bulabildiği ve içeriklerin doğru gizlilik kuralları dahilinde tüm ilgili kullanıcılara göründüğü tam çalışan, profesyonel ve ölçeklenebilir sosyal kitap platformudur.Bu komutu özellikle “bir kullanıcının paylaşımını diğer kullanıcı göremiyor” ve “kullanıcılar birbirini bulup takip edemiyor” sorunlarını kök nedeninden çözmeye yönelik hazırladım. Botun yalnızca arayüzü düzeltmek yerine frontend + backend + veritabanı + güvenlik kuralları + test taraflarını birlikte incelemesini sağlıyor.

@@ -1,0 +1,165 @@
+UYGULAMAYI A'DAN Z'YE KAPSAMLI OLARAK İNCELE, TEST ET VE TÜM SORUNLARI GİDER.
+
+Özel video paylaşım bölümünü ve uygulamanın tamamını baştan sona incele. Mevcut tasarımı ve çalışan özellikleri gereksiz yere değiştirme; ancak hatalı, eksik veya kullanıcı deneyimini bozan tüm noktaları profesyonel şekilde düzelt.
+
+1. ÖZEL VİDEO PAYLAŞIM BÖLÜMÜ
+
+Özel bölümde kullanıcı bir video paylaştığında:
+
+- Video, uygulamanın mevcut ekran ve içerik yapısına tam olarak uyumlu şekilde görüntülensin.
+- Video ekranda kesilmesin, taşmasın veya gereksiz şekilde küçülmesin.
+- Farklı telefon ekranlarında ve farklı çözünürlüklerde video görüntüsü otomatik olarak uyum sağlasın.
+- Dikey ve yatay video formatları mümkün olduğunca doğru oran korunarak gösterilsin.
+- Video oynatıcı uygulamanın tasarım bütünlüğünü bozmasın.
+- Video üzerinde kullanıcıların görebileceği Beğen / Beğeniyorum seçeneği düzgün şekilde yer alsın.
+- Kullanıcı beğendiğinde beğeni anında ve gerçek zamanlı olarak güncellensin.
+- Beğeni durumu tüm kullanıcılar tarafından gerçek zamanlı görülebilsin.
+- Aynı kullanıcı aynı videoyu tekrar tekrar beğenerek sayıyı artıramasın.
+- Kullanıcı beğenisini geri çektiğinde beğeni sayısı gerçek zamanlı olarak güncellensin.
+- Video paylaşımı, video yükleme durumu, oynatma, durdurma ve hata durumları düzgün şekilde çalışsın.
+- Video yüklenirken kullanıcıya uygun bir yükleme durumu gösterilsin.
+- Başarısız yüklemelerde uygulama donmasın veya siyah ekran göstermesin; kullanıcıya anlaşılır hata mesajı gösterilsin.
+
+2. GOOGLE İLE OTOMATİK GİRİŞ / BAĞLANMA
+
+Uygulamadaki kullanıcı giriş sistemini kontrol et.
+
+- Kullanıcıların Google hesapları üzerinden güvenli şekilde giriş yapabilmesini sağla.
+- Google ile giriş yapan kullanıcı için uygulamada gerekli kullanıcı hesabı otomatik olarak oluşturulsun veya mevcut hesapla güvenli şekilde eşleştirilsin.
+- Kullanıcı her giriş yaptığında gereksiz yere tekrar kayıt ekranına gönderilmesin.
+- Oturum bilgileri güvenli şekilde korunsun.
+- Kullanıcı uygulamayı kapatıp tekrar açtığında, oturum sistemi doğru şekilde çalışsın.
+- Google ile giriş sırasında oluşabilecek hata, iptal veya bağlantı problemlerini düzgün şekilde ele al.
+- Aynı Google hesabı için gereksiz şekilde birden fazla kullanıcı hesabı oluşturulmasını engelle.
+- Mevcut kullanıcı verileri korunmalı; Google giriş sistemi mevcut hesap sistemini bozmayacak şekilde entegre edilmeli.
+
+3. EKRAN KARARMASI SORUNLARI
+
+Uygulamanın tüm ekranlarını tek tek kontrol et.
+
+Özellikle:
+
+- Sayfa açılırken ekranın gereksiz şekilde kararmasını,
+- Siyah ekran oluşmasını,
+- İçeriğin geç yüklenmesini,
+- Geçişlerde ekranın kısa süreli kaybolmasını,
+- Video ekranlarında siyah alanların hatalı oluşmasını,
+- Klavye açıldığında ekranın kararmasını,
+- Modal, popup veya sayfa geçişlerinde ekranın arkasının yanlış görünmesini
+
+tespit et ve düzelt.
+
+Hiçbir ekran gereksiz yere siyaha düşmemeli veya kullanıcıya boş/karanlık bir ekran gösterilmemeli.
+
+4. EKRAN KAYMALARI VE SCROLL SORUNLARI
+
+Uygulamadaki bütün ekranları farklı telefon ekran boyutlarında test et.
+
+- Sayfalar sağa veya sola taşmamalı.
+- İçerikler ekran dışına çıkmamalı.
+- Gereksiz yatay kaydırma oluşmamalı.
+- Dikey kaydırma düzgün çalışmalı.
+- Klavye açıldığında içerikler klavyenin altında kalmamalı.
+- Yazı yazma alanları görünür kalmalı.
+- Butonlar ekranın dışında kalmamalı.
+- Video, fotoğraf ve metin alanları birbirinin üzerine binmemeli.
+- Küçük ve büyük ekranlarda responsive tasarım düzgün çalışmalı.
+- Safe area / status bar / navigation bar alanları doğru şekilde hesaba katılmalı.
+
+5. UYGULAMANIN TAMAMINI A'DAN Z'YE DENETLE
+
+Sadece özel video bölümünü değil, uygulamanın tüm ekranlarını ve tüm kullanıcı akışlarını incele.
+
+Şunları tek tek kontrol et:
+
+- Ana sayfa
+- Kullanıcı profili
+- Profil ve kapak fotoğrafı
+- Kitap alanları
+- Özel bölüm
+- Video paylaşımı
+- Video oynatma
+- Beğeni sistemi
+- Yorum sistemi
+- Mesajlaşma
+- Bildirimler
+- Giriş / kayıt
+- Google ile giriş
+- Butonlar
+- Menü geçişleri
+- Sayfa geçişleri
+- Klavye açılıp kapanması
+- Scroll davranışları
+- Yükleme ekranları
+- Hata ekranları
+- İnternet bağlantısı kesildiğinde davranış
+- Farklı ekran boyutları
+- Uygulamanın performansı
+
+6. GERÇEK ZAMANLI SİSTEMLER
+
+Gerçek zamanlı çalışan özellikleri kontrol et.
+
+Bir kullanıcı:
+
+- video paylaştığında,
+- video beğendiğinde,
+- beğenisini kaldırdığında,
+- yorum yaptığında,
+- mesaj gönderdiğinde,
+- bildirim aldığında
+
+diğer kullanıcıların gerekli verileri gecikmeden ve doğru şekilde görebilmesini sağla.
+
+Veri senkronizasyon hatalarını, çift kayıtları ve eski verilerin ekranda kalmasını düzelt.
+
+7. PERFORMANS VE KARARLILIK
+
+Uygulamayı gereksiz yere ağırlaştıran kodları ve işlemleri tespit et.
+
+- Gereksiz yeniden render işlemlerini azalt.
+- Gereksiz ağ isteklerini azalt.
+- Video yükleme ve oynatma performansını iyileştir.
+- Bellek kullanımını kontrol et.
+- Sayfa geçişlerinde takılma ve donmaları gider.
+- Uygulamanın çökmesine neden olabilecek hataları düzelt.
+- İnternet yavaş olduğunda uygulamanın kullanılabilir kalmasını sağla.
+
+8. TASARIM BÜTÜNLÜĞÜ
+
+Mevcut uygulamanın tasarım dilini koru.
+
+Ancak:
+
+- üst üste binen öğeler,
+- okunmayan yazılar,
+- görünmeyen butonlar,
+- yanlış hizalamalar,
+- ekran dışına çıkan içerikler,
+- yanlış boşluklar,
+- kararma sorunları,
+- hatalı renk kontrastları
+
+varsa düzelt.
+
+Hiçbir düzeltme mevcut çalışan özellikleri bozmasın.
+
+9. TEST VE SON KONTROL
+
+Kod üzerinde yalnızca yüzeysel değişiklik yapma.
+
+Uygulamayı gerçek bir kullanıcı gibi A'dan Z'ye test et.
+
+Her ekranı aç, her butona bas, her kullanıcı akışını dene ve ortaya çıkabilecek hataları tespit et.
+
+Özellikle farklı ekran boyutlarında, klavye açıkken, internet yavaşken, video yüklenirken ve sayfalar arasında geçiş yapılırken test gerçekleştir.
+
+Tespit edilen tüm hataları düzelt.
+
+Bir hatayı düzeltirken başka bir özelliği bozmadığından emin ol.
+
+SONUÇ:
+
+Uygulama; video paylaşımı, video görüntüleme, beğeni sistemi, Google ile giriş, ekran görüntüsü, scroll, klavye, sayfa geçişleri, performans ve genel kullanıcı deneyimi açısından profesyonel, stabil, responsive ve hatasız çalışacak şekilde teslim edilmeli.
+
+Hiçbir sorunu görmezden gelme. Uygulamayı A'dan Z'ye incele ve tespit ettiğin bütün teknik ve görsel problemleri tek tek gider.
