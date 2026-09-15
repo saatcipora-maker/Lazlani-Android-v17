@@ -23,6 +23,18 @@ export const UploadUrlRequestContentType = {
   'image/webp': 'image/webp',
 } as const;
 
+/**
+ * Protected object namespace.
+ */
+export type UploadUrlRequestNamespace = typeof UploadUrlRequestNamespace[keyof typeof UploadUrlRequestNamespace];
+
+
+export const UploadUrlRequestNamespace = {
+  'book-covers': 'book-covers',
+  'social-posts': 'social-posts',
+  'dm-photos': 'dm-photos',
+} as const;
+
 export interface UploadUrlRequest {
   /**
      * @minLength 1
@@ -35,11 +47,13 @@ export interface UploadUrlRequest {
      */
   size: number;
   contentType: UploadUrlRequestContentType;
+  /** Protected object namespace. */
+  namespace?: UploadUrlRequestNamespace;
 }
 
 export interface UploadUrlResponse {
   uploadURL: string;
-  /** @pattern ^/objects/uploads/book-covers/ */
+  /** @pattern ^/objects/uploads/(book-covers|social-posts|dm-photos)/ */
   objectPath: string;
   metadata: UploadUrlRequest;
 }
@@ -54,7 +68,7 @@ export const FinalizeUploadRequestContentType = {
 } as const;
 
 export interface FinalizeUploadRequest {
-  /** @pattern ^/objects/uploads/book-covers/ */
+  /** @pattern ^/objects/uploads/(book-covers|social-posts|dm-photos)/ */
   objectPath: string;
   /**
      * @minimum 1
@@ -65,7 +79,7 @@ export interface FinalizeUploadRequest {
 }
 
 export interface FinalizeUploadResult {
-  /** @pattern ^/objects/book-covers/ */
+  /** @pattern ^/objects/(book-covers|social-posts|dm-photos)/ */
   objectPath: string;
 }
 
@@ -298,8 +312,10 @@ export type SyncOperationType = typeof SyncOperationType[keyof typeof SyncOperat
 
 export const SyncOperationType = {
   create_message: 'create_message',
+  delete_message: 'delete_message',
   create_notification: 'create_notification',
   create_comment: 'create_comment',
+  delete_comment: 'delete_comment',
   create_reply: 'create_reply',
   create_ozel_comment: 'create_ozel_comment',
   create_ozel_reply: 'create_ozel_reply',
@@ -310,6 +326,10 @@ export const SyncOperationType = {
   create_book: 'create_book',
   update_book: 'update_book',
   delete_book: 'delete_book',
+  create_post: 'create_post',
+  update_post: 'update_post',
+  delete_post: 'delete_post',
+  start_reading: 'start_reading',
 } as const;
 
 export type SyncEntityType = typeof SyncEntityType[keyof typeof SyncEntityType];
@@ -327,7 +347,26 @@ export const SyncEntityType = {
   reaction: 'reaction',
   vote: 'vote',
   book: 'book',
+  post: 'post',
+  reading: 'reading',
 } as const;
+
+export type SyncOperationPayloadAggregateType = typeof SyncOperationPayloadAggregateType[keyof typeof SyncOperationPayloadAggregateType];
+
+
+export const SyncOperationPayloadAggregateType = {
+  absolute: 'absolute',
+} as const;
+
+/**
+ * Photo/media metadata. Access is enforced by the containing record audience.
+ */
+export type SyncOperationPayloadMedia = { [key: string]: unknown };
+
+/**
+ * Optional photo metadata for a post or direct message.
+ */
+export type SyncOperationPayloadPhoto = { [key: string]: unknown };
 
 export type SyncOperationPayloadChaptersItem = { [key: string]: unknown };
 
@@ -343,7 +382,13 @@ export interface SyncOperationPayload {
   id?: string;
   targetType?: string;
   targetId?: string;
+  parentId?: string;
   recipientUserId?: string;
+  authorUserId?: string;
+  /** Photo/media metadata. Access is enforced by the containing record audience. */
+  media?: SyncOperationPayloadMedia;
+  /** Optional photo metadata for a post or direct message. */
+  photo?: SyncOperationPayloadPhoto;
   coverUrl?: string;
   title?: string;
   coverColor?: string;
@@ -386,6 +431,24 @@ export interface SyncOperationPayload {
      * @maximum 5
      */
   readonly ratingAverage?: number;
+  /**
+     * Absolute aggregate value for unique reading starts.
+     * @minimum 0
+     */
+  readonly aggregateCount?: number;
+  /**
+     * Alias of aggregateCount for mobile projections.
+     * @minimum 0
+     */
+  readonly absoluteCount?: number;
+  /**
+     * Monotonic event id for aggregate convergence.
+     * @minimum 1
+     */
+  readonly aggregateRevision?: number;
+  readonly aggregateType?: SyncOperationPayloadAggregateType;
+  /** @minimum 0 */
+  readonly aggregateValue?: number;
   [key: string]: unknown;
  }
 

@@ -21,4 +21,6 @@ export const SyncEntityType = {
   reaction: 'reaction',
   vote: 'vote',
   book: 'book',
+  post: 'post',
+  reading: 'reading',
 } as const;

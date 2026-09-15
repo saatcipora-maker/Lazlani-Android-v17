@@ -7,6 +7,6 @@
  */
 
 export interface FinalizeUploadResult {
-  /** @pattern ^/objects/book-covers/ */
+  /** @pattern ^/objects/(book-covers|social-posts|dm-photos)/ */
   objectPath: string;
 }

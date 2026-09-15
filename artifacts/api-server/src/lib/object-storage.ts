@@ -50,8 +50,22 @@ export class InvalidBookCoverReferenceError extends Error {
   }
 }
 
+export class InvalidMediaReferenceError extends Error {
+  constructor(message = "Invalid media reference") {
+    super(message);
+    this.name = "InvalidMediaReferenceError";
+  }
+}
+
+export type MediaObjectReference = {
+  objectPath: string;
+  namespace: "social-posts" | "dm-photos";
+};
+
 export const MAX_COVER_BYTES = 10 * 1024 * 1024;
 export const ALLOWED_COVER_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+export const MEDIA_NAMESPACES = ["book-covers", "social-posts", "dm-photos"] as const;
+type MediaNamespace = (typeof MEDIA_NAMESPACES)[number];
 
 function privateObjectDir(): string {
   const value = process.env.PRIVATE_OBJECT_DIR?.trim();
@@ -167,23 +181,98 @@ export async function validateBookCoverReference(
   return `${new URL(trustedApiOrigin).origin}/api/storage${objectPath}`;
 }
 
-function isNamespaceObjectPath(objectPath: string, namespace: "uploads/book-covers" | "book-covers"): boolean {
-  const relative = relativeObjectPath(objectPath);
-  const match = relative.match(
-    namespace === "book-covers"
-      ? /^book-covers\/([^/]+)\/([A-Za-z0-9_-]+)$/
-      : /^uploads\/book-covers\/([^/]+)\/([A-Za-z0-9_-]+)$/,
-  );
-  return Boolean(match);
+/**
+ * Validate a finalized social/DM media reference before it is attached to a
+ * sync record. Staged paths and another user's finalized object are never
+ * accepted. Non-storage URLs are left to the product's content policy.
+ */
+export async function validateMediaReference(
+  reference: unknown,
+  ownerUserId: string,
+  trustedApiOrigin: string,
+): Promise<MediaObjectReference | undefined> {
+  if (typeof reference !== "string" || !reference.trim()) return;
+  const parsedReference = canonicalMediaObjectReference(reference, trustedApiOrigin);
+  if (!parsedReference) return;
+  const { objectPath, namespace } = parsedReference;
+  if (!isNamespaceObjectPath(objectPath, namespace)
+    || ownerFromObjectPath(objectPath, namespace) !== ownerUserId) {
+    throw new InvalidMediaReferenceError("Media object belongs to another user or is not finalized");
+  }
+  try {
+    await getStoredObject(objectPath);
+  } catch (error) {
+    if (error instanceof ObjectNotFoundError) {
+      throw new InvalidMediaReferenceError("Media object does not exist");
+    }
+    throw error;
+  }
+  return { objectPath, namespace };
 }
 
-function ownerFromObjectPath(objectPath: string, namespace: "uploads/book-covers" | "book-covers"): string | null {
+export function canonicalMediaObjectReference(
+  reference: string,
+  trustedApiOrigin: string,
+): MediaObjectReference | undefined {
+  let objectPath = reference;
+  if (reference.startsWith("http")) {
+    let parsed: URL;
+    try {
+      parsed = new URL(reference);
+      const origin = new URL(trustedApiOrigin);
+      if (parsed.origin !== origin.origin || parsed.protocol !== "https:"
+        || parsed.search || parsed.hash || parsed.username || parsed.password) return;
+      const match = parsed.pathname.match(
+        /^\/api\/storage\/objects\/(social-posts|dm-photos)\/([^/]+)\/([A-Za-z0-9_-]+)$/,
+      );
+      if (!match) return;
+      objectPath = `/objects/${match[1]}/${match[2]}/${match[3]}`;
+    } catch {
+      return;
+    }
+  }
+  const relative = objectPath.replace(/^\/objects\//, "");
+  if (!relative.startsWith("social-posts/") && !relative.startsWith("dm-photos/")) return;
+  const namespace = relative.startsWith("social-posts/") ? "social-posts" : "dm-photos";
+  try {
+    if (!isNamespaceObjectPath(objectPath, namespace)) {
+      throw new InvalidMediaReferenceError("Media object path is not finalized");
+    }
+  } catch (error) {
+    if (error instanceof ObjectNotFoundError) {
+      throw new InvalidMediaReferenceError("Media object path is not finalized");
+    }
+    throw error;
+  }
+  return { objectPath, namespace };
+}
+
+function isNamespaceObjectPath(
+  objectPath: string,
+  namespace: "uploads/book-covers" | "book-covers"
+    | "uploads/social-posts" | "social-posts"
+    | "uploads/dm-photos" | "dm-photos",
+): boolean {
   const relative = relativeObjectPath(objectPath);
-  const match = relative.match(
-    namespace === "book-covers"
-      ? /^book-covers\/([^/]+)\/([A-Za-z0-9_-]+)$/
-      : /^uploads\/book-covers\/([^/]+)\/([A-Za-z0-9_-]+)$/,
-  );
+  const parts = namespace.split("/");
+  const prefix = parts.length === 2 ? `${parts[0]}/` : "";
+  const kind = parts.length === 2 ? parts[1] : parts[0];
+  return Boolean(relative.match(new RegExp(
+    `^${prefix}${kind}/([^/]+)/([A-Za-z0-9_-]+)$`,
+  )));
+}
+
+function ownerFromObjectPath(
+  objectPath: string,
+  namespace: "uploads/book-covers" | "book-covers"
+    | "uploads/social-posts" | "social-posts"
+    | "uploads/dm-photos" | "dm-photos",
+): string | null {
+  const relative = relativeObjectPath(objectPath);
+  const parts = namespace.split("/");
+  const prefix = parts.length === 2 ? `${parts[0]}/` : "";
+  const kind = parts.length === 2 ? parts[1] : parts[0];
+  const match = relative.match(new RegExp(`^${prefix}${kind}/([^/]+)/([A-Za-z0-9_-]+)$`));
   if (!match?.[1]) return null;
   try {
     return decodeURIComponent(match[1]);
@@ -197,6 +286,18 @@ export async function createBookCoverUpload(userId: string): Promise<{
   objectPath: string;
 }> {
   const objectPath = `uploads/book-covers/${ownerSegmentFor(userId)}/${randomUUID()}`;
+  const { bucketName, objectName } = parseObjectPath(`${privateObjectDir()}/${objectPath}`);
+  return {
+    uploadURL: await signPutUrl(bucketName, objectName),
+    objectPath: `/objects/${objectPath}`,
+  };
+}
+
+export async function createMediaUpload(
+  userId: string,
+  namespace: Exclude<MediaNamespace, "book-covers">,
+): Promise<{ uploadURL: string; objectPath: string }> {
+  const objectPath = `uploads/${namespace}/${ownerSegmentFor(userId)}/${randomUUID()}`;
   const { bucketName, objectName } = parseObjectPath(`${privateObjectDir()}/${objectPath}`);
   return {
     uploadURL: await signPutUrl(bucketName, objectName),
@@ -228,8 +329,19 @@ export async function finalizeBookCoverUpload(
 ): Promise<{
   objectPath: string;
 }> {
-  if (!isNamespaceObjectPath(objectPath, "uploads/book-covers")
-    || ownerFromObjectPath(objectPath, "uploads/book-covers") !== userId) {
+  return finalizeMediaUpload(userId, objectPath, expectedMetadata, "book-covers");
+}
+
+export async function finalizeMediaUpload(
+  userId: string,
+  objectPath: string,
+  expectedMetadata: { size: number; contentType: string } | undefined,
+  namespace: MediaNamespace,
+): Promise<{ objectPath: string }> {
+  const stagingNamespace = `uploads/${namespace}` as
+    | "uploads/book-covers" | "uploads/social-posts" | "uploads/dm-photos";
+  if (!isNamespaceObjectPath(objectPath, stagingNamespace)
+    || ownerFromObjectPath(objectPath, stagingNamespace) !== userId) {
     throw new ObjectOwnershipError();
   }
 
@@ -258,15 +370,17 @@ export async function finalizeBookCoverUpload(
   }
 
   const finalId = randomUUID();
-  const finalObjectName = `book-covers/${ownerSegmentFor(userId)}/${finalId}`;
+  const finalObjectName = `${namespace}/${ownerSegmentFor(userId)}/${finalId}`;
   const finalFile = bucket.file(finalObjectName);
   await stagingFile.copy(finalFile);
   await stagingFile.delete();
-  return { objectPath: objectPathFor("book-covers", userId, finalId) };
+  return { objectPath: objectPathFor(namespace, userId, finalId) };
 }
 
 export async function getStoredObject(objectPath: string): Promise<File> {
-  if (!isNamespaceObjectPath(objectPath, "book-covers")) throw new ObjectNotFoundError();
+  if (!MEDIA_NAMESPACES.some(namespace => isNamespaceObjectPath(objectPath, namespace))) {
+    throw new ObjectNotFoundError();
+  }
   const relativePath = relativeObjectPath(objectPath);
   const { bucketName, objectName } = parseObjectPath(`${privateObjectDir()}/${relativePath}`);
   const file = storage.bucket(bucketName).file(objectName);
@@ -276,8 +390,16 @@ export async function getStoredObject(objectPath: string): Promise<File> {
 }
 
 export async function deleteBookCover(userId: string, objectPath: string): Promise<void> {
-  if (!isNamespaceObjectPath(objectPath, "book-covers")
-    || ownerFromObjectPath(objectPath, "book-covers") !== userId) {
+  await deleteStoredObject(userId, objectPath, "book-covers");
+}
+
+export async function deleteStoredObject(
+  userId: string,
+  objectPath: string,
+  namespace: MediaNamespace,
+): Promise<void> {
+  if (!isNamespaceObjectPath(objectPath, namespace)
+    || ownerFromObjectPath(objectPath, namespace) !== userId) {
     throw new ObjectOwnershipError();
   }
   const relativePath = relativeObjectPath(objectPath);
@@ -288,7 +410,11 @@ export async function deleteBookCover(userId: string, objectPath: string): Promi
   await file.delete();
 }
 
-export async function streamStoredObject(file: File, response: import("express").Response): Promise<void> {
+export async function streamStoredObject(
+  file: File,
+  response: import("express").Response,
+  options: { private?: boolean } = {},
+): Promise<void> {
   const [metadata] = await file.getMetadata();
   const contentType = String(metadata.contentType || "").toLowerCase().split(";", 1)[0].trim();
   const size = Number(metadata.size);
@@ -297,11 +423,17 @@ export async function streamStoredObject(file: File, response: import("express")
     throw new ObjectNotFoundError();
   }
   response.setHeader("Content-Type", contentType);
-  response.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+  response.setHeader(
+    "Cache-Control",
+    options.private ? "private, no-store, max-age=0" : "public, max-age=31536000, immutable",
+  );
   response.setHeader("Content-Length", String(size));
   response.setHeader("Content-Disposition", "inline");
   response.setHeader("X-Content-Type-Options", "nosniff");
   response.setHeader("Content-Security-Policy", "default-src 'none'; sandbox");
-  response.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+  response.setHeader(
+    "Cross-Origin-Resource-Policy",
+    options.private ? "same-origin" : "cross-origin",
+  );
   Readable.from(file.createReadStream()).pipe(response);
 }

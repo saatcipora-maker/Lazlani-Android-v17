@@ -139,8 +139,6 @@ export const getHealthCheckQueryKey = () => {
     `/api/healthz`
     ] as const;
     }
-
-
 export const getHealthCheckQueryOptions = <TData = Awaited<ReturnType<typeof healthCheck>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof healthCheck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
@@ -1901,7 +1899,7 @@ export const getRequestUploadUrlUrl = () => {
 }
 
 /**
- * @summary Request a protected upload URL for a book cover
+ * @summary Request a protected upload URL for a book cover, post photo, or DM photo
  */
 export const requestUploadUrl = async (uploadUrlRequest: UploadUrlRequest, options?: RequestInit): Promise<UploadUrlResponse> => {
 
@@ -1950,7 +1948,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type RequestUploadUrlMutationError = ErrorType<ApiError>
 
     /**
- * @summary Request a protected upload URL for a book cover
+ * @summary Request a protected upload URL for a book cover, post photo, or DM photo
  */
 export const useRequestUploadUrl = <TError = ErrorType<ApiError>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestUploadUrl>>, TError,{data: BodyType<UploadUrlRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -1972,8 +1970,8 @@ export const getFinalizeUploadUrl = () => {
 }
 
 /**
- * Verifies the stored object's metadata and image signature, then promotes it into the public book-covers namespace.
- * @summary Verify and finalize a staged book cover
+ * Verifies the stored object's metadata and image signature, then promotes it into the requested protected namespace.
+ * @summary Verify and finalize a staged social media image
  */
 export const finalizeUpload = async (finalizeUploadRequest: FinalizeUploadRequest, options?: RequestInit): Promise<FinalizeUploadResult> => {
 
@@ -2022,7 +2020,7 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
     export type FinalizeUploadMutationError = ErrorType<ApiError>
 
     /**
- * @summary Verify and finalize a staged book cover
+ * @summary Verify and finalize a staged social media image
  */
 export const useFinalizeUpload = <TError = ErrorType<ApiError>,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeUpload>>, TError,{data: BodyType<FinalizeUploadRequest>}, TContext>, request?: SecondParameter<typeof customFetch>}
@@ -2044,7 +2042,8 @@ export const getGetStorageObjectUrl = (objectPath: string,) => {
 }
 
 /**
- * @summary Serve a persistent book cover
+ * Book covers are public. Post photos follow post visibility and DM photos are limited to message audience members.
+ * @summary Serve a persistent social media image
  */
 export const getStorageObject = async (objectPath: string, options?: RequestInit): Promise<Blob> => {
 
@@ -2091,7 +2090,7 @@ export type GetStorageObjectQueryError = ErrorType<ApiError>
 
 
 /**
- * @summary Serve a persistent book cover
+ * @summary Serve a persistent social media image
  */
 
 export function useGetStorageObject<TData = Awaited<ReturnType<typeof getStorageObject>>, TError = ErrorType<ApiError>>(

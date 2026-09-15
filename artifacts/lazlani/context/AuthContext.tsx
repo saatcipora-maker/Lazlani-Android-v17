@@ -49,6 +49,11 @@ const TOKEN_KEY = 'lazlani_auth_token';
 let currentAuthToken: string | null = null;
 setAuthTokenGetter(() => currentAuthToken);
 
+/** Used only by authenticated native media renderers (e.g. DM photos). */
+export function getCurrentAuthToken(): string | null {
+  return currentAuthToken;
+}
+
 function apiErrorMessage(error: unknown, fallback: string): string {
   if (!error || typeof error !== 'object') return fallback;
   const data = (error as { data?: unknown }).data;

@@ -5,7 +5,10 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+import type { SyncOperationPayloadAggregateType } from './syncOperationPayloadAggregateType';
 import type { SyncOperationPayloadChaptersItem } from './syncOperationPayloadChaptersItem';
+import type { SyncOperationPayloadMedia } from './syncOperationPayloadMedia';
+import type { SyncOperationPayloadPhoto } from './syncOperationPayloadPhoto';
 import type { SyncOperationPayloadValueCounts } from './syncOperationPayloadValueCounts';
 
 /**
@@ -15,7 +18,13 @@ export interface SyncOperationPayload {
   id?: string;
   targetType?: string;
   targetId?: string;
+  parentId?: string;
   recipientUserId?: string;
+  authorUserId?: string;
+  /** Photo/media metadata. Access is enforced by the containing record audience. */
+  media?: SyncOperationPayloadMedia;
+  /** Optional photo metadata for a post or direct message. */
+  photo?: SyncOperationPayloadPhoto;
   coverUrl?: string;
   title?: string;
   coverColor?: string;
@@ -58,5 +67,23 @@ export interface SyncOperationPayload {
      * @maximum 5
      */
   readonly ratingAverage?: number;
+  /**
+     * Absolute aggregate value for unique reading starts.
+     * @minimum 0
+     */
+  readonly aggregateCount?: number;
+  /**
+     * Alias of aggregateCount for mobile projections.
+     * @minimum 0
+     */
+  readonly absoluteCount?: number;
+  /**
+     * Monotonic event id for aggregate convergence.
+     * @minimum 1
+     */
+  readonly aggregateRevision?: number;
+  readonly aggregateType?: SyncOperationPayloadAggregateType;
+  /** @minimum 0 */
+  readonly aggregateValue?: number;
   [key: string]: unknown;
  }

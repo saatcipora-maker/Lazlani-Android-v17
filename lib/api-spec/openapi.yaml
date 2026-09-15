@@ -755,7 +755,7 @@ paths:
     post:
       operationId: requestUploadUrl
       tags: [storage]
-      summary: Request a protected upload URL for a book cover
+      summary: Request a protected upload URL for a book cover, post photo, or DM photo
       security:
         - bearerAuth: []
       requestBody:
@@ -793,8 +793,8 @@ paths:
     post:
       operationId: finalizeUpload
       tags: [storage]
-      summary: Verify and finalize a staged book cover
-      description: Verifies the stored object's metadata and image signature, then promotes it into the public book-covers namespace.
+      summary: Verify and finalize a staged social media image
+      description: Verifies the stored object's metadata and image signature, then promotes it into the requested protected namespace.
       security:
         - bearerAuth: []
       requestBody:
@@ -838,14 +838,15 @@ paths:
     get:
       operationId: getStorageObject
       tags: [storage]
-      summary: Serve a persistent book cover
+      summary: Serve a persistent social media image
+      description: Book covers are public. Post photos follow post visibility and DM photos are limited to message audience members.
       parameters:
         - name: objectPath
           in: path
           required: true
           schema:
             type: string
-            pattern: "^book-covers/"
+            pattern: "^(book-covers|social-posts|dm-photos)/"
       responses:
         "200":
           description: Stored image
@@ -868,6 +869,18 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
+        "401":
+          description: Authentication required for private media
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+        "403":
+          description: Caller is not in the media audience
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
     delete:
       operationId: deleteStorageObject
       tags: [storage]
@@ -880,7 +893,7 @@ paths:
           required: true
           schema:
             type: string
-            pattern: "^book-covers/"
+            pattern: "^(book-covers|social-posts|dm-photos)/"
       responses:
         "204":
           description: Object deleted
@@ -939,6 +952,11 @@ components:
         contentType:
           type: string
           enum: [image/jpeg, image/png, image/webp]
+        namespace:
+          type: string
+          enum: [book-covers, social-posts, dm-photos]
+          default: book-covers
+          description: Protected object namespace.
       required: [name, size, contentType]
     UploadUrlResponse:
       type: object
@@ -947,7 +965,7 @@ components:
           type: string
         objectPath:
           type: string
-          pattern: "^/objects/uploads/book-covers/"
+          pattern: "^/objects/uploads/(book-covers|social-posts|dm-photos)/"
         metadata:
           $ref: "#/components/schemas/UploadUrlRequest"
       required: [uploadURL, objectPath, metadata]
@@ -956,7 +974,7 @@ components:
       properties:
         objectPath:
           type: string
-          pattern: "^/objects/uploads/book-covers/"
+          pattern: "^/objects/uploads/(book-covers|social-posts|dm-photos)/"
         size:
           type: integer
           minimum: 1
@@ -970,7 +988,7 @@ components:
       properties:
         objectPath:
           type: string
-          pattern: "^/objects/book-covers/"
+          pattern: "^/objects/(book-covers|social-posts|dm-photos)/"
       required: [objectPath]
     PasswordResetRequestInput:
       type: object
@@ -1262,8 +1280,10 @@ components:
       type: string
       enum:
         - create_message
+        - delete_message
         - create_notification
         - create_comment
+        - delete_comment
         - create_reply
         - create_ozel_comment
         - create_ozel_reply
@@ -1274,6 +1294,10 @@ components:
         - create_book
         - update_book
         - delete_book
+        - create_post
+        - update_post
+        - delete_post
+        - start_reading
     SyncEntityType:
       type: string
       enum:
@@ -1288,6 +1312,8 @@ components:
         - reaction
         - vote
         - book
+        - post
+        - reading
     SyncOperationInput:
       type: object
       properties:
@@ -1307,7 +1333,17 @@ components:
         id: { type: string }
         targetType: { type: string }
         targetId: { type: string }
+        parentId: { type: string }
         recipientUserId: { type: string }
+        authorUserId: { type: string }
+        media:
+          type: object
+          additionalProperties: true
+          description: Photo/media metadata. Access is enforced by the containing record audience.
+        photo:
+          type: object
+          additionalProperties: true
+          description: Optional photo metadata for a post or direct message.
         coverUrl: { type: string }
         title: { type: string }
         coverColor: { type: string }
@@ -1360,6 +1396,29 @@ components:
           maximum: 5
           readOnly: true
           description: Authoritative average of all active ratings for the target.
+        aggregateCount:
+          type: integer
+          minimum: 0
+          readOnly: true
+          description: Absolute aggregate value for unique reading starts.
+        absoluteCount:
+          type: integer
+          minimum: 0
+          readOnly: true
+          description: Alias of aggregateCount for mobile projections.
+        aggregateRevision:
+          type: integer
+          minimum: 1
+          readOnly: true
+          description: Monotonic event id for aggregate convergence.
+        aggregateType:
+          type: string
+          enum: [absolute]
+          readOnly: true
+        aggregateValue:
+          type: integer
+          minimum: 0
+          readOnly: true
       additionalProperties: true
     SyncEvent:
       type: object

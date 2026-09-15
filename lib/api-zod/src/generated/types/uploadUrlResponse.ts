@@ -9,7 +9,7 @@ import type { UploadUrlRequest } from './uploadUrlRequest';
 
 export interface UploadUrlResponse {
   uploadURL: string;
-  /** @pattern ^/objects/uploads/book-covers/ */
+  /** @pattern ^/objects/uploads/(book-covers|social-posts|dm-photos)/ */
   objectPath: string;
   metadata: UploadUrlRequest;
 }

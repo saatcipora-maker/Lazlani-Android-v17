@@ -8,6 +8,8 @@
     "build": "node scripts/build.js",
     "serve": "node server/serve.js",
     "test:sync-mobile": "node --experimental-strip-types tests/legacyMigrationPlanner.test.mjs",
+    "test:social-projection": "node --experimental-strip-types tests/socialProjection.test.mjs",
+    "test:social-sync": "node --experimental-strip-types tests/socialSyncRegression.test.mjs",
     "test:smoke": "nix shell nixpkgs#chromium --command sh -c 'PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=\"$(command -v chromium)\" playwright test --config=tests/playwright.config.ts'",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test:demo-cleanup": "sh -c 'mkdir -p .test-dist; pnpm --filter @workspace/api-server exec esbuild ../lazlani/utils/demoDataCleanup.test.mjs --bundle --platform=node --format=cjs --define:__DEV__=false --outfile=../lazlani/.test-dist/demoDataCleanup.test.cjs; status=$?; if [ $status -eq 0 ]; then node --test .test-dist/demoDataCleanup.test.cjs; status=$?; fi; rm -rf .test-dist; exit $status'"

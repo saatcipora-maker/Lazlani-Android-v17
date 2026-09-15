@@ -15,6 +15,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { Post } from '@/data/types';
 import PostCard from '@/components/PostCard';
+import { uploadSocialPostImage } from '@/services/socialMediaUpload';
 
 type ContentType = 'text' | 'photo' | 'story' | 'book';
 
@@ -25,7 +26,7 @@ export default function BultenScreen() {
   const { user } = useAuth();
   const {
     posts, postComments, postLikedIds, postSavedIds, postCommentLikedIds,
-    togglePostLike, togglePostSave, addPost, addPostComment, addPostCommentReply,
+    togglePostLike, togglePostSave, addPost, deletePost, addPostComment, deletePostComment, addPostCommentReply,
     togglePostCommentLike, addReactionToPostComment,
     stories, books, checkContent,
   } = useData();
@@ -73,10 +74,28 @@ export default function BultenScreen() {
     setShowLinkedPicker(false);
   };
 
-  const submitPost = () => {
+  const submitPost = async () => {
     if (!postContent.trim() && selectedImages.length === 0) return;
+    if (isSubmitting) return;
     setIsSubmitting(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+
+    const checkText = [postTitle, postContent].filter(Boolean).join(' ');
+    const filterResult = checkContent(checkText);
+    if (!filterResult.ok) {
+      Alert.alert('İçerik Filtresi', filterResult.message ?? 'Uygunsuz içerik tespit edildi.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    let uploadedImages: string[] = [];
+    try {
+      for (const uri of selectedImages) uploadedImages.push(await uploadSocialPostImage(uri));
+    } catch (error) {
+      Alert.alert('Fotoğraf yüklenemedi', error instanceof Error ? error.message : 'Lütfen tekrar deneyin.');
+      setIsSubmitting(false);
+      return;
+    }
 
     const newPost: Post = {
       id: `post-${Date.now()}`,
@@ -85,7 +104,7 @@ export default function BultenScreen() {
       authorAvatarColor: user.avatarColor,
       title: postTitle.trim() || undefined,
       content: postContent.trim(),
-      imageUris: selectedImages.length > 0 ? selectedImages : undefined,
+      imageUris: uploadedImages.length > 0 ? uploadedImages : undefined,
       contentType: postType,
       linkedContentId: linkedContentId || undefined,
       linkedContentTitle: linkedContentTitle || undefined,
@@ -96,13 +115,6 @@ export default function BultenScreen() {
       createdAt: new Date().toISOString(),
     };
 
-    const checkText = [postTitle, postContent].filter(Boolean).join(' ');
-    const filterResult = checkContent(checkText);
-    if (!filterResult.ok) {
-      Alert.alert('İçerik Filtresi', filterResult.message ?? 'Uygunsuz içerik tespit edildi.');
-      setIsSubmitting(false);
-      return;
-    }
     addPost(newPost);
     resetForm();
     setIsSubmitting(false);
@@ -116,8 +128,10 @@ export default function BultenScreen() {
       isSaved={postSavedIds.has(item.id)}
       onLike={() => togglePostLike(item.id)}
       onSave={() => togglePostSave(item.id)}
+      onDelete={() => deletePost(item.id)}
       postComments={postComments.filter(c => c.postId === item.id)}
       onAddComment={addPostComment}
+      onDeleteComment={deletePostComment}
       onAddReply={addPostCommentReply}
       onToggleCommentLike={togglePostCommentLike}
       onAddReaction={addReactionToPostComment}

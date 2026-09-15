@@ -251,7 +251,8 @@ export interface Message {
   conversationId: string;
   senderId: string;
   content: string;
-  type: 'text';
+  type: 'text' | 'photo';
+  mediaUrl?: string;
   isRead: boolean;
   createdAt: string;
   likedBy?: string[];

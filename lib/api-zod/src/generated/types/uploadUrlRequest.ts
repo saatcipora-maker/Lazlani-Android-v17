@@ -6,6 +6,7 @@
  * OpenAPI spec version: 0.1.0
  */
 import type { UploadUrlRequestContentType } from './uploadUrlRequestContentType';
+import type { UploadUrlRequestNamespace } from './uploadUrlRequestNamespace';
 
 export interface UploadUrlRequest {
   /**
@@ -19,4 +20,6 @@ export interface UploadUrlRequest {
      */
   size: number;
   contentType: UploadUrlRequestContentType;
+  /** Protected object namespace. */
+  namespace?: UploadUrlRequestNamespace;
 }

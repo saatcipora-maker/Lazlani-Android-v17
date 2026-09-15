@@ -574,7 +574,7 @@ export const GetSyncSnapshotResponse = zod.object({
   "cursor": zod.number(),
   "records": zod.array(zod.object({
   "id": zod.string(),
-  "entityType": zod.enum(['message', 'notification', 'comment', 'reply', 'ozel_comment', 'ozel_reply', 'ozel_video', 'like', 'reaction', 'vote', 'book']),
+  "entityType": zod.enum(['message', 'notification', 'comment', 'reply', 'ozel_comment', 'ozel_reply', 'ozel_video', 'like', 'reaction', 'vote', 'book', 'post', 'reading']),
   "payload": zod.record(zod.string(), zod.unknown()),
   "version": zod.number(),
   "updatedAt": zod.coerce.date()
@@ -600,16 +600,27 @@ export const submitSyncOperationBodyPayloadRatingCountMin = 0;
 export const submitSyncOperationBodyPayloadRatingAverageMin = 0;
 export const submitSyncOperationBodyPayloadRatingAverageMax = 5;
 
+export const submitSyncOperationBodyPayloadAggregateCountMin = 0;
+
+export const submitSyncOperationBodyPayloadAbsoluteCountMin = 0;
+
+
+export const submitSyncOperationBodyPayloadAggregateValueMin = 0;
+
 
 
 export const SubmitSyncOperationBody = zod.object({
   "clientOperationId": zod.string().min(1).max(submitSyncOperationBodyClientOperationIdMax),
-  "operationType": zod.enum(['create_message', 'create_notification', 'create_comment', 'create_reply', 'create_ozel_comment', 'create_ozel_reply', 'upsert_ozel_video', 'toggle_like', 'set_reaction', 'toggle_vote', 'create_book', 'update_book', 'delete_book']),
+  "operationType": zod.enum(['create_message', 'delete_message', 'create_notification', 'create_comment', 'delete_comment', 'create_reply', 'create_ozel_comment', 'create_ozel_reply', 'upsert_ozel_video', 'toggle_like', 'set_reaction', 'toggle_vote', 'create_book', 'update_book', 'delete_book', 'create_post', 'update_post', 'delete_post', 'start_reading']),
   "payload": zod.object({
   "id": zod.string().optional(),
   "targetType": zod.string().optional(),
   "targetId": zod.string().optional(),
+  "parentId": zod.string().optional(),
   "recipientUserId": zod.string().optional(),
+  "authorUserId": zod.string().optional(),
+  "media": zod.record(zod.string(), zod.unknown()).optional().describe('Photo\/media metadata. Access is enforced by the containing record audience.'),
+  "photo": zod.record(zod.string(), zod.unknown()).optional().describe('Optional photo metadata for a post or direct message.'),
   "coverUrl": zod.string().optional(),
   "title": zod.string().optional(),
   "coverColor": zod.string().optional(),
@@ -633,7 +644,12 @@ export const SubmitSyncOperationBody = zod.object({
   "activeCount": zod.number().min(submitSyncOperationBodyPayloadActiveCountMin).optional().describe('Authoritative count of active likes or reactions for the target.'),
   "valueCounts": zod.record(zod.string(), zod.number().min(submitSyncOperationBodyPayloadValueCountsMinOne)).optional().describe('Authoritative active count by reaction value.'),
   "ratingCount": zod.number().min(submitSyncOperationBodyPayloadRatingCountMin).optional().describe('Authoritative count of active ratings for the target.'),
-  "ratingAverage": zod.number().min(submitSyncOperationBodyPayloadRatingAverageMin).max(submitSyncOperationBodyPayloadRatingAverageMax).optional().describe('Authoritative average of all active ratings for the target.')
+  "ratingAverage": zod.number().min(submitSyncOperationBodyPayloadRatingAverageMin).max(submitSyncOperationBodyPayloadRatingAverageMax).optional().describe('Authoritative average of all active ratings for the target.'),
+  "aggregateCount": zod.number().min(submitSyncOperationBodyPayloadAggregateCountMin).optional().describe('Absolute aggregate value for unique reading starts.'),
+  "absoluteCount": zod.number().min(submitSyncOperationBodyPayloadAbsoluteCountMin).optional().describe('Alias of aggregateCount for mobile projections.'),
+  "aggregateRevision": zod.number().min(1).optional().describe('Monotonic event id for aggregate convergence.'),
+  "aggregateType": zod.enum(['absolute']).optional(),
+  "aggregateValue": zod.number().min(submitSyncOperationBodyPayloadAggregateValueMin).optional()
 }).describe('Typed common operation fields. rating is required by toggle_vote and is always an integer from 1 through 5.')
 })
 
@@ -642,14 +658,14 @@ export const SubmitSyncOperationResponse = zod.object({
   "duplicate": zod.boolean(),
   "event": zod.object({
   "id": zod.number(),
-  "entityType": zod.enum(['message', 'notification', 'comment', 'reply', 'ozel_comment', 'ozel_reply', 'ozel_video', 'like', 'reaction', 'vote', 'book']),
+  "entityType": zod.enum(['message', 'notification', 'comment', 'reply', 'ozel_comment', 'ozel_reply', 'ozel_video', 'like', 'reaction', 'vote', 'book', 'post', 'reading']),
   "entityId": zod.string(),
   "payload": zod.record(zod.string(), zod.unknown()),
   "createdAt": zod.coerce.date()
 }),
   "record": zod.object({
   "id": zod.string(),
-  "entityType": zod.enum(['message', 'notification', 'comment', 'reply', 'ozel_comment', 'ozel_reply', 'ozel_video', 'like', 'reaction', 'vote', 'book']),
+  "entityType": zod.enum(['message', 'notification', 'comment', 'reply', 'ozel_comment', 'ozel_reply', 'ozel_video', 'like', 'reaction', 'vote', 'book', 'post', 'reading']),
   "payload": zod.record(zod.string(), zod.unknown()),
   "version": zod.number(),
   "updatedAt": zod.coerce.date()
@@ -681,26 +697,27 @@ export const StreamSyncEventsResponse = zod.unknown()
 
 
 /**
- * @summary Request a protected upload URL for a book cover
+ * @summary Request a protected upload URL for a book cover, post photo, or DM photo
  */
 export const requestUploadUrlBodyNameMax = 180;
 
 export const requestUploadUrlBodySizeMax = 10485760;
 
-
+export const requestUploadUrlBodyNamespaceDefault = `book-covers`;
 
 export const RequestUploadUrlBody = zod.object({
   "name": zod.string().min(1).max(requestUploadUrlBodyNameMax),
   "size": zod.number().min(1).max(requestUploadUrlBodySizeMax),
-  "contentType": zod.enum(['image/jpeg', 'image/png', 'image/webp'])
+  "contentType": zod.enum(['image/jpeg', 'image/png', 'image/webp']),
+  "namespace": zod.enum(['book-covers', 'social-posts', 'dm-photos']).default(requestUploadUrlBodyNamespaceDefault).describe('Protected object namespace.')
 })
 
-export const requestUploadUrlResponseObjectPathRegExp = new RegExp('^/objects/uploads/book-covers');
+export const requestUploadUrlResponseObjectPathRegExp = new RegExp('^/objects/uploads/(book-covers|social-posts|dm-photos)');
 export const requestUploadUrlResponseMetadataNameMax = 180;
 
 export const requestUploadUrlResponseMetadataSizeMax = 10485760;
 
-
+export const requestUploadUrlResponseMetadataNamespaceDefault = `book-covers`;
 
 export const RequestUploadUrlResponse = zod.object({
   "uploadURL": zod.string(),
@@ -708,16 +725,17 @@ export const RequestUploadUrlResponse = zod.object({
   "metadata": zod.object({
   "name": zod.string().min(1).max(requestUploadUrlResponseMetadataNameMax),
   "size": zod.number().min(1).max(requestUploadUrlResponseMetadataSizeMax),
-  "contentType": zod.enum(['image/jpeg', 'image/png', 'image/webp'])
+  "contentType": zod.enum(['image/jpeg', 'image/png', 'image/webp']),
+  "namespace": zod.enum(['book-covers', 'social-posts', 'dm-photos']).default(requestUploadUrlResponseMetadataNamespaceDefault).describe('Protected object namespace.')
 })
 })
 
 
 /**
- * Verifies the stored object's metadata and image signature, then promotes it into the public book-covers namespace.
- * @summary Verify and finalize a staged book cover
+ * Verifies the stored object's metadata and image signature, then promotes it into the requested protected namespace.
+ * @summary Verify and finalize a staged social media image
  */
-export const finalizeUploadBodyObjectPathRegExp = new RegExp('^/objects/uploads/book-covers');
+export const finalizeUploadBodyObjectPathRegExp = new RegExp('^/objects/uploads/(book-covers|social-posts|dm-photos)');
 export const finalizeUploadBodySizeMax = 10485760;
 
 
@@ -728,7 +746,7 @@ export const FinalizeUploadBody = zod.object({
   "contentType": zod.enum(['image/jpeg', 'image/png', 'image/webp']).optional()
 })
 
-export const finalizeUploadResponseObjectPathRegExp = new RegExp('^/objects/book-covers');
+export const finalizeUploadResponseObjectPathRegExp = new RegExp('^/objects/(book-covers|social-posts|dm-photos)');
 
 
 export const FinalizeUploadResponse = zod.object({
@@ -737,9 +755,10 @@ export const FinalizeUploadResponse = zod.object({
 
 
 /**
- * @summary Serve a persistent book cover
+ * Book covers are public. Post photos follow post visibility and DM photos are limited to message audience members.
+ * @summary Serve a persistent social media image
  */
-export const getStorageObjectPathObjectPathRegExp = new RegExp('^book-covers');
+export const getStorageObjectPathObjectPathRegExp = new RegExp('^(book-covers|social-posts|dm-photos)');
 
 
 export const GetStorageObjectParams = zod.object({
@@ -752,7 +771,7 @@ export const GetStorageObjectResponse = zod.unknown()
 /**
  * @summary Delete an owned finalized book cover
  */
-export const deleteStorageObjectPathObjectPathRegExp = new RegExp('^book-covers');
+export const deleteStorageObjectPathObjectPathRegExp = new RegExp('^(book-covers|social-posts|dm-photos)');
 
 
 export const DeleteStorageObjectParams = zod.object({

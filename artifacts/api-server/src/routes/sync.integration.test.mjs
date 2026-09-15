@@ -902,3 +902,60 @@ test("desired-state likes and rating replacement keep one user-target interactio
   assert.equal(secondVote.body.event.payload.ratingAverage, 5);
   assert.equal(secondVote.body.event.payload.value, undefined);
 });
+
+test("comment aggregates include legacy rows without parent_id across create and delete", async () => {
+  const parentId = `comment-parent-legacy-${marker}`;
+  const legacyId = `comment-legacy-${marker}`;
+  const createdId = `comment-new-${marker}`;
+  await db.insert(syncRecordsTable).values({
+    id: legacyId,
+    entityType: "comment",
+    ownerUserId: userId,
+    isPublic: true,
+    audienceUserIds: [],
+    payload: {
+      id: legacyId,
+      postId: parentId,
+      body: "legacy comment",
+      actorUserId: userId,
+    },
+    parentId: null,
+    version: 1,
+    deletedAt: null,
+  });
+
+  try {
+    const created = await request("/sync/operations", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+      body: JSON.stringify({
+        clientOperationId: `comment-legacy-create-${marker}`,
+        operationType: "create_comment",
+        payload: { id: createdId, postId: parentId, body: "new comment" },
+      }),
+    });
+    assert.equal(created.response.status, 200);
+    assert.equal(created.body.event.payload.parentId, parentId);
+    assert.equal(created.body.event.payload.commentsCount, 2);
+    assert.equal(created.body.event.payload.aggregateRevision, created.body.event.id);
+
+    const deleted = await request("/sync/operations", {
+      method: "POST",
+      headers: { "content-type": "application/json", authorization: `Bearer ${token}` },
+      body: JSON.stringify({
+        clientOperationId: `comment-legacy-delete-${marker}`,
+        operationType: "delete_comment",
+        payload: { id: createdId },
+      }),
+    });
+    assert.equal(deleted.response.status, 200);
+    assert.equal(deleted.body.event.payload.parentId, parentId);
+    assert.equal(deleted.body.event.payload.commentsCount, 1);
+    assert.equal(deleted.body.event.payload.aggregateRevision, deleted.body.event.id);
+  } finally {
+    await db.delete(syncRecordsTable).where(eq(syncRecordsTable.id, legacyId));
+    await db.delete(syncRecordsTable).where(eq(syncRecordsTable.id, createdId));
+    await db.delete(syncEventsTable).where(eq(syncEventsTable.entityId, legacyId));
+    await db.delete(syncEventsTable).where(eq(syncEventsTable.entityId, createdId));
+  }
+});

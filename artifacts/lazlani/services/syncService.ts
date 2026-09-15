@@ -14,6 +14,7 @@ import {
   mergeProjectionRecords,
   projectionEntityKey,
 } from '@/services/syncProjectionJournal';
+import { apiUrl } from '@/services/apiOrigin';
 export type { SyncEventCommitOptions } from '@/services/syncEventCommit';
 
 const QUEUE_KEY = 'lazlani_sync_queue';
@@ -102,11 +103,6 @@ export function parseSseBuffer(input: string): ParsedSseResult {
 
 function operationId(): string {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 11)}`;
-}
-
-function apiOrigin(): string {
-  const domain = process.env.EXPO_PUBLIC_DOMAIN;
-  return domain ? `https://${domain}` : '';
 }
 
 type ApplyRecord = (record: SyncRecord, own: boolean) => void;
@@ -429,7 +425,7 @@ export class SyncService {
     this.abortController = controller;
     try {
       const query = this.cursor ? `?cursor=${encodeURIComponent(this.cursor)}` : '';
-      const response = await expoFetch(`${apiOrigin()}/api/sync/events${query}`, {
+      const response = await expoFetch(`${apiUrl('/api/sync/events')}${query}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           Accept: 'text/event-stream',

@@ -8,7 +8,7 @@
 import type { FinalizeUploadRequestContentType } from './finalizeUploadRequestContentType';
 
 export interface FinalizeUploadRequest {
-  /** @pattern ^/objects/uploads/book-covers/ */
+  /** @pattern ^/objects/uploads/(book-covers|social-posts|dm-photos)/ */
   objectPath: string;
   /**
      * @minimum 1

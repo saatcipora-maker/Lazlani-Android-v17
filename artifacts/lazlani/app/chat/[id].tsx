@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Alert, FlatList, Keyboard, Platform, StyleSheet, Text, TextInput,
+  Alert, FlatList, Image, Keyboard, Platform, StyleSheet, Text, TextInput,
   TouchableOpacity, useWindowDimensions, View,
 } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -9,11 +9,13 @@ import { Ionicons } from '@expo/vector-icons';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
+import * as ImagePicker from 'expo-image-picker';
 import { useColors } from '@/hooks/useColors';
 import { useData } from '@/context/DataContext';
-import { useAuth } from '@/context/AuthContext';
+import { getCurrentAuthToken, useAuth } from '@/context/AuthContext';
 import { Message } from '@/data/types';
 import UserAvatar from '@/components/UserAvatar';
+import { uploadDmPhoto } from '@/services/socialMediaUpload';
 
 export default function ChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -22,8 +24,13 @@ export default function ChatScreen() {
   const { height: screenHeight } = useWindowDimensions();
   const router = useRouter();
   const { user } = useAuth();
-  const { conversations, messagesByConv, sendMessage, markConversationRead, toggleMessageLike } = useData();
+  const {
+    conversations, messagesByConv, sendMessage, deleteMessage,
+    markConversationRead, toggleMessageLike,
+  } = useData();
   const [text, setText] = useState('');
+  const [photoUri, setPhotoUri] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
   const [isKeyboardVisible, setIsKeyboardVisible] = useState(false);
   const topPad = Platform.OS === 'web' ? 67 : insets.top;
   const bottomPad = insets.bottom;
@@ -63,11 +70,28 @@ export default function ChatScreen() {
     );
   }
 
-  const handleSend = () => {
-    if (!text.trim()) return;
+  const pickPhoto = async () => {
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      quality: 0.8,
+    });
+    if (!result.canceled) setPhotoUri(result.assets[0]?.uri ?? null);
+  };
+
+  const handleSend = async () => {
+    if ((!text.trim() && !photoUri) || isSending) return;
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    sendMessage(id, user.id, text.trim());
-    setText('');
+    setIsSending(true);
+    try {
+      const mediaUrl = photoUri ? await uploadDmPhoto(photoUri) : undefined;
+      sendMessage(id, user.id, text.trim(), mediaUrl);
+      setText('');
+      setPhotoUri(null);
+    } catch (error) {
+      Alert.alert('Fotoğraf gönderilemedi', error instanceof Error ? error.message : 'Lütfen tekrar deneyin.');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   const renderMessage = ({ item }: { item: Message }) => {
@@ -87,9 +111,23 @@ export default function ChatScreen() {
             ? { backgroundColor: colors.primary, borderBottomRightRadius: 4 }
             : { backgroundColor: colors.card, borderBottomLeftRadius: 4 },
         ]}>
-          <Text style={[styles.msgText, { color: isMe ? '#fff' : colors.foreground }]}>
-            {item.content}
-          </Text>
+          {item.mediaUrl && (
+            <Image
+              source={{
+                uri: item.mediaUrl,
+                headers: getCurrentAuthToken()
+                  ? { Authorization: `Bearer ${getCurrentAuthToken()}` }
+                  : undefined,
+              }}
+              style={styles.messageImage}
+              resizeMode="cover"
+            />
+          )}
+          {!!item.content && (
+            <Text style={[styles.msgText, { color: isMe ? '#fff' : colors.foreground }]}>
+              {item.content}
+            </Text>
+          )}
           <Text style={[styles.msgTime, { color: isMe ? 'rgba(255,255,255,0.6)' : colors.mutedForeground }]}>
             {new Date(item.createdAt).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })}
           </Text>
@@ -98,6 +136,14 @@ export default function ChatScreen() {
             accessibilityLabel={item.likedBy?.includes(user.id) ? 'Mesaj beğenisini kaldır' : 'Mesajı beğen'}
             onPress={() => toggleMessageLike(id, item.id, user.id)}
             style={styles.messageLike}
+            onLongPress={() => {
+              if (isMe) {
+                Alert.alert('Mesajı sil', 'Bu mesajı tüm cihazlardan kaldırmak ister misin?', [
+                  { text: 'Vazgeç', style: 'cancel' },
+                  { text: 'Sil', style: 'destructive', onPress: () => deleteMessage(id, item.id) },
+                ]);
+              }
+            }}
           >
             <Ionicons
               name={item.likedBy?.includes(user.id) ? 'heart' : 'heart-outline'}
@@ -177,7 +223,7 @@ export default function ChatScreen() {
             style={styles.attachBtn}
             accessibilityRole="button"
             accessibilityLabel="Fotoğraf ekle"
-            onPress={() => Alert.alert('Fotoğraf Ekleme', 'Mesajlara fotoğraf ekleme özelliği hazırlanıyor.')}
+             onPress={pickPhoto}
           >
             <Ionicons name="image-outline" size={22} color={colors.mutedForeground} />
           </TouchableOpacity>
@@ -193,6 +239,12 @@ export default function ChatScreen() {
             styles.inputWrap,
             { backgroundColor: colors.card, borderColor: colors.border },
           ]}>
+            {photoUri && (
+              <TouchableOpacity onPress={() => setPhotoUri(null)} style={styles.photoPreview}>
+                <Image source={{ uri: photoUri }} style={styles.photoPreviewImage} />
+                <Ionicons name="close-circle" size={18} color="#EF4444" />
+              </TouchableOpacity>
+            )}
             <TextInput
               style={[styles.input, { color: colors.foreground, fontFamily: 'Poppins_400Regular' }]}
               placeholder="Mesaj yaz..."
@@ -207,8 +259,8 @@ export default function ChatScreen() {
           </View>
           <TouchableOpacity
             onPress={handleSend}
-            disabled={!text.trim()}
-            style={[styles.sendBtn, { opacity: text.trim() ? 1 : 0.4 }]}
+             disabled={(!text.trim() && !photoUri) || isSending}
+             style={[styles.sendBtn, { opacity: text.trim() || photoUri ? 1 : 0.4 }]}
           >
             <LinearGradient
               colors={['#9B59F5', '#EC4899']}
@@ -247,6 +299,7 @@ const styles = StyleSheet.create({
     maxWidth: '72%', borderRadius: 18,
     paddingHorizontal: 14, paddingVertical: 10,
   },
+  messageImage: { width: 180, height: 180, borderRadius: 12, marginBottom: 6 },
   msgText: { fontFamily: 'Poppins_400Regular', fontSize: 14, lineHeight: 20 },
   msgTime: { fontFamily: 'Poppins_400Regular', fontSize: 10, marginTop: 4, alignSelf: 'flex-end' },
   messageLike: { flexDirection: 'row', alignItems: 'center', alignSelf: 'flex-end', gap: 3, marginTop: 4, paddingVertical: 2 },
@@ -262,6 +315,8 @@ const styles = StyleSheet.create({
     minHeight: 42, justifyContent: 'center',
   },
   input: { fontSize: 14, maxHeight: 120 },
+  photoPreview: { flexDirection: 'row', alignItems: 'center', gap: 4, marginBottom: 6 },
+  photoPreviewImage: { width: 48, height: 48, borderRadius: 8 },
   sendBtn: { width: 42, height: 42, marginBottom: 2 },
   sendBtnGrad: { flex: 1, borderRadius: 21, alignItems: 'center', justifyContent: 'center' },
 });

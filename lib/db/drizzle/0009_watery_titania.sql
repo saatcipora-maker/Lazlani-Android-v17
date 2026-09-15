@@ -1,0 +1,1 @@
+CREATE INDEX "sync_interactions_target_aggregate_idx" ON "sync_interactions" USING btree ("target_type","target_id","interaction_type");

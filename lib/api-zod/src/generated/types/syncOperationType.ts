@@ -11,8 +11,10 @@ export type SyncOperationType = typeof SyncOperationType[keyof typeof SyncOperat
 
 export const SyncOperationType = {
   create_message: 'create_message',
+  delete_message: 'delete_message',
   create_notification: 'create_notification',
   create_comment: 'create_comment',
+  delete_comment: 'delete_comment',
   create_reply: 'create_reply',
   create_ozel_comment: 'create_ozel_comment',
   create_ozel_reply: 'create_ozel_reply',
@@ -23,4 +25,8 @@ export const SyncOperationType = {
   create_book: 'create_book',
   update_book: 'update_book',
   delete_book: 'delete_book',
+  create_post: 'create_post',
+  update_post: 'update_post',
+  delete_post: 'delete_post',
+  start_reading: 'start_reading',
 } as const;

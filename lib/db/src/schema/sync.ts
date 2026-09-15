@@ -3,6 +3,7 @@ import {
   boolean,
   integer,
   jsonb,
+  index,
   pgEnum,
   pgTable,
   serial,
@@ -14,6 +15,7 @@ import { z } from "zod/v4";
 
 export const syncEntityTypes = [
   "message",
+  "post",
   "notification",
   "comment",
   "reply",
@@ -24,14 +26,17 @@ export const syncEntityTypes = [
   "reaction",
   "vote",
   "book",
+  "reading",
 ] as const;
 export type SyncEntityType = (typeof syncEntityTypes)[number];
 export const syncEntityTypeEnum = pgEnum("sync_entity_type", syncEntityTypes);
 
 export const syncOperationTypes = [
   "create_message",
+  "delete_message",
   "create_notification",
   "create_comment",
+  "delete_comment",
   "create_reply",
   "create_ozel_comment",
   "create_ozel_reply",
@@ -42,11 +47,15 @@ export const syncOperationTypes = [
   "create_book",
   "update_book",
   "delete_book",
+  "create_post",
+  "update_post",
+  "delete_post",
+  "start_reading",
 ] as const;
 export type SyncOperationType = (typeof syncOperationTypes)[number];
 export const syncOperationTypeEnum = pgEnum("sync_operation_type", syncOperationTypes);
 
-export const syncInteractionTypes = ["like", "reaction", "vote"] as const;
+export const syncInteractionTypes = ["like", "reaction", "vote", "reading"] as const;
 export type SyncInteractionType = (typeof syncInteractionTypes)[number];
 export const syncInteractionTypeEnum = pgEnum("sync_interaction_type", syncInteractionTypes);
 
@@ -64,6 +73,7 @@ export const syncRecordsTable = pgTable(
     isPublic: boolean("is_public").notNull().default(false),
     audienceUserIds: text("audience_user_ids").array().notNull().default([]),
     payload: jsonb("payload").notNull(),
+    parentId: text("parent_id"),
     version: integer("version").notNull().default(1),
     deletedAt: timestamp("deleted_at", { withTimezone: true }),
     updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
@@ -71,6 +81,7 @@ export const syncRecordsTable = pgTable(
   },
   table => ({
     entityIdentity: unique("sync_records_entity_identity").on(table.entityType, table.id),
+    parentLookup: index("sync_records_parent_lookup").on(table.entityType, table.parentId, table.deletedAt),
   }),
 );
 
@@ -130,6 +141,34 @@ export const syncInteractionsTable = pgTable(
       table.targetId,
       table.interactionType,
     ),
+    aggregateTargetLookup: index("sync_interactions_target_aggregate_idx").on(
+      table.targetType,
+      table.targetId,
+      table.interactionType,
+    ),
+  }),
+);
+
+/**
+ * A finalized media object is bound to one canonical social record. Keeping
+ * this relation separate from JSON payloads makes audience checks exact and
+ * indexed, and prevents re-attaching a DM photo to another conversation.
+ */
+export const syncMediaAttachmentsTable = pgTable(
+  "sync_media_attachments",
+  {
+    objectPath: text("object_path").primaryKey(),
+    entityType: syncEntityTypeEnum("entity_type").notNull(),
+    entityId: text("entity_id").notNull(),
+    ownerUserId: text("owner_user_id").notNull(),
+    audienceUserIds: text("audience_user_ids").array().notNull().default([]),
+    isPublic: boolean("is_public").notNull().default(false),
+    active: boolean("active").notNull().default(true),
+    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  table => ({
+    entityLookup: index("sync_media_attachments_entity_lookup").on(table.entityType, table.entityId),
+    audienceLookup: index("sync_media_attachments_audience_lookup").on(table.audienceUserIds),
   }),
 );
 
@@ -144,6 +183,9 @@ export const insertSyncInteractionSchema = createInsertSchema(syncInteractionsTa
   createdAt: true,
   updatedAt: true,
 });
+export const insertSyncMediaAttachmentSchema = createInsertSchema(syncMediaAttachmentsTable).omit({
+  createdAt: true,
+});
 
 export type SyncRecord = typeof syncRecordsTable.$inferSelect;
 export type InsertSyncRecord = z.infer<typeof insertSyncRecordSchema>;
@@ -153,3 +195,5 @@ export type SyncOperation = typeof syncOperationsTable.$inferSelect;
 export type InsertSyncOperation = z.infer<typeof insertSyncOperationSchema>;
 export type SyncInteraction = typeof syncInteractionsTable.$inferSelect;
 export type InsertSyncInteraction = z.infer<typeof insertSyncInteractionSchema>;
+export type SyncMediaAttachment = typeof syncMediaAttachmentsTable.$inferSelect;
+export type InsertSyncMediaAttachment = z.infer<typeof insertSyncMediaAttachmentSchema>;

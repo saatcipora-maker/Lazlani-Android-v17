@@ -5,15 +5,10 @@ import {
   requestUploadUrl,
   type UploadUrlRequestContentType,
 } from "@workspace/api-client-react";
+import { apiUrl } from '@/services/apiOrigin';
 
 const MAX_COVER_BYTES = 10 * 1024 * 1024;
 const DEFAULT_CONTENT_TYPE = "image/jpeg";
-
-function apiOrigin(): string {
-  const domain = process.env.EXPO_PUBLIC_DOMAIN?.trim();
-  if (!domain) throw new Error("Sunucu adresi yapılandırılmamış.");
-  return `https://${domain}`;
-}
 
 function fileNameFor(contentType: string): string {
   const extension = contentType === "image/png" ? "png"
@@ -62,7 +57,7 @@ export async function uploadBookCover(localUri: string): Promise<string> {
     size: blob.size,
     contentType,
   });
-  return `${apiOrigin()}/api/storage${finalized.objectPath}`;
+  return apiUrl(`/api/storage${finalized.objectPath}`);
 }
 
 export function isDeviceLocalCover(uri: string): boolean {
@@ -70,7 +65,7 @@ export function isDeviceLocalCover(uri: string): boolean {
 }
 
 function finalizedObjectPath(uri: string): string | null {
-  const prefix = `${apiOrigin()}/api/storage/objects/`;
+  const prefix = apiUrl('/api/storage/objects/');
   if (!uri.startsWith(prefix)) return null;
   const value = uri.slice(prefix.length);
   return value.startsWith("book-covers/") && value.length > "book-covers/".length

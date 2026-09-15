@@ -24,6 +24,12 @@ import {
   shouldApplyAggregateVersion,
   type AggregateVersion,
 } from '@/services/aggregateVersion';
+import {
+  absoluteAggregateValue,
+  reconcileCommentCount,
+  resolveCommentParentId,
+  sortPostsByCreatedAt,
+} from '@/services/postProjection';
 
 const SAMPLE_POST_COMMENTS: PostComment[] = [
   {
@@ -83,6 +89,7 @@ export function reconcileAbsoluteRating(
     ratingCount: Number.isFinite(nextCount) ? Math.max(0, nextCount) : current.ratingCount,
   };
 }
+
 interface DataContextType {
   books: Book[];
   stories: Story[];
@@ -170,13 +177,17 @@ interface DataContextType {
   addStory: (story: Story) => void;
   addPoem: (poem: Poem) => void;
   addPost: (post: Post) => void;
+  updatePost: (id: string, patch: Partial<Post>) => void;
+  deletePost: (id: string) => void;
   addComment: (comment: Comment) => void;
   addReply: (commentId: string, reply: import('@/data/types').Reply) => void;
   addPostComment: (comment: PostComment) => void;
+  deletePostComment: (commentId: string) => void;
   addPostCommentReply: (commentId: string, reply: PostReply) => void;
   togglePostCommentLike: (commentId: string) => void;
   addReactionToPostComment: (commentId: string, emoji: string) => void;
-  sendMessage: (convId: string, senderId: string, content: string) => void;
+  sendMessage: (convId: string, senderId: string, content: string, mediaUrl?: string) => void;
+  deleteMessage: (convId: string, messageId: string) => void;
   startConversation: (participant: User) => string;
   toggleMessageLike: (convId: string, messageId: string, userId: string) => void;
   markNotifsRead: () => void;
@@ -250,6 +261,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [filterLevel, setFilterLevel] = useState<FilterLevel>('orta');
   const [purchaseRequests, setPurchaseRequests] = useState<PurchaseRequest[]>([]);
   const [users, setUsers] = useState<User[]>(DEMO_DATA_ENABLED ? [...SAMPLE_USERS] : []);
+  const postsRef = useRef(posts);
+  const postCommentsRef = useRef(postComments);
+  const ozelCommentsRef = useRef(ozelComments);
   const syncServiceRef = useRef<SyncService | null>(null);
   const syncUserRef = useRef<string | null>(null);
   const syncGenerationRef = useRef(0);
@@ -257,6 +271,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const interactionStateRef = useRef<Map<string, InteractionState>>(new Map());
   const aggregateVersionRef = useRef<Map<string, AggregateVersion>>(new Map());
   const bookRollbackRef = useRef<Map<string, Book | undefined>>(new Map());
+  const postRollbackRef = useRef<Map<string, Post | undefined>>(new Map());
+  const readingStartedRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => { postsRef.current = posts; }, [posts]);
+  useEffect(() => { postCommentsRef.current = postComments; }, [postComments]);
+  useEffect(() => { ozelCommentsRef.current = ozelComments; }, [ozelComments]);
   const interactionKey = (actorId: string, kind: string, targetType: string, targetId: string) =>
     `${actorId}:${kind}:${targetType}:${targetId}`;
   const aggregateVersionKey = (kind: string, targetType: string, targetId: string) =>
@@ -359,6 +379,22 @@ export function DataProvider({ children }: { children: ReactNode }) {
     const actorId = typeof payload.actorUserId === 'string' ? payload.actorUserId : undefined;
     const canonical = (value: any) => actorId ? { ...value, authorId: actorId, actorUserId: actorId } : value;
     switch (record.entityType) {
+      case 'post': {
+        const postId = typeof payload.id === 'string' ? payload.id : '';
+        if (!postId) return;
+        setPosts(prev => {
+          const next = payload.deleted === true
+            ? prev.filter(post => post.id !== postId)
+            : sortPostsByCreatedAt(
+              prev.some(post => post.id === postId)
+                ? prev.map(post => post.id === postId ? { ...post, ...canonical(payload) } as Post : post)
+                : [{ ...canonical(payload), id: postId } as Post, ...prev],
+            );
+          persistSyncCollection('lazlani_posts_data', next);
+          return next;
+        });
+        break;
+      }
       case 'book': {
         const bookPayload = canonical(payload);
         const bookId = typeof bookPayload.id === 'string' ? bookPayload.id : '';
@@ -379,14 +415,34 @@ export function DataProvider({ children }: { children: ReactNode }) {
         break;
       }
       case 'message': {
-        const message = canonical(payload) as Message;
-        if (!message.id || !message.conversationId) return;
+        const message = canonical(payload) as Message & { deleted?: boolean };
+        if (!message.id) return;
+        if (message.deleted === true) {
+          setMessagesByConv(prev => {
+            const next = Object.fromEntries(Object.entries(prev).map(([conversationId, items]) => [
+              conversationId,
+              items.filter(item => item.id !== message.id),
+            ]));
+            persistSyncCollection('lazlani_messages', next);
+            return next;
+          });
+          break;
+        }
+        if (!message.conversationId) return;
+        const mediaPayload = payload.media && typeof payload.media === 'object'
+          ? payload.media as Record<string, any> : undefined;
+        const photoPayload = payload.photo && typeof payload.photo === 'object'
+          ? payload.photo as Record<string, any> : undefined;
+        const mediaUrl = message.mediaUrl
+          ?? (typeof mediaPayload?.url === 'string' ? mediaPayload.url : undefined)
+          ?? (typeof photoPayload?.url === 'string' ? photoPayload.url : undefined);
         setMessagesByConv(prev => {
           const current = prev[message.conversationId] ?? [];
           const canonicalMessage = {
             ...message,
             senderId: actorId ?? message.senderId,
-            type: 'text' as const,
+            type: mediaUrl ? 'photo' as const : (message.type ?? 'text') as 'text' | 'photo',
+            ...(mediaUrl ? { mediaUrl } : {}),
           };
           const nextMessages = current.some(item => item.id === message.id)
             ? current.map(item => item.id === message.id ? { ...item, ...canonicalMessage } : item)
@@ -412,7 +468,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
                 participantName: c.participantName || participant?.displayName || participantId || 'Kullanıcı',
                 participantAvatarColor: c.participantAvatarColor
                   || participant?.avatarColor || '#9B59F5',
-                lastMessage: message.content,
+                lastMessage: mediaUrl ? 'Fotoğraf' : message.content,
                 lastMessageTime: message.createdAt,
               } : c)
             : [{
@@ -424,7 +480,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
               participantAvatarColor: isOwnMessage
                 ? String(payload.recipientAvatarColor ?? recipient?.avatarColor ?? '#9B59F5')
                 : String(payload.senderAvatarColor ?? actor?.avatarColor ?? '#9B59F5'),
-              lastMessage: message.content,
+              lastMessage: mediaUrl ? 'Fotoğraf' : message.content,
               lastMessageTime: message.createdAt,
               unreadCount: own ? 0 : 1,
               isOnline: false,
@@ -451,23 +507,79 @@ export function DataProvider({ children }: { children: ReactNode }) {
       case 'comment': {
         const value = canonical(payload) as Comment | PostComment;
         if (!value.id) return;
-        if ('postId' in value) {
-          let inserted = false;
+        if (payload.deleted === true) {
+          const removed = postCommentsRef.current.find(comment => comment.id === value.id);
+          const parentPostId = resolveCommentParentId(payload, removed?.postId);
           setPostComments(prev => {
-            const canonicalComment = { ...value, replies: value.replies ?? [], reactions: value.reactions ?? {} } as PostComment;
-            const existing = prev.some(item => item.id === value.id);
-            inserted = !existing;
-            const next = existing
-              ? prev.map(item => item.id === value.id ? { ...item, ...canonicalComment } : item)
-              : [canonicalComment, ...prev];
+            const next = prev.filter(comment => comment.id !== value.id);
+            postCommentsRef.current = next;
             persistSyncCollection('lazlani_post_comments', next);
             return next;
           });
-          if (inserted) setPosts(prev => {
-            const next = prev.map(post => post.id === value.postId
-              ? { ...post, commentsCount: post.commentsCount + 1 } : post);
-            persistSyncCollection('lazlani_posts_data', next);
+          if (parentPostId) setPosts(posts => {
+            const canonicalCount = Number(payload.commentsCount);
+            const hasAbsoluteCount = Number.isFinite(canonicalCount)
+              && isNewAggregateVersion(
+                aggregateVersionKey('comments', 'post', parentPostId),
+                String(record.updatedAt ?? ''),
+                `${actorId ?? ''}:${record.id}`,
+                payload.aggregateRevision,
+              );
+            const nextPosts = posts.map(post => post.id === parentPostId
+              ? {
+                ...post,
+                commentsCount: reconcileCommentCount(
+                  post.commentsCount,
+                  canonicalCount,
+                  -1,
+                  !removed,
+                  hasAbsoluteCount,
+                ),
+              } : post);
+            persistSyncCollection('lazlani_posts_data', nextPosts);
+            return nextPosts;
+          });
+          setComments(prev => {
+            const next = prev.filter(comment => comment.id !== value.id);
+            persistSyncCollection('lazlani_comments', next);
             return next;
+          });
+          break;
+        }
+        if ('postId' in value) {
+          const existing = postCommentsRef.current.some(item => item.id === value.id);
+          const canonicalCount = Number(payload.commentsCount);
+          const hasAbsoluteCount = Number.isFinite(canonicalCount)
+            && isNewAggregateVersion(
+              aggregateVersionKey('comments', 'post', value.postId),
+              String(record.updatedAt ?? ''),
+              `${actorId ?? ''}:${record.id}`,
+              payload.aggregateRevision,
+            );
+          setPostComments(prev => {
+            const canonicalComment = { ...value, replies: value.replies ?? [], reactions: value.reactions ?? {} } as PostComment;
+            const next = existing
+              ? prev.map(item => item.id === value.id ? { ...item, ...canonicalComment } : item)
+              : [canonicalComment, ...prev];
+            postCommentsRef.current = next;
+            persistSyncCollection('lazlani_post_comments', next);
+            return next;
+          });
+          setPosts(posts => {
+            const canonicalCount = Number(payload.commentsCount);
+            const nextPosts = posts.map(post => post.id === value.postId
+              ? {
+                ...post,
+                commentsCount: reconcileCommentCount(
+                  post.commentsCount,
+                  canonicalCount,
+                  1,
+                  existing,
+                  hasAbsoluteCount,
+                ),
+              } : post);
+            persistSyncCollection('lazlani_posts_data', nextPosts);
+            return nextPosts;
           });
         } else {
           setComments(prev => {
@@ -511,18 +623,17 @@ export function DataProvider({ children }: { children: ReactNode }) {
       case 'ozel_comment': {
         const comment = canonical(payload) as OzelComment;
         if (!comment.id) return;
-        let inserted = false;
+        const existing = ozelCommentsRef.current.some(item => item.id === comment.id);
         setOzelComments(prev => {
-          const existing = prev.some(item => item.id === comment.id);
-          inserted = !existing;
           const canonicalComment = { ...comment, replies: comment.replies ?? [] };
           const next = existing
             ? prev.map(item => item.id === comment.id ? { ...item, ...canonicalComment } : item)
             : [canonicalComment, ...prev];
+          ozelCommentsRef.current = next;
           persistSyncCollection('lazlani_ozel_comments', next);
           return next;
         });
-        if (inserted) setOzelPosts(prev => {
+        if (!existing) setOzelPosts(prev => {
           const next = prev.map(post => post.id === comment.postId
             ? { ...post, commentsCount: post.commentsCount + 1 } : post);
           persistSyncCollection('lazlani_ozel_posts', next);
@@ -541,6 +652,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
               : [...comment.replies, reply];
             return { ...comment, replies };
           });
+          ozelCommentsRef.current = next;
           persistSyncCollection('lazlani_ozel_comments', next);
           return next;
         });
@@ -718,6 +830,17 @@ export function DataProvider({ children }: { children: ReactNode }) {
         }
         break;
       }
+      case 'reading': {
+        const targetId = String(payload.targetId ?? '');
+        if (!targetId) return;
+        const absolute = absoluteAggregateValue(payload, 0);
+        setBooks(prev => {
+          const next = prev.map(book => book.id === targetId ? { ...book, readCount: absolute } : book);
+          persistSyncCollection('lazlani_books_data', next);
+          return next;
+        });
+        break;
+      }
     }
   };
 
@@ -728,6 +851,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setStories(DEMO_DATA_ENABLED ? [...SAMPLE_STORIES] : []);
     setPoems(DEMO_DATA_ENABLED ? [...SAMPLE_POEMS] : []);
     setPosts(DEMO_DATA_ENABLED ? [...SAMPLE_POSTS] : []);
+    readingStartedRef.current.clear();
+    interactionStateRef.current.clear();
+    aggregateVersionRef.current.clear();
     setLikedIds(new Set());
     setSavedIds(new Set());
     setFollowedIds(new Set());
@@ -789,7 +915,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
     set('lazlani_post_comment_likes', value => setPostCommentLikedIds(new Set(value)));
     set('lazlani_lists', value => setLists(value));
     set('lazlani_ratings', value => setUserRatings(value));
-    set('lazlani_progress', value => setReadProgressState(value));
+    set('lazlani_progress', value => {
+      setReadProgressState(value);
+      if (value && typeof value === 'object') {
+        Object.keys(value).forEach(bookId => readingStartedRef.current.add(`${userId}:${bookId}`));
+      }
+    });
     set('lazlani_bookmarks', value => setBookmarks(value));
     set('lazlani_favorites', value => setFavoriteIds(new Set(value)));
     set('lazlani_ozel_posts', value => setOzelPosts(value));
@@ -806,7 +937,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     set('lazlani_books_data', value => setBooks(value));
     set('lazlani_stories_data', value => setStories(value));
     set('lazlani_poems_data', value => setPoems(value));
-    set('lazlani_posts_data', value => setPosts(value));
+    set('lazlani_posts_data', value => setPosts(sortPostsByCreatedAt(value)));
   };
 
   const removeRejectedOptimisticOperation = (operation: QueuedSyncOperation) => {
@@ -832,6 +963,20 @@ export function DataProvider({ children }: { children: ReactNode }) {
           persistSyncCollection('lazlani_conversations', next);
           return next;
         });
+        break;
+      }
+      case 'create_post':
+      case 'update_post':
+      case 'delete_post': {
+        const previous = postRollbackRef.current.get(entityId);
+        setPosts(prev => {
+          const next = operation.operationType === 'create_post'
+            ? previous ? prev.map(post => post.id === entityId ? previous : post) : prev.filter(post => post.id !== entityId)
+            : previous ? prev.map(post => post.id === entityId ? previous : post) : prev;
+          persistSyncCollection('lazlani_posts_data', sortPostsByCreatedAt(next));
+          return sortPostsByCreatedAt(next);
+        });
+        postRollbackRef.current.delete(entityId);
         break;
       }
       case 'create_book':
@@ -1167,8 +1312,12 @@ export function DataProvider({ children }: { children: ReactNode }) {
       const active = !next.has(id);
       active ? next.add(id) : next.delete(id);
       persistSyncCollection('lazlani_post_likes', [...next]);
-      setPosts(items => items.map(post => post.id === id
-        ? { ...post, likesCount: Math.max(0, post.likesCount + (active ? 1 : -1)) } : post));
+       setPosts(items => {
+         const nextPosts = items.map(post => post.id === id
+           ? { ...post, likesCount: Math.max(0, post.likesCount + (active ? 1 : -1)) } : post);
+         persistSyncCollection('lazlani_posts_data', nextPosts);
+         return nextPosts;
+       });
       recordOptimisticInteraction('like', 'post', id, { active });
       enqueueSync('toggle_like', { targetId: id, targetType: 'post', active });
       return next;
@@ -1234,11 +1383,18 @@ export function DataProvider({ children }: { children: ReactNode }) {
   };
 
   const setReadProgress = (bookId: string, percent: number) => {
+    const readingKey = `${syncUserRef.current ?? 'local'}:${bookId}`;
+    const shouldStartReading = Boolean(syncUserRef.current) && !readingStartedRef.current.has(readingKey);
+    if (shouldStartReading) readingStartedRef.current.add(readingKey);
     setReadProgressState(prev => {
       const next = { ...prev, [bookId]: percent };
       persistSyncCollection('lazlani_progress', next);
       return next;
     });
+    if (shouldStartReading) {
+      recordOptimisticInteraction('reading', 'book', bookId, { active: true });
+      enqueueSync('start_reading', { targetId: bookId, targetType: 'book' });
+    }
   };
 
   const addUser = (user: User) => {
@@ -1269,11 +1425,55 @@ export function DataProvider({ children }: { children: ReactNode }) {
     persistSyncCollection('lazlani_poems_data', next);
     return next;
   });
-  const addPost = (post: Post) => setPosts(prev => {
-    const next = [post, ...prev];
-    persistSyncCollection('lazlani_posts_data', next);
-    return next;
-  });
+  const addPost = (post: Post) => {
+    const ownerId = syncUserRef.current ?? post.authorId;
+    const normalized = { ...post, id: post.id || syncEntityId('post', ownerId) };
+    postRollbackRef.current.set(normalized.id, postsRef.current.find(item => item.id === normalized.id));
+    setPosts(prev => {
+      const next = sortPostsByCreatedAt([normalized, ...prev.filter(item => item.id !== normalized.id)]);
+      persistSyncCollection('lazlani_posts_data', next);
+      return next;
+    });
+    enqueueSync('create_post', {
+      ...normalized,
+      ...(normalized.imageUris?.length
+        ? { media: { urls: normalized.imageUris }, photo: { url: normalized.imageUris[0] } }
+        : {}),
+    });
+  };
+  const updatePost = (id: string, patch: Partial<Post>) => {
+    const current = postsRef.current.find(post => post.id === id);
+    if (!current) return;
+    const updated = { ...current, ...patch };
+    postRollbackRef.current.set(id, current);
+    setPosts(prev => {
+      const next = sortPostsByCreatedAt(prev.map(post => post.id === id ? updated : post));
+      persistSyncCollection('lazlani_posts_data', next);
+      return next;
+    });
+    enqueueSync('update_post', {
+      ...updated,
+      ...(updated.imageUris?.length
+        ? { media: { urls: updated.imageUris }, photo: { url: updated.imageUris[0] } }
+        : {}),
+    });
+  };
+  const deletePost = (id: string) => {
+    const previous = postsRef.current.find(post => post.id === id);
+    if (!previous) return;
+    postRollbackRef.current.set(id, previous);
+    setPosts(prev => {
+      const next = prev.filter(post => post.id !== id);
+      persistSyncCollection('lazlani_posts_data', next);
+      return next;
+    });
+    setPostComments(prev => {
+      const next = prev.filter(comment => comment.postId !== id);
+      persistSyncCollection('lazlani_post_comments', next);
+      return next;
+    });
+    enqueueSync('delete_post', { id });
+  };
   const addComment = (comment: Comment) => {
     const ownerId = syncUserRef.current ?? comment.authorId;
     const normalized = { ...comment, id: syncEntityId('comment', ownerId) };
@@ -1288,6 +1488,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const addPostComment = (comment: PostComment) => {
     const ownerId = syncUserRef.current ?? comment.authorId;
     const normalized = { ...comment, id: syncEntityId('post-comment', ownerId) };
+    postCommentsRef.current = [normalized, ...postCommentsRef.current];
     setPostComments(prev => {
       const next = [normalized, ...prev];
       persistSyncCollection('lazlani_post_comments', next);
@@ -1299,6 +1500,25 @@ export function DataProvider({ children }: { children: ReactNode }) {
       return next;
     });
     enqueueSync('create_comment', { ...normalized });
+  };
+
+  const deletePostComment = (commentId: string) => {
+    const comment = postCommentsRef.current.find(item => item.id === commentId);
+    if (!comment) return;
+    postCommentsRef.current = postCommentsRef.current.filter(item => item.id !== commentId);
+    setPostComments(prev => {
+      const next = prev.filter(item => item.id !== commentId);
+      persistSyncCollection('lazlani_post_comments', next);
+      return next;
+    });
+    setPosts(prev => {
+      const next = prev.map(post => post.id === comment.postId
+        ? { ...post, commentsCount: Math.max(0, post.commentsCount - 1) }
+        : post);
+      persistSyncCollection('lazlani_posts_data', next);
+      return next;
+    });
+    enqueueSync('delete_comment', { id: commentId });
   };
 
   const addPostCommentReply = (commentId: string, reply: PostReply) => {
@@ -1321,14 +1541,15 @@ export function DataProvider({ children }: { children: ReactNode }) {
     enqueueSync('create_reply', { ...normalized, commentId });
   };
 
-  const sendMessage = (convId: string, senderId: string, content: string) => {
+  const sendMessage = (convId: string, senderId: string, content: string, mediaUrl?: string) => {
     const ownerId = syncUserRef.current ?? senderId;
     const msg: Message = {
       id: syncEntityId('message', ownerId),
       conversationId: convId,
       senderId,
       content,
-      type: 'text',
+      type: mediaUrl ? 'photo' : 'text',
+      ...(mediaUrl ? { mediaUrl } : {}),
       isRead: false,
       createdAt: new Date().toISOString(),
     };
@@ -1345,7 +1566,20 @@ export function DataProvider({ children }: { children: ReactNode }) {
       return next;
     });
     const participant = conversations.find(c => c.id === convId)?.participantId;
-    if (participant) enqueueSync('create_message', { ...msg, recipientUserId: participant });
+    if (participant) enqueueSync('create_message', {
+      ...msg,
+      recipientUserId: participant,
+      ...(mediaUrl ? { media: { url: mediaUrl }, photo: { url: mediaUrl } } : {}),
+    });
+  };
+
+  const deleteMessage = (convId: string, messageId: string) => {
+    setMessagesByConv(prev => {
+      const next = { ...prev, [convId]: (prev[convId] ?? []).filter(message => message.id !== messageId) };
+      persistSyncCollection('lazlani_messages', next);
+      return next;
+    });
+    enqueueSync('delete_message', { id: messageId });
   };
 
   const startConversation = (participant: User): string => {
@@ -1644,6 +1878,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const addOzelComment = (comment: OzelComment) => {
     const ownerId = syncUserRef.current ?? comment.authorId;
     const normalized = { ...comment, id: syncEntityId('ozel-comment', ownerId) };
+    ozelCommentsRef.current = [normalized, ...ozelCommentsRef.current];
     setOzelComments(prev => {
       const next = [normalized, ...prev];
       persistSyncCollection('lazlani_ozel_comments', next);
@@ -1666,6 +1901,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       const next = prev.map(c =>
         c.id === commentId ? { ...c, replies: [...c.replies, normalized] } : c
       );
+      ozelCommentsRef.current = next;
       persistSyncCollection('lazlani_ozel_comments', next);
       return next;
     });
@@ -1684,6 +1920,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
             ? { ...comment, likesCount: Math.max(0, comment.likesCount + (wasLiked ? -1 : 1)) }
             : comment
         );
+        ozelCommentsRef.current = updated;
         persistSyncCollection('lazlani_ozel_comments', updated);
         return updated;
       });
@@ -1786,9 +2023,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
         supportTickets, contactMessages, adminLogs, adminUsers,
         toggleLike, toggleSave, toggleFollow, togglePostLike, togglePostSave,
         rateContent, setReadProgress,
-        addBook, addStory, addPoem, addPost, addComment, addReply,
-        addPostComment, addPostCommentReply, togglePostCommentLike, addReactionToPostComment,
-        sendMessage, startConversation, toggleMessageLike, markNotifsRead,
+        addBook, addStory, addPoem, addPost, updatePost, deletePost, addComment, addReply,
+        addPostComment, deletePostComment, addPostCommentReply, togglePostCommentLike, addReactionToPostComment,
+        sendMessage, deleteMessage, startConversation, toggleMessageLike, markNotifsRead,
         addList, removeList, addToList, removeFromList,
         addSupportTicket, addContactMessage, updateTicketStatus, updateContactStatus,
         adminSuspendUser, adminActivateUser, adminDeleteUser, adminRemovePost, adminRemoveComment, addAdminLog,

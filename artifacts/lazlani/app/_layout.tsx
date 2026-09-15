@@ -12,18 +12,14 @@ import {
   useFonts,
 } from '@expo-google-fonts/poppins';
 import { Stack, useRouter, useSegments } from 'expo-router';
-import Constants from 'expo-constants';
 import * as SplashScreen from 'expo-splash-screen';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
 import { DataProvider } from '@/context/DataContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { setBaseUrl } from '@workspace/api-client-react';
+import { apiOrigin } from '@/services/apiOrigin';
 
-const apiBaseUrl = process.env.EXPO_PUBLIC_DOMAIN
-  ? `https://${process.env.EXPO_PUBLIC_DOMAIN}`
-  : Constants.expoConfig?.extra?.apiBaseUrl ?? null;
-
-setBaseUrl(apiBaseUrl);
+setBaseUrl(apiOrigin());
 
 SplashScreen.preventAutoHideAsync();
 

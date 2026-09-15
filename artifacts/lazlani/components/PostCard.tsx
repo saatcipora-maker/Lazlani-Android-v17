@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {
-  Modal, Platform, Pressable, ScrollView, Share,
+  Alert, Image, Modal, Platform, Pressable, ScrollView, Share,
   StyleSheet, Text, TextInput, TouchableOpacity, View,
 } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -21,8 +21,10 @@ interface Props {
   isSaved: boolean;
   onLike: () => void;
   onSave: () => void;
+  onDelete?: () => void;
   postComments: PostComment[];
   onAddComment: (comment: PostComment) => void;
+  onDeleteComment?: (commentId: string) => void;
   onAddReply: (commentId: string, reply: PostReply) => void;
   onToggleCommentLike: (commentId: string) => void;
   onAddReaction: (commentId: string, emoji: string) => void;
@@ -81,7 +83,7 @@ function ReactionBar({ reactions, onReact }: { reactions: Record<string, number>
 
 function CommentItem({
   comment, onLike, isLiked, onReply, onReact, commentLikedIds,
-  currentUserId, currentUserName, currentUserAvatarColor, onAddReply,
+  currentUserId, currentUserName, currentUserAvatarColor, onAddReply, onDelete,
 }: {
   comment: PostComment;
   onLike: () => void;
@@ -93,6 +95,7 @@ function CommentItem({
   currentUserName: string;
   currentUserAvatarColor: string;
   onAddReply: (commentId: string, reply: PostReply) => void;
+  onDelete?: () => void;
 }) {
   const colors = useColors();
   const [showReplies, setShowReplies] = useState(false);
@@ -125,6 +128,11 @@ function CommentItem({
           <Text style={[styles.commentAuthor, { color: colors.primary }]}>{comment.authorName}</Text>
           <Text style={[styles.commentText, { color: colors.foreground }]}>{comment.content}</Text>
         </View>
+        {comment.authorId === currentUserId && onDelete && (
+          <TouchableOpacity onPress={onDelete} style={styles.commentDelete}>
+            <Ionicons name="trash-outline" size={13} color={colors.mutedForeground} />
+          </TouchableOpacity>
+        )}
 
         <ReactionBar
           reactions={comment.reactions}
@@ -194,7 +202,7 @@ function CommentItem({
 
 export default function PostCard({
   post, isLiked, isSaved, onLike, onSave,
-  postComments, onAddComment, onAddReply, onToggleCommentLike, onAddReaction,
+  onDelete, postComments, onAddComment, onDeleteComment, onAddReply, onToggleCommentLike, onAddReaction,
   commentLikedIds, currentUserId, currentUserName, currentUserAvatarColor,
 }: Props) {
   const colors = useColors();
@@ -255,7 +263,22 @@ export default function PostCard({
             </Text>
           )}
         </View>
-        <Ionicons name="ellipsis-horizontal" size={20} color={colors.mutedForeground} />
+        {post.authorId === currentUserId && onDelete ? (
+          <TouchableOpacity
+            accessibilityRole="button"
+            accessibilityLabel="Paylaşımı sil"
+            onPress={() => {
+              Alert.alert('Paylaşımı sil', 'Bu paylaşımı tüm cihazlardan kaldırmak ister misin?', [
+                { text: 'Vazgeç', style: 'cancel' },
+                { text: 'Sil', style: 'destructive', onPress: onDelete },
+              ]);
+            }}
+          >
+            <Ionicons name="trash-outline" size={20} color={colors.mutedForeground} />
+          </TouchableOpacity>
+        ) : (
+          <Ionicons name="ellipsis-horizontal" size={20} color={colors.mutedForeground} />
+        )}
       </View>
 
       {/* Title */}
@@ -265,6 +288,14 @@ export default function PostCard({
 
       {/* Content */}
       <Text style={[styles.content, { color: colors.foreground }]}>{post.content}</Text>
+
+      {post.imageUris?.length ? (
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.postImages}>
+          {post.imageUris.map(uri => (
+            <Image key={uri} source={{ uri }} style={styles.postImage} resizeMode="cover" />
+          ))}
+        </ScrollView>
+      ) : null}
 
       {/* Linked content badge */}
       {post.contentType && post.contentType !== 'text' && post.linkedContentTitle && (
@@ -310,7 +341,7 @@ export default function PostCard({
             color={isLiked ? '#EC4899' : colors.mutedForeground}
           />
           <Text style={[styles.actionText, { color: colors.mutedForeground }]}>
-            {post.likesCount + (isLiked ? 1 : 0)}
+            {post.likesCount}
           </Text>
         </TouchableOpacity>
 
@@ -364,6 +395,12 @@ export default function PostCard({
               currentUserName={currentUserName}
               currentUserAvatarColor={currentUserAvatarColor}
               onAddReply={onAddReply}
+              onDelete={comment.authorId === currentUserId && onDeleteComment ? () => {
+                Alert.alert('Yorumu sil', 'Bu yorumu kaldırmak ister misin?', [
+                  { text: 'Vazgeç', style: 'cancel' },
+                  { text: 'Sil', style: 'destructive', onPress: () => onDeleteComment(comment.id) },
+                ]);
+              } : undefined}
             />
           ))}
 
@@ -406,6 +443,8 @@ const styles = StyleSheet.create({
   username: { fontFamily: 'Poppins_400Regular', fontSize: 12 },
   title: { fontFamily: 'Poppins_700Bold', fontSize: 15, paddingHorizontal: 14, marginBottom: 4 },
   content: { fontFamily: 'Poppins_400Regular', fontSize: 14, lineHeight: 22, paddingHorizontal: 14, paddingBottom: 10 },
+  postImages: { gap: 8, paddingHorizontal: 14, paddingBottom: 10 },
+  postImage: { width: 190, height: 190, borderRadius: 12 },
   linkedCard: {
     flexDirection: 'row', alignItems: 'center', gap: 10,
     marginHorizontal: 14, marginBottom: 10, padding: 10,
@@ -431,6 +470,7 @@ const styles = StyleSheet.create({
   commentText: { fontFamily: 'Poppins_400Regular', fontSize: 13, lineHeight: 18 },
   commentActions: { flexDirection: 'row', alignItems: 'center', gap: 12, marginTop: 4, paddingLeft: 4 },
   commentAction: { flexDirection: 'row', alignItems: 'center', gap: 4 },
+  commentDelete: { alignSelf: 'flex-end', padding: 4 },
   commentActionTxt: { fontFamily: 'Poppins_400Regular', fontSize: 11 },
   showRepliesBtn: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 4, paddingLeft: 4 },
   replyLine: { width: 20, height: 1 },

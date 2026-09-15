@@ -1,4 +1,4 @@
-import { and, eq, gt, or, sql } from "drizzle-orm";
+import { and, eq, gt, isNull, notInArray, or, sql } from "drizzle-orm";
 import { Router, type IRouter, type Request } from "express";
 import { SubmitSyncOperationBody, SubmitSyncOperationResponse } from "@workspace/api-zod";
 import {
@@ -6,6 +6,7 @@ import {
   db,
   syncEventsTable,
   syncInteractionsTable,
+  syncMediaAttachmentsTable,
   syncOperationsTable,
   syncRecordsTable,
   type SyncEntityType,
@@ -27,6 +28,11 @@ import { readSyncSnapshot, syncRecordForClient } from "../lib/sync-snapshot";
 import { insertSyncEvent, reserveSyncEventId } from "../lib/sync-events";
 import {
   InvalidBookCoverReferenceError,
+  InvalidMediaReferenceError,
+  canonicalMediaObjectReference,
+  deleteStoredObject,
+  validateMediaReference,
+  type MediaObjectReference,
   validateBookCoverReference,
 } from "../lib/object-storage";
 import { randomUUID } from "node:crypto";
@@ -150,8 +156,10 @@ function asOperationType(value: string): SyncOperationType {
 function operationEntityType(operationType: SyncOperationType): SyncEntityType {
   switch (operationType) {
     case "create_message": return "message";
+    case "delete_message": return "message";
     case "create_notification": return "notification";
     case "create_comment": return "comment";
+    case "delete_comment": return "comment";
     case "create_reply": return "reply";
     case "create_ozel_comment": return "ozel_comment";
     case "create_ozel_reply": return "ozel_reply";
@@ -163,6 +171,12 @@ function operationEntityType(operationType: SyncOperationType): SyncEntityType {
     case "update_book":
     case "delete_book":
       return "book";
+    case "create_post":
+    case "update_post":
+    case "delete_post":
+      return "post";
+    case "start_reading":
+      return "reading";
   }
 }
 
@@ -199,6 +213,45 @@ function assertFullBookPayload(payload: JsonObject): void {
   }
 }
 
+async function validateAttachedMedia(
+  payload: JsonObject,
+  userId: string,
+  apiOrigin: string,
+): Promise<MediaObjectReference[]> {
+  const references: MediaObjectReference[] = [];
+  const visit = async (value: unknown): Promise<void> => {
+    if (typeof value === "string") {
+      const storageLike = value.startsWith("/objects/")
+        || value.includes("/api/storage/objects/");
+      if (!storageLike) return;
+      try {
+        const canonical = canonicalMediaObjectReference(value, apiOrigin);
+        if (!canonical) throw new InvalidMediaReferenceError("Media must use a social media namespace");
+        const validated = await validateMediaReference(value, userId, apiOrigin);
+        if (!validated) throw new InvalidMediaReferenceError("Media reference is invalid");
+        references.push(validated);
+      } catch (error) {
+        if (error instanceof InvalidMediaReferenceError) {
+          throw new SyncDomainError(error.message);
+        }
+        throw error;
+      }
+      return;
+    }
+    if (Array.isArray(value)) {
+      for (const item of value) await visit(item);
+      return;
+    }
+    if (value && typeof value === "object") {
+      for (const item of Object.values(value)) await visit(item);
+    }
+  };
+  // Walk the complete typed envelope, not just the conventional media/photo
+  // keys. Clients may send galleries as nested arrays or custom metadata.
+  await visit(payload);
+  return [...new Map(references.map(reference => [reference.objectPath, reference])).values()];
+}
+
 async function applyOperation(
   tx: Parameters<Parameters<typeof db.transaction>[0]>[0],
   userId: string,
@@ -207,7 +260,10 @@ async function applyOperation(
   apiOrigin: string,
 ) {
   let payload = sanitizedPayload(inputPayload, userId);
-  const interaction = operationType === "toggle_like" || operationType === "set_reaction" || operationType === "toggle_vote";
+  const interaction = operationType === "toggle_like"
+    || operationType === "set_reaction"
+    || operationType === "toggle_vote"
+    || operationType === "start_reading";
   const entityType = operationEntityType(operationType);
   let now: Date;
   let eventId: number | undefined;
@@ -215,34 +271,59 @@ async function applyOperation(
   let isPublic = !["create_message", "create_notification"].includes(operationType);
   let audienceUserIds: string[] = [];
   let deletedAt: Date | null = null;
+  let attachedMedia: MediaObjectReference[] = [];
+  let commentParentId: string | null = null;
+  let cleanupObjectPaths: string[] = [];
   const bookOperation = operationType === "create_book"
     || operationType === "update_book"
     || operationType === "delete_book";
+  const deleteOperation = operationType === "delete_message"
+    || operationType === "delete_comment"
+    || operationType === "delete_post"
+    || operationType === "delete_book";
+  const postOperation = operationType === "create_post"
+    || operationType === "update_post"
+    || operationType === "delete_post";
 
   if (interaction) {
     const targetId = stringValue(payload, "targetId");
-    const targetType = stringValue(payload, "targetType") ?? "content";
+    const targetType = stringValue(payload, "targetType") ?? (operationType === "start_reading" ? "book" : "content");
     if (!targetId) throw new SyncDomainError("targetId is required for interactions");
-    const interactionType = operationType === "toggle_like" ? "like" : operationType === "toggle_vote" ? "vote" : "reaction";
+    if (operationType === "start_reading" && targetType !== "book") {
+      throw new SyncDomainError("Reading starts must target a book");
+    }
+    const interactionType = operationType === "toggle_like"
+      ? "like"
+      : operationType === "toggle_vote"
+        ? "vote"
+        : operationType === "start_reading" ? "reading" : "reaction";
     const rating = operationType === "toggle_vote" ? ratingValue(payload) : null;
     if (operationType === "toggle_vote" && rating === null) {
       throw new SyncDomainError("vote rating must be an integer from 1 to 5");
     }
-    if (targetType === "message") {
+    if (targetType === "message" || operationType === "start_reading") {
       await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${
         `sync-record:${targetId}`
       }))`);
       const [targetRecord] = await tx.select().from(syncRecordsTable)
         .where(eq(syncRecordsTable.id, targetId))
         .limit(1);
-      if (!targetRecord ||
-        targetRecord.entityType !== "message" ||
-        targetRecord.isPublic ||
-        !targetRecord.audienceUserIds?.includes(userId)) {
+      if (targetType === "message" && (!targetRecord
+        || targetRecord.entityType !== "message"
+        || targetRecord.isPublic
+        || !targetRecord.audienceUserIds?.includes(userId))) {
         throw new SyncDomainError("Target is not available for interaction");
       }
-      isPublic = false;
-      audienceUserIds = [...(targetRecord.audienceUserIds ?? [])];
+      if (operationType === "start_reading" && targetRecord
+        && (targetRecord.entityType !== "book"
+          || !targetRecord.isPublic && targetRecord.ownerUserId !== userId
+            && !targetRecord.audienceUserIds?.includes(userId))) {
+        throw new SyncDomainError("Target is not available for reading");
+      }
+      if (targetType === "message") {
+        isPublic = false;
+        audienceUserIds = [...(targetRecord.audienceUserIds ?? [])];
+      }
     }
     // Serialize all updates for one target aggregate. Without this lock two
     // concurrent users could each calculate a count that omits the other's
@@ -290,6 +371,16 @@ async function applyOperation(
             eq(syncInteractionsTable.interactionType, interactionType),
           ))
           .returning()
+      : operationType === "start_reading"
+        ? await tx.update(syncInteractionsTable)
+          .set({ active: true, value: null, updatedAt: now })
+          .where(and(
+            eq(syncInteractionsTable.userId, userId),
+            eq(syncInteractionsTable.targetType, targetType),
+            eq(syncInteractionsTable.targetId, targetId),
+            eq(syncInteractionsTable.interactionType, interactionType),
+          ))
+          .returning()
       : await tx.update(syncInteractionsTable)
         .set({
           active: booleanValue(payload, "active") ?? sql`NOT ${syncInteractionsTable.active}`,
@@ -330,6 +421,15 @@ async function applyOperation(
       payload.ratingAverage = ratings.length
         ? ratings.reduce((total, rating) => total + rating, 0) / ratings.length
         : 0;
+    } else if (interactionType === "reading") {
+      // Reading is a unique-user absolute aggregate, not an increment
+      // operation. Replaying with another client operation id remains a
+      // no-op at the interaction layer and emits the current absolute value.
+      payload.aggregateCount = activeRows.length;
+      payload.absoluteCount = activeRows.length;
+      payload.readCount = activeRows.length;
+      payload.aggregateType = "absolute";
+      payload.aggregateValue = activeRows.length;
     } else {
       payload.activeCount = activeRows.length;
       if (interactionType === "reaction") {
@@ -355,6 +455,37 @@ async function applyOperation(
       audienceUserIds = privateAudience(userId, recipientUserId);
       payload.recipientUserId = recipientUserId;
       isPublic = false;
+    }
+    if (operationType === "create_comment") {
+      const targetId = stringValue(payload, "targetId");
+      const targetType = stringValue(payload, "targetType");
+      if (targetType === "message") {
+        if (!targetId) throw new SyncDomainError("targetId is required for message comments");
+        const [target] = await tx.select().from(syncRecordsTable)
+          .where(eq(syncRecordsTable.id, targetId)).limit(1);
+        if (!target || target.entityType !== "message" || target.isPublic
+          || !target.audienceUserIds?.includes(userId)) {
+          throw new SyncDomainError("Target is not available for comment");
+        }
+        isPublic = false;
+        audienceUserIds = [...(target.audienceUserIds ?? [])];
+      }
+    }
+    if (operationType === "create_message" || operationType === "create_post"
+      || operationType === "update_post") {
+      attachedMedia = await validateAttachedMedia(payload, userId, apiOrigin);
+      const expectedNamespace = operationType === "create_message" ? "dm-photos" : "social-posts";
+      if (attachedMedia.some(reference => reference.namespace !== expectedNamespace)) {
+        throw new SyncDomainError(`Media namespace must be ${expectedNamespace}`);
+      }
+    }
+    if (postOperation && operationType !== "delete_post") {
+      if (!stringValue(payload, "id")) throw new SyncDomainError("Post id is required");
+      isPublic = true;
+      audienceUserIds = [];
+    }
+    if (deleteOperation && !stringValue(payload, "id")) {
+      throw new SyncDomainError("Record id is required");
     }
     if (bookOperation) {
       if (operationType === "delete_book") {
@@ -386,6 +517,14 @@ async function applyOperation(
       delete payload.deleted;
       delete payload.deletedAt;
     }
+    if (deleteOperation && !bookOperation) {
+      deletedAt = now;
+    }
+    if (operationType === "create_comment") {
+      commentParentId = stringValue(payload, "targetId")
+        ?? stringValue(payload, "postId")
+        ?? stringValue(payload, "parentId");
+    }
   }
 
   // Client-selected record ids are an object-level authorization boundary.
@@ -402,7 +541,11 @@ async function applyOperation(
     if (existingRecord.entityType !== entityType) {
       throw new SyncDomainError("Sync record type and visibility are immutable");
     }
-    if (bookOperation && operationType === "delete_book") {
+    if (deleteOperation) {
+      commentParentId = existingRecord.parentId
+        ?? stringValue(objectPayload(existingRecord.payload), "targetId")
+        ?? stringValue(objectPayload(existingRecord.payload), "postId")
+        ?? stringValue(objectPayload(existingRecord.payload), "parentId");
       isPublic = existingRecord.isPublic;
       audienceUserIds = [...(existingRecord.audienceUserIds ?? [])];
     }
@@ -429,27 +572,39 @@ async function applyOperation(
         throw new SyncDomainError("Private sync record audience is immutable");
       }
     }
-    if (bookOperation && operationType === "delete_book") {
+    if (deleteOperation) {
       isPublic = existingRecord.isPublic;
       audienceUserIds = [...(existingRecord.audienceUserIds ?? [])];
       payload = {
         id: entityId,
         actorUserId: userId,
         deleted: true,
+        ...(commentParentId ? { parentId: commentParentId } : {}),
       };
       deletedAt = now;
     }
-  } else if (bookOperation && operationType === "delete_book") {
-    throw new SyncDomainError("Book does not exist");
+  } else if (deleteOperation) {
+    throw new SyncDomainError("Record does not exist");
+  } else if (operationType === "update_post") {
+    throw new SyncDomainError("Post does not exist");
   }
 
-  const [record] = await tx.insert(syncRecordsTable).values({
+  if (operationType === "create_comment" || operationType === "delete_comment") {
+    if (commentParentId) {
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${
+        `sync-comments:${commentParentId}`
+      }))`);
+    }
+  }
+
+  let [record] = await tx.insert(syncRecordsTable).values({
     id: entityId,
     entityType,
     ownerUserId: userId,
     isPublic,
     audienceUserIds,
     payload,
+    parentId: commentParentId,
     version: 1,
     deletedAt,
     updatedAt: now,
@@ -462,6 +617,7 @@ async function applyOperation(
       isPublic,
       audienceUserIds,
       payload,
+      parentId: commentParentId,
       version: sql`${syncRecordsTable.version} + 1`,
       deletedAt,
       updatedAt: now,
@@ -469,7 +625,103 @@ async function applyOperation(
   }).returning();
   if (!record) throw new Error("Sync record could not be saved");
 
+  const mediaOperation = operationType === "create_message"
+    || operationType === "create_post"
+    || operationType === "update_post"
+    || operationType === "delete_message"
+    || operationType === "delete_post";
+  if (mediaOperation) {
+    const retiredAttachments = await tx.select({
+      objectPath: syncMediaAttachmentsTable.objectPath,
+    }).from(syncMediaAttachmentsTable).where(and(
+      eq(syncMediaAttachmentsTable.entityType, entityType),
+      eq(syncMediaAttachmentsTable.entityId, entityId),
+      eq(syncMediaAttachmentsTable.active, true),
+      ...(attachedMedia.length
+        ? [notInArray(syncMediaAttachmentsTable.objectPath, attachedMedia.map(item => item.objectPath))]
+        : []),
+    ));
+    cleanupObjectPaths = retiredAttachments.map(item => item.objectPath);
+    const attachmentRetirement = [
+      eq(syncMediaAttachmentsTable.entityType, entityType),
+      eq(syncMediaAttachmentsTable.entityId, entityId),
+      eq(syncMediaAttachmentsTable.active, true),
+      ...(attachedMedia.length
+        ? [notInArray(syncMediaAttachmentsTable.objectPath, attachedMedia.map(item => item.objectPath))]
+        : []),
+    ];
+    await tx.update(syncMediaAttachmentsTable)
+      .set({ active: false })
+      .where(and(...attachmentRetirement));
+    for (const reference of attachedMedia) {
+      await tx.execute(sql`SELECT pg_advisory_xact_lock(hashtext(${
+        `sync-media:${reference.objectPath}`
+      }))`);
+      const [existingAttachment] = await tx.select().from(syncMediaAttachmentsTable)
+        .where(eq(syncMediaAttachmentsTable.objectPath, reference.objectPath))
+        .limit(1);
+      if (existingAttachment && (
+        !existingAttachment.active
+        || existingAttachment.entityType !== entityType
+        || existingAttachment.entityId !== entityId
+      )) {
+        throw new SyncDomainError("Media object is already bound to another social record");
+      }
+      await tx.insert(syncMediaAttachmentsTable).values({
+        objectPath: reference.objectPath,
+        entityType,
+        entityId,
+        ownerUserId: userId,
+        audienceUserIds: isPublic ? [] : audienceUserIds,
+        isPublic,
+        active: true,
+      }).onConflictDoUpdate({
+        target: syncMediaAttachmentsTable.objectPath,
+        set: {
+          entityType,
+          entityId,
+          ownerUserId: userId,
+          audienceUserIds: isPublic ? [] : audienceUserIds,
+          isPublic,
+          active: true,
+        },
+      });
+    }
+  }
+
   eventId ??= await reserveSyncEventId(tx);
+  if ((operationType === "create_comment" || operationType === "delete_comment")
+    && commentParentId) {
+    // parent_id is backfilled by migration 0010. Keep the aggregate correct
+    // while a rolling deployment still has legacy rows with a null column.
+    const legacyParentId = sql`COALESCE(
+      CASE WHEN jsonb_typeof(${syncRecordsTable.payload}->'postId') = 'string'
+        THEN NULLIF(btrim(${syncRecordsTable.payload}->>'postId'), '') END,
+      CASE WHEN jsonb_typeof(${syncRecordsTable.payload}->'targetId') = 'string'
+        THEN NULLIF(btrim(${syncRecordsTable.payload}->>'targetId'), '') END,
+      CASE WHEN jsonb_typeof(${syncRecordsTable.payload}->'parentId') = 'string'
+        THEN NULLIF(btrim(${syncRecordsTable.payload}->>'parentId'), '') END
+    )`;
+    const [aggregate] = await tx.select({
+      count: sql<number>`count(*)::int`,
+    }).from(syncRecordsTable).where(and(
+      eq(syncRecordsTable.entityType, "comment"),
+      isNull(syncRecordsTable.deletedAt),
+      or(
+        eq(syncRecordsTable.parentId, commentParentId),
+        and(isNull(syncRecordsTable.parentId), eq(legacyParentId, commentParentId)),
+      ),
+    ));
+    payload.commentsCount = aggregate?.count ?? 0;
+    payload.aggregateRevision = eventId;
+    payload.parentId = commentParentId;
+    const [updatedRecord] = await tx.update(syncRecordsTable)
+      .set({ payload, updatedAt: now })
+      .where(eq(syncRecordsTable.id, entityId))
+      .returning();
+    if (!updatedRecord) throw new Error("Comment aggregate could not be saved");
+    record = updatedRecord;
+  }
   const eventValues = {
     entityType,
     entityId,
@@ -482,7 +734,7 @@ async function applyOperation(
     },
     createdAt: now,
   } satisfies Omit<typeof syncEventsTable.$inferInsert, "id">;
-  return { eventId, eventValues, record };
+  return { eventId, eventValues, record, cleanupObjectPaths };
 }
 
 router.get("/sync/snapshot", async (req, res): Promise<void> => {
@@ -529,6 +781,7 @@ router.post("/sync/operations", async (req, res): Promise<void> => {
           event: null,
           isPublic: false,
           audienceUserIds: null,
+          cleanupObjectPaths: [],
         };
       }
        const applied = await applyOperation(
@@ -566,8 +819,24 @@ router.post("/sync/operations", async (req, res): Promise<void> => {
         event: eventForClient(committedEvent),
         isPublic: committedEvent.isPublic,
         audienceUserIds: committedEvent.audienceUserIds,
+        cleanupObjectPaths: applied.cleanupObjectPaths,
       };
     });
+
+    for (const objectPath of result.cleanupObjectPaths) {
+      const namespace = objectPath.startsWith("/objects/social-posts/")
+        ? "social-posts"
+        : objectPath.startsWith("/objects/dm-photos/") ? "dm-photos" : null;
+      if (!namespace) continue;
+      try {
+        await deleteStoredObject(user.id, objectPath, namespace);
+      } catch (error) {
+        // The tombstone and attachment deactivation are already committed.
+        // A failed physical delete is safe to retry independently and must
+        // never turn a successful canonical operation into a 503.
+        req.log.warn({ err: error, objectPath }, "Deferred social media cleanup");
+      }
+    }
 
     if (result.event) {
       // Notify only after the transaction has committed. Every API instance
