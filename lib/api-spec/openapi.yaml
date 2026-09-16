@@ -20,6 +20,8 @@ tags:
     description: Premium subscription request operations
   - name: admin
     description: Superadmin-only account role administration
+  - name: love
+    description: Authenticated LOVE realtime chat, presence, safety, and moderation
 paths:
   /healthz:
     get:
@@ -915,6 +917,229 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ApiError"
+  /love/room:
+    get:
+      operationId: loveRoom
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: LOVE general room, content: { application/json: { schema: { $ref: "#/components/schemas/LoveRoom" } } } }
+  /love/conversations:
+    get:
+      operationId: loveConversations
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200": { description: Conversations, content: { application/json: { schema: { $ref: "#/components/schemas/LoveConversationList" } } } }
+    post:
+      operationId: createLoveConversation
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/LoveConversationInput" } } }
+      responses:
+        "201": { description: Conversation, content: { application/json: { schema: { $ref: "#/components/schemas/LoveConversation" } } } }
+  /love/conversations/{id}/messages:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+    get:
+      operationId: loveMessages
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - { name: before, in: query, schema: { type: string } }
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 100 } }
+      responses:
+        "200": { description: Messages, content: { application/json: { schema: { $ref: "#/components/schemas/LoveMessageList" } } } }
+    post:
+      operationId: sendLoveMessage
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/LoveMessageInput" } } }
+      responses:
+        "201": { description: Message, content: { application/json: { schema: { $ref: "#/components/schemas/LoveMessageResponse" } } } }
+  /love/messages/{id}:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+    patch:
+      operationId: editLoveMessage
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, properties: { body: { type: string, maxLength: 4000 } }, required: [body] } } }
+      responses: { "200": { description: Edited message, content: { application/json: { schema: { $ref: "#/components/schemas/LoveMessageResponse" } } } } }
+    delete:
+      operationId: deleteLoveMessage
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses: { "200": { description: Deleted message, content: { application/json: { schema: { $ref: "#/components/schemas/LoveMessageResponse" } } } } }
+  /love/messages/{id}/reactions/{reaction}:
+    parameters:
+      - { name: id, in: path, required: true, schema: { type: string } }
+      - { name: reaction, in: path, required: true, schema: { type: string } }
+    put:
+      operationId: setLoveMessageReaction
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses: { "200": { description: Reaction set, content: { application/json: { schema: { $ref: "#/components/schemas/LoveReactionResult" } } } } }
+    delete:
+      operationId: removeLoveMessageReaction
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses: { "200": { description: Reaction removed, content: { application/json: { schema: { $ref: "#/components/schemas/LoveReactionResult" } } } } }
+  /love/conversations/{id}/read:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+    put:
+      operationId: markLoveConversationRead
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, properties: { messageId: { type: string } }, required: [messageId] } } }
+      responses: { "200": { description: Read marker, content: { application/json: { schema: { $ref: "#/components/schemas/LoveReadResult" } } } } }
+  /love/users/search:
+    get:
+      operationId: searchLoveUsers
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      parameters: [{ name: q, in: query, schema: { type: string, maxLength: 80 } }]
+      responses: { "200": { description: Users, content: { application/json: { schema: { $ref: "#/components/schemas/LoveUsersResponse" } } } } }
+  /love/users/{id}:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+    get:
+      operationId: loveUserProfile
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses: { "200": { description: User profile, content: { application/json: { schema: { $ref: "#/components/schemas/LoveUserProfileResponse" } } } } }
+  /love/presence:
+    get:
+      operationId: listLovePresence
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses: { "200": { description: Presence, content: { application/json: { schema: { $ref: "#/components/schemas/LovePresenceResponse" } } } } }
+    put:
+      operationId: heartbeatLovePresence
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content: { application/json: { schema: { type: object, properties: { status: { type: string, enum: [online, busy, offline] } } } } }
+      responses: { "200": { description: Presence updated, content: { application/json: { schema: { $ref: "#/components/schemas/LovePresence" } } } } }
+  /love/blocks:
+    get:
+      operationId: listLoveBlocks
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses: { "200": { description: Block list, content: { application/json: { schema: { $ref: "#/components/schemas/LoveBlocksResponse" } } } } }
+  /love/blocks/{userId}:
+    parameters: [{ name: userId, in: path, required: true, schema: { type: string } }]
+    post:
+      operationId: blockLoveUser
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses: { "204": { description: Blocked } }
+    delete:
+      operationId: unblockLoveUser
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses: { "204": { description: Unblocked } }
+  /love/reports:
+    post:
+      operationId: reportLoveContent
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/LoveReportInput" } } }
+      responses: { "201": { description: Report created, content: { application/json: { schema: { $ref: "#/components/schemas/LoveReportResponse" } } } } }
+  /love/settings:
+    get:
+      operationId: getLoveSettings
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses: { "200": { description: Settings, content: { application/json: { schema: { $ref: "#/components/schemas/LoveSettingsResponse" } } } } }
+    put:
+      operationId: updateLoveSettings
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { $ref: "#/components/schemas/LoveSettingsInput" } } }
+      responses: { "200": { description: Settings updated, content: { application/json: { schema: { $ref: "#/components/schemas/LoveSettingsResponse" } } } } }
+  /love/media/request-url:
+    post:
+      operationId: requestLoveMediaUpload
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, properties: { size: { type: integer }, contentType: { type: string } }, required: [size, contentType] } } }
+      responses: { "200": { description: Upload URL, content: { application/json: { schema: { $ref: "#/components/schemas/LoveMediaUpload" } } } } }
+  /love/media/finalize:
+    post:
+      operationId: finalizeLoveMediaUpload
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, properties: { objectPath: { type: string }, size: { type: integer }, contentType: { type: string } }, required: [objectPath, size, contentType] } } }
+      responses: { "200": { description: Finalized media, content: { application/json: { schema: { $ref: "#/components/schemas/LoveMediaUpload" } } } } }
+  /love/media/{path}:
+    parameters: [{ name: path, in: path, required: true, schema: { type: string } }]
+    get:
+      operationId: serveLoveMedia
+      tags: [love]
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Authenticated private LOVE image bytes
+          headers:
+            Content-Type: { schema: { type: string, enum: [image/jpeg, image/png, image/webp, image/gif] } }
+            Content-Length: { schema: { type: integer } }
+          content:
+            image/jpeg: { schema: { type: string, format: binary } }
+            image/png: { schema: { type: string, format: binary } }
+            image/webp: { schema: { type: string, format: binary } }
+            image/gif: { schema: { type: string, format: binary } }
+  /admin/love/reports:
+    get:
+      operationId: listLoveReports
+      tags: [admin]
+      security: [{ bearerAuth: [] }]
+      responses: { "200": { description: Moderation reports, content: { application/json: { schema: { $ref: "#/components/schemas/LoveReportsResponse" } } } } }
+  /admin/love/reports/{id}:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+    patch:
+      operationId: reviewLoveReport
+      tags: [admin]
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content: { application/json: { schema: { type: object, properties: { status: { type: string, enum: [open, resolved, dismissed] } }, required: [status] } } }
+      responses: { "200": { description: Report reviewed, content: { application/json: { schema: { $ref: "#/components/schemas/LoveReportResponse" } } } } }
+  /admin/love/audit:
+    get:
+      operationId: listLoveAudit
+      tags: [admin]
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Immutable LOVE moderation audit entries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  audit: { type: array, items: { type: object, additionalProperties: true } }
+                required: [audit]
+  /admin/love/messages/{id}/hide:
+    parameters: [{ name: id, in: path, required: true, schema: { type: string } }]
+    patch:
+      operationId: hideLoveMessage
+      tags: [admin]
+      security: [{ bearerAuth: [] }]
+      responses: { "200": { description: Message hidden, content: { application/json: { schema: { $ref: "#/components/schemas/LoveMessageResponse" } } } } }
 components:
   securitySchemes:
     bearerAuth:
@@ -922,6 +1147,121 @@ components:
       scheme: bearer
       bearerFormat: opaque
   schemas:
+    LoveRoom:
+      type: object
+      properties:
+        id: { type: string }
+        kind: { type: string }
+        title: { type: string }
+        isMember: { type: boolean }
+      required: [id, kind, title, isMember]
+    LoveConversation:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: string }
+        kind: { type: string }
+        partner: { type: object, nullable: true, additionalProperties: true }
+        lastMessage: { $ref: "#/components/schemas/LoveMessage", nullable: true }
+        unreadCount: { type: integer, minimum: 0 }
+      required: [id, kind, partner, lastMessage, unreadCount]
+    LoveConversationList:
+      type: object
+      properties:
+        conversations:
+          type: array
+          items: { $ref: "#/components/schemas/LoveConversation" }
+      required: [conversations]
+    LoveConversationInput:
+      type: object
+      properties:
+        userId: { type: string, minLength: 1 }
+      required: [userId]
+    LoveMessage:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: string }
+        conversationId: { type: string }
+        senderId: { type: string }
+        body: { type: string, nullable: true }
+        version: { type: integer }
+        createdAt: { type: string, format: date-time }
+      required: [id, conversationId, senderId, version, createdAt]
+    LoveMessageInput:
+      type: object
+      properties:
+        clientMessageId: { type: string, minLength: 1, maxLength: 200 }
+        body: { type: string, maxLength: 4000 }
+        mediaObjectPath: { type: string, maxLength: 500 }
+        mediaType: { type: string, maxLength: 80 }
+      required: [clientMessageId]
+    LoveMessageResponse:
+      type: object
+      properties:
+        message: { $ref: "#/components/schemas/LoveMessage" }
+        duplicate: { type: boolean }
+      required: [message, duplicate]
+    LoveMessageList:
+      type: object
+      properties:
+        messages:
+          type: array
+          items: { $ref: "#/components/schemas/LoveMessage" }
+        nextCursor: { type: string, nullable: true, description: Base64url JSON tuple cursor containing createdAt and id }
+      required: [messages, nextCursor]
+    LoveReactionResult:
+      type: object
+      properties: { active: { type: boolean } }
+      required: [active]
+    LoveReadResult:
+      type: object
+      properties: { messageId: { type: string } }
+      required: [messageId]
+    LoveUserProfileResponse:
+      type: object
+      additionalProperties: true
+      properties: { user: { type: object, additionalProperties: true }, presence: { type: object, additionalProperties: true } }
+      required: [user, presence]
+    LoveUsersResponse:
+      type: object
+      properties: { users: { type: array, items: { type: object, additionalProperties: true } } }
+      required: [users]
+    LovePresence:
+      type: object
+      additionalProperties: true
+      properties: { status: { type: string }, expiresAt: { type: string, format: date-time } }
+    LovePresenceResponse:
+      type: object
+      properties: { presence: { type: array, items: { $ref: "#/components/schemas/LovePresence" } } }
+      required: [presence]
+    LoveBlocksResponse:
+      type: object
+      properties: { blocks: { type: array, items: { type: object, additionalProperties: true } } }
+      required: [blocks]
+    LoveReportInput:
+      type: object
+      properties: { reason: { type: string, maxLength: 500 }, messageId: { type: string }, reportedUserId: { type: string } }
+      required: [reason]
+    LoveReportResponse:
+      type: object
+      properties: { report: { type: object, additionalProperties: true } }
+      required: [report]
+    LoveReportsResponse:
+      type: object
+      properties: { reports: { type: array, items: { type: object, additionalProperties: true } } }
+      required: [reports]
+    LoveSettingsInput:
+      type: object
+      properties: { notifications: { type: boolean }, sound: { type: boolean }, vibration: { type: boolean }, theme: { type: string } }
+    LoveSettingsResponse:
+      type: object
+      properties: { settings: { type: object, additionalProperties: true } }
+      required: [settings]
+    LoveMediaUpload:
+      type: object
+      properties: { uploadURL: { type: string }, objectPath: { type: string }, contentType: { type: string }, size: { type: integer } }
+      required: [objectPath]
     HealthStatus:
       type: object
       properties:

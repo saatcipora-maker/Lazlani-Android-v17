@@ -149,8 +149,11 @@ export default function HomeScreen() {
               testID="header-love-button"
               accessibilityRole="button"
               accessibilityLabel="LOVE"
-              accessibilityHint="Yakında kullanıma açılacak"
-              onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+              accessibilityHint="LOVE'a gir"
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                router.push('/love');
+              }}
               activeOpacity={0.78}
               style={[
                 styles.loveButton,

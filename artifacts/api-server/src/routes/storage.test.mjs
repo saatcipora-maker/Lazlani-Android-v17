@@ -4,6 +4,8 @@ import { validateBookCoverMetadata } from "./storage";
 import {
   canonicalBookCoverObjectPath,
   isSupportedBookCoverMagic,
+  isSupportedImageMagic,
+  validateLoveMediaMetadata,
 } from "../lib/object-storage";
 
 test("accepts supported book cover images within the size limit", () => {
@@ -64,4 +66,16 @@ test("canonicalizes only finalized HTTPS cover references for the authenticated 
       /cover reference/i,
     );
   }
+});
+
+test("LOVE media accepts GIF and rejects unsupported or oversized uploads", () => {
+  assert.equal(validateLoveMediaMetadata({ size: 1, contentType: "image/gif" }), null);
+  assert.match(validateLoveMediaMetadata({ size: 10 * 1024 * 1024 + 1, contentType: "image/jpeg" }) ?? "", /10 MB/);
+  assert.match(validateLoveMediaMetadata({ size: 10, contentType: "image/svg+xml" }) ?? "", /JPEG/);
+});
+
+test("LOVE media validates image signatures instead of trusting MIME", () => {
+  assert.equal(isSupportedImageMagic("image/gif", Uint8Array.from([0x47, 0x49, 0x46, 0x38, 0x39, 0x61])), true);
+  assert.equal(isSupportedImageMagic("image/gif", Uint8Array.from([0xff, 0xd8, 0xff])), false);
+  assert.equal(isSupportedImageMagic("image/png", Uint8Array.from([0xff, 0xd8, 0xff])), false);
 });

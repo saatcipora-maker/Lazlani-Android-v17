@@ -34,10 +34,36 @@ import type {
   AuthSessionRevokeOthersResponse,
   AuthSessionRevokeResponse,
   AuthUserPayload,
+  EditLoveMessageBody,
+  FinalizeLoveMediaUploadBody,
   FinalizeUploadRequest,
   FinalizeUploadResult,
   GetSyncSnapshotParams,
   HealthStatus,
+  HeartbeatLovePresenceBody,
+  ListLoveAudit200,
+  LoveBlocksResponse,
+  LoveConversation,
+  LoveConversationInput,
+  LoveConversationList,
+  LoveMediaUpload,
+  LoveMessageInput,
+  LoveMessageList,
+  LoveMessageResponse,
+  LoveMessagesParams,
+  LovePresence,
+  LovePresenceResponse,
+  LoveReactionResult,
+  LoveReadResult,
+  LoveReportInput,
+  LoveReportResponse,
+  LoveReportsResponse,
+  LoveRoom,
+  LoveSettingsInput,
+  LoveSettingsResponse,
+  LoveUserProfileResponse,
+  LoveUsersResponse,
+  MarkLoveConversationReadBody,
   PasswordResetConfirmInput,
   PasswordResetConfirmResponse,
   PasswordResetRequestInput,
@@ -45,6 +71,9 @@ import type {
   PremiumRequestCreateInput,
   PremiumRequestListResponse,
   PremiumRequestResponse,
+  RequestLoveMediaUploadBody,
+  ReviewLoveReportBody,
+  SearchLoveUsersParams,
   StreamSyncEventsParams,
   SyncOperationInput,
   SyncOperationResult,
@@ -139,6 +168,8 @@ export const getHealthCheckQueryKey = () => {
     `/api/healthz`
     ] as const;
     }
+
+
 export const getHealthCheckQueryOptions = <TData = Awaited<ReturnType<typeof healthCheck>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof healthCheck>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
 ) => {
 
@@ -2181,3 +2212,1851 @@ export const useDeleteStorageObject = <TError = ErrorType<ApiError>,
       > => {
       return useMutation(getDeleteStorageObjectMutationOptions(options));
     }
+
+export const getLoveRoomUrl = () => {
+
+
+
+
+  return `/api/love/room`
+}
+
+export const loveRoom = async ( options?: RequestInit): Promise<LoveRoom> => {
+
+  return customFetch<LoveRoom>(getLoveRoomUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getLoveRoomQueryKey = () => {
+    return [
+    `/api/love/room`
+    ] as const;
+    }
+
+
+export const getLoveRoomQueryOptions = <TData = Awaited<ReturnType<typeof loveRoom>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof loveRoom>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getLoveRoomQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof loveRoom>>> = ({ signal }) => loveRoom({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof loveRoom>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type LoveRoomQueryResult = NonNullable<Awaited<ReturnType<typeof loveRoom>>>
+export type LoveRoomQueryError = ErrorType<unknown>
+
+
+
+export function useLoveRoom<TData = Awaited<ReturnType<typeof loveRoom>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof loveRoom>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getLoveRoomQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getLoveConversationsUrl = () => {
+
+
+
+
+  return `/api/love/conversations`
+}
+
+export const loveConversations = async ( options?: RequestInit): Promise<LoveConversationList> => {
+
+  return customFetch<LoveConversationList>(getLoveConversationsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getLoveConversationsQueryKey = () => {
+    return [
+    `/api/love/conversations`
+    ] as const;
+    }
+
+
+export const getLoveConversationsQueryOptions = <TData = Awaited<ReturnType<typeof loveConversations>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof loveConversations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getLoveConversationsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof loveConversations>>> = ({ signal }) => loveConversations({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof loveConversations>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type LoveConversationsQueryResult = NonNullable<Awaited<ReturnType<typeof loveConversations>>>
+export type LoveConversationsQueryError = ErrorType<unknown>
+
+
+
+export function useLoveConversations<TData = Awaited<ReturnType<typeof loveConversations>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof loveConversations>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getLoveConversationsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getCreateLoveConversationUrl = () => {
+
+
+
+
+  return `/api/love/conversations`
+}
+
+export const createLoveConversation = async (loveConversationInput: LoveConversationInput, options?: RequestInit): Promise<LoveConversation> => {
+
+  return customFetch<LoveConversation>(getCreateLoveConversationUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(loveConversationInput)
+  }
+);}
+
+
+
+
+
+export const getCreateLoveConversationMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLoveConversation>>, TError,{data: BodyType<LoveConversationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof createLoveConversation>>, TError,{data: BodyType<LoveConversationInput>}, TContext> => {
+
+const mutationKey = ['createLoveConversation'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createLoveConversation>>, {data: BodyType<LoveConversationInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  createLoveConversation(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type CreateLoveConversationMutationResult = NonNullable<Awaited<ReturnType<typeof createLoveConversation>>>
+    export type CreateLoveConversationMutationBody = BodyType<LoveConversationInput>
+    export type CreateLoveConversationMutationError = ErrorType<unknown>
+
+    export const useCreateLoveConversation = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createLoveConversation>>, TError,{data: BodyType<LoveConversationInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof createLoveConversation>>,
+        TError,
+        {data: BodyType<LoveConversationInput>},
+        TContext
+      > => {
+      return useMutation(getCreateLoveConversationMutationOptions(options));
+    }
+
+export const getLoveMessagesUrl = (id: string,
+    params?: LoveMessagesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/love/conversations/${id}/messages?${stringifiedParams}` : `/api/love/conversations/${id}/messages`
+}
+
+export const loveMessages = async (id: string,
+    params?: LoveMessagesParams, options?: RequestInit): Promise<LoveMessageList> => {
+
+  return customFetch<LoveMessageList>(getLoveMessagesUrl(id,params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getLoveMessagesQueryKey = (id: string,
+    params?: LoveMessagesParams,) => {
+    return [
+    `/api/love/conversations/${id}/messages`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getLoveMessagesQueryOptions = <TData = Awaited<ReturnType<typeof loveMessages>>, TError = ErrorType<unknown>>(id: string,
+    params?: LoveMessagesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof loveMessages>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getLoveMessagesQueryKey(id,params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof loveMessages>>> = ({ signal }) => loveMessages(id,params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof loveMessages>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type LoveMessagesQueryResult = NonNullable<Awaited<ReturnType<typeof loveMessages>>>
+export type LoveMessagesQueryError = ErrorType<unknown>
+
+
+
+export function useLoveMessages<TData = Awaited<ReturnType<typeof loveMessages>>, TError = ErrorType<unknown>>(
+ id: string,
+    params?: LoveMessagesParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof loveMessages>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getLoveMessagesQueryOptions(id,params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getSendLoveMessageUrl = (id: string,) => {
+
+
+
+
+  return `/api/love/conversations/${id}/messages`
+}
+
+export const sendLoveMessage = async (id: string,
+    loveMessageInput: LoveMessageInput, options?: RequestInit): Promise<LoveMessageResponse> => {
+
+  return customFetch<LoveMessageResponse>(getSendLoveMessageUrl(id),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(loveMessageInput)
+  }
+);}
+
+
+
+
+
+export const getSendLoveMessageMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendLoveMessage>>, TError,{id: string;data: BodyType<LoveMessageInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof sendLoveMessage>>, TError,{id: string;data: BodyType<LoveMessageInput>}, TContext> => {
+
+const mutationKey = ['sendLoveMessage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof sendLoveMessage>>, {id: string;data: BodyType<LoveMessageInput>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  sendLoveMessage(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SendLoveMessageMutationResult = NonNullable<Awaited<ReturnType<typeof sendLoveMessage>>>
+    export type SendLoveMessageMutationBody = BodyType<LoveMessageInput>
+    export type SendLoveMessageMutationError = ErrorType<unknown>
+
+    export const useSendLoveMessage = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof sendLoveMessage>>, TError,{id: string;data: BodyType<LoveMessageInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof sendLoveMessage>>,
+        TError,
+        {id: string;data: BodyType<LoveMessageInput>},
+        TContext
+      > => {
+      return useMutation(getSendLoveMessageMutationOptions(options));
+    }
+
+export const getEditLoveMessageUrl = (id: string,) => {
+
+
+
+
+  return `/api/love/messages/${id}`
+}
+
+export const editLoveMessage = async (id: string,
+    editLoveMessageBody: EditLoveMessageBody, options?: RequestInit): Promise<LoveMessageResponse> => {
+
+  return customFetch<LoveMessageResponse>(getEditLoveMessageUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(editLoveMessageBody)
+  }
+);}
+
+
+
+
+
+export const getEditLoveMessageMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof editLoveMessage>>, TError,{id: string;data: BodyType<EditLoveMessageBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof editLoveMessage>>, TError,{id: string;data: BodyType<EditLoveMessageBody>}, TContext> => {
+
+const mutationKey = ['editLoveMessage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof editLoveMessage>>, {id: string;data: BodyType<EditLoveMessageBody>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  editLoveMessage(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type EditLoveMessageMutationResult = NonNullable<Awaited<ReturnType<typeof editLoveMessage>>>
+    export type EditLoveMessageMutationBody = BodyType<EditLoveMessageBody>
+    export type EditLoveMessageMutationError = ErrorType<unknown>
+
+    export const useEditLoveMessage = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof editLoveMessage>>, TError,{id: string;data: BodyType<EditLoveMessageBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof editLoveMessage>>,
+        TError,
+        {id: string;data: BodyType<EditLoveMessageBody>},
+        TContext
+      > => {
+      return useMutation(getEditLoveMessageMutationOptions(options));
+    }
+
+export const getDeleteLoveMessageUrl = (id: string,) => {
+
+
+
+
+  return `/api/love/messages/${id}`
+}
+
+export const deleteLoveMessage = async (id: string, options?: RequestInit): Promise<LoveMessageResponse> => {
+
+  return customFetch<LoveMessageResponse>(getDeleteLoveMessageUrl(id),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getDeleteLoveMessageMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteLoveMessage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof deleteLoveMessage>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['deleteLoveMessage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof deleteLoveMessage>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  deleteLoveMessage(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type DeleteLoveMessageMutationResult = NonNullable<Awaited<ReturnType<typeof deleteLoveMessage>>>
+
+    export type DeleteLoveMessageMutationError = ErrorType<unknown>
+
+    export const useDeleteLoveMessage = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteLoveMessage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof deleteLoveMessage>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+      return useMutation(getDeleteLoveMessageMutationOptions(options));
+    }
+
+export const getSetLoveMessageReactionUrl = (id: string,
+    reaction: string,) => {
+
+
+
+
+  return `/api/love/messages/${id}/reactions/${reaction}`
+}
+
+export const setLoveMessageReaction = async (id: string,
+    reaction: string, options?: RequestInit): Promise<LoveReactionResult> => {
+
+  return customFetch<LoveReactionResult>(getSetLoveMessageReactionUrl(id,reaction),
+  {
+    ...options,
+    method: 'PUT'
+
+
+  }
+);}
+
+
+
+
+
+export const getSetLoveMessageReactionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setLoveMessageReaction>>, TError,{id: string;reaction: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof setLoveMessageReaction>>, TError,{id: string;reaction: string}, TContext> => {
+
+const mutationKey = ['setLoveMessageReaction'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof setLoveMessageReaction>>, {id: string;reaction: string}> = (props) => {
+          const {id,reaction} = props ?? {};
+
+          return  setLoveMessageReaction(id,reaction,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type SetLoveMessageReactionMutationResult = NonNullable<Awaited<ReturnType<typeof setLoveMessageReaction>>>
+
+    export type SetLoveMessageReactionMutationError = ErrorType<unknown>
+
+    export const useSetLoveMessageReaction = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof setLoveMessageReaction>>, TError,{id: string;reaction: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof setLoveMessageReaction>>,
+        TError,
+        {id: string;reaction: string},
+        TContext
+      > => {
+      return useMutation(getSetLoveMessageReactionMutationOptions(options));
+    }
+
+export const getRemoveLoveMessageReactionUrl = (id: string,
+    reaction: string,) => {
+
+
+
+
+  return `/api/love/messages/${id}/reactions/${reaction}`
+}
+
+export const removeLoveMessageReaction = async (id: string,
+    reaction: string, options?: RequestInit): Promise<LoveReactionResult> => {
+
+  return customFetch<LoveReactionResult>(getRemoveLoveMessageReactionUrl(id,reaction),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getRemoveLoveMessageReactionMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeLoveMessageReaction>>, TError,{id: string;reaction: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof removeLoveMessageReaction>>, TError,{id: string;reaction: string}, TContext> => {
+
+const mutationKey = ['removeLoveMessageReaction'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof removeLoveMessageReaction>>, {id: string;reaction: string}> = (props) => {
+          const {id,reaction} = props ?? {};
+
+          return  removeLoveMessageReaction(id,reaction,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RemoveLoveMessageReactionMutationResult = NonNullable<Awaited<ReturnType<typeof removeLoveMessageReaction>>>
+
+    export type RemoveLoveMessageReactionMutationError = ErrorType<unknown>
+
+    export const useRemoveLoveMessageReaction = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeLoveMessageReaction>>, TError,{id: string;reaction: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof removeLoveMessageReaction>>,
+        TError,
+        {id: string;reaction: string},
+        TContext
+      > => {
+      return useMutation(getRemoveLoveMessageReactionMutationOptions(options));
+    }
+
+export const getMarkLoveConversationReadUrl = (id: string,) => {
+
+
+
+
+  return `/api/love/conversations/${id}/read`
+}
+
+export const markLoveConversationRead = async (id: string,
+    markLoveConversationReadBody: MarkLoveConversationReadBody, options?: RequestInit): Promise<LoveReadResult> => {
+
+  return customFetch<LoveReadResult>(getMarkLoveConversationReadUrl(id),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(markLoveConversationReadBody)
+  }
+);}
+
+
+
+
+
+export const getMarkLoveConversationReadMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markLoveConversationRead>>, TError,{id: string;data: BodyType<MarkLoveConversationReadBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof markLoveConversationRead>>, TError,{id: string;data: BodyType<MarkLoveConversationReadBody>}, TContext> => {
+
+const mutationKey = ['markLoveConversationRead'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof markLoveConversationRead>>, {id: string;data: BodyType<MarkLoveConversationReadBody>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  markLoveConversationRead(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type MarkLoveConversationReadMutationResult = NonNullable<Awaited<ReturnType<typeof markLoveConversationRead>>>
+    export type MarkLoveConversationReadMutationBody = BodyType<MarkLoveConversationReadBody>
+    export type MarkLoveConversationReadMutationError = ErrorType<unknown>
+
+    export const useMarkLoveConversationRead = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof markLoveConversationRead>>, TError,{id: string;data: BodyType<MarkLoveConversationReadBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof markLoveConversationRead>>,
+        TError,
+        {id: string;data: BodyType<MarkLoveConversationReadBody>},
+        TContext
+      > => {
+      return useMutation(getMarkLoveConversationReadMutationOptions(options));
+    }
+
+export const getSearchLoveUsersUrl = (params?: SearchLoveUsersParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : String(value))
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/api/love/users/search?${stringifiedParams}` : `/api/love/users/search`
+}
+
+export const searchLoveUsers = async (params?: SearchLoveUsersParams, options?: RequestInit): Promise<LoveUsersResponse> => {
+
+  return customFetch<LoveUsersResponse>(getSearchLoveUsersUrl(params),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getSearchLoveUsersQueryKey = (params?: SearchLoveUsersParams,) => {
+    return [
+    `/api/love/users/search`, ...(params ? [params] : [])
+    ] as const;
+    }
+
+
+export const getSearchLoveUsersQueryOptions = <TData = Awaited<ReturnType<typeof searchLoveUsers>>, TError = ErrorType<unknown>>(params?: SearchLoveUsersParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof searchLoveUsers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getSearchLoveUsersQueryKey(params);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof searchLoveUsers>>> = ({ signal }) => searchLoveUsers(params, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof searchLoveUsers>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type SearchLoveUsersQueryResult = NonNullable<Awaited<ReturnType<typeof searchLoveUsers>>>
+export type SearchLoveUsersQueryError = ErrorType<unknown>
+
+
+
+export function useSearchLoveUsers<TData = Awaited<ReturnType<typeof searchLoveUsers>>, TError = ErrorType<unknown>>(
+ params?: SearchLoveUsersParams, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof searchLoveUsers>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getSearchLoveUsersQueryOptions(params,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getLoveUserProfileUrl = (id: string,) => {
+
+
+
+
+  return `/api/love/users/${id}`
+}
+
+export const loveUserProfile = async (id: string, options?: RequestInit): Promise<LoveUserProfileResponse> => {
+
+  return customFetch<LoveUserProfileResponse>(getLoveUserProfileUrl(id),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getLoveUserProfileQueryKey = (id: string,) => {
+    return [
+    `/api/love/users/${id}`
+    ] as const;
+    }
+
+
+export const getLoveUserProfileQueryOptions = <TData = Awaited<ReturnType<typeof loveUserProfile>>, TError = ErrorType<unknown>>(id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof loveUserProfile>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getLoveUserProfileQueryKey(id);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof loveUserProfile>>> = ({ signal }) => loveUserProfile(id, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: id !== null && id !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof loveUserProfile>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type LoveUserProfileQueryResult = NonNullable<Awaited<ReturnType<typeof loveUserProfile>>>
+export type LoveUserProfileQueryError = ErrorType<unknown>
+
+
+
+export function useLoveUserProfile<TData = Awaited<ReturnType<typeof loveUserProfile>>, TError = ErrorType<unknown>>(
+ id: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof loveUserProfile>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getLoveUserProfileQueryOptions(id,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListLovePresenceUrl = () => {
+
+
+
+
+  return `/api/love/presence`
+}
+
+export const listLovePresence = async ( options?: RequestInit): Promise<LovePresenceResponse> => {
+
+  return customFetch<LovePresenceResponse>(getListLovePresenceUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListLovePresenceQueryKey = () => {
+    return [
+    `/api/love/presence`
+    ] as const;
+    }
+
+
+export const getListLovePresenceQueryOptions = <TData = Awaited<ReturnType<typeof listLovePresence>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLovePresence>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListLovePresenceQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listLovePresence>>> = ({ signal }) => listLovePresence({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listLovePresence>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListLovePresenceQueryResult = NonNullable<Awaited<ReturnType<typeof listLovePresence>>>
+export type ListLovePresenceQueryError = ErrorType<unknown>
+
+
+
+export function useListLovePresence<TData = Awaited<ReturnType<typeof listLovePresence>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLovePresence>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListLovePresenceQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getHeartbeatLovePresenceUrl = () => {
+
+
+
+
+  return `/api/love/presence`
+}
+
+export const heartbeatLovePresence = async (heartbeatLovePresenceBody?: HeartbeatLovePresenceBody, options?: RequestInit): Promise<LovePresence> => {
+
+  return customFetch<LovePresence>(getHeartbeatLovePresenceUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(heartbeatLovePresenceBody)
+  }
+);}
+
+
+
+
+
+export const getHeartbeatLovePresenceMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof heartbeatLovePresence>>, TError,{data?: BodyType<HeartbeatLovePresenceBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof heartbeatLovePresence>>, TError,{data?: BodyType<HeartbeatLovePresenceBody>}, TContext> => {
+
+const mutationKey = ['heartbeatLovePresence'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof heartbeatLovePresence>>, {data?: BodyType<HeartbeatLovePresenceBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  heartbeatLovePresence(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type HeartbeatLovePresenceMutationResult = NonNullable<Awaited<ReturnType<typeof heartbeatLovePresence>>>
+    export type HeartbeatLovePresenceMutationBody = BodyType<HeartbeatLovePresenceBody> | undefined
+    export type HeartbeatLovePresenceMutationError = ErrorType<unknown>
+
+    export const useHeartbeatLovePresence = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof heartbeatLovePresence>>, TError,{data?: BodyType<HeartbeatLovePresenceBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof heartbeatLovePresence>>,
+        TError,
+        {data?: BodyType<HeartbeatLovePresenceBody>},
+        TContext
+      > => {
+      return useMutation(getHeartbeatLovePresenceMutationOptions(options));
+    }
+
+export const getListLoveBlocksUrl = () => {
+
+
+
+
+  return `/api/love/blocks`
+}
+
+export const listLoveBlocks = async ( options?: RequestInit): Promise<LoveBlocksResponse> => {
+
+  return customFetch<LoveBlocksResponse>(getListLoveBlocksUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListLoveBlocksQueryKey = () => {
+    return [
+    `/api/love/blocks`
+    ] as const;
+    }
+
+
+export const getListLoveBlocksQueryOptions = <TData = Awaited<ReturnType<typeof listLoveBlocks>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLoveBlocks>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListLoveBlocksQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listLoveBlocks>>> = ({ signal }) => listLoveBlocks({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listLoveBlocks>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListLoveBlocksQueryResult = NonNullable<Awaited<ReturnType<typeof listLoveBlocks>>>
+export type ListLoveBlocksQueryError = ErrorType<unknown>
+
+
+
+export function useListLoveBlocks<TData = Awaited<ReturnType<typeof listLoveBlocks>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLoveBlocks>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListLoveBlocksQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getBlockLoveUserUrl = (userId: string,) => {
+
+
+
+
+  return `/api/love/blocks/${userId}`
+}
+
+export const blockLoveUser = async (userId: string, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getBlockLoveUserUrl(userId),
+  {
+    ...options,
+    method: 'POST'
+
+
+  }
+);}
+
+
+
+
+
+export const getBlockLoveUserMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof blockLoveUser>>, TError,{userId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof blockLoveUser>>, TError,{userId: string}, TContext> => {
+
+const mutationKey = ['blockLoveUser'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof blockLoveUser>>, {userId: string}> = (props) => {
+          const {userId} = props ?? {};
+
+          return  blockLoveUser(userId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type BlockLoveUserMutationResult = NonNullable<Awaited<ReturnType<typeof blockLoveUser>>>
+
+    export type BlockLoveUserMutationError = ErrorType<unknown>
+
+    export const useBlockLoveUser = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof blockLoveUser>>, TError,{userId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof blockLoveUser>>,
+        TError,
+        {userId: string},
+        TContext
+      > => {
+      return useMutation(getBlockLoveUserMutationOptions(options));
+    }
+
+export const getUnblockLoveUserUrl = (userId: string,) => {
+
+
+
+
+  return `/api/love/blocks/${userId}`
+}
+
+export const unblockLoveUser = async (userId: string, options?: RequestInit): Promise<void> => {
+
+  return customFetch<void>(getUnblockLoveUserUrl(userId),
+  {
+    ...options,
+    method: 'DELETE'
+
+
+  }
+);}
+
+
+
+
+
+export const getUnblockLoveUserMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unblockLoveUser>>, TError,{userId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof unblockLoveUser>>, TError,{userId: string}, TContext> => {
+
+const mutationKey = ['unblockLoveUser'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof unblockLoveUser>>, {userId: string}> = (props) => {
+          const {userId} = props ?? {};
+
+          return  unblockLoveUser(userId,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UnblockLoveUserMutationResult = NonNullable<Awaited<ReturnType<typeof unblockLoveUser>>>
+
+    export type UnblockLoveUserMutationError = ErrorType<unknown>
+
+    export const useUnblockLoveUser = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof unblockLoveUser>>, TError,{userId: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof unblockLoveUser>>,
+        TError,
+        {userId: string},
+        TContext
+      > => {
+      return useMutation(getUnblockLoveUserMutationOptions(options));
+    }
+
+export const getReportLoveContentUrl = () => {
+
+
+
+
+  return `/api/love/reports`
+}
+
+export const reportLoveContent = async (loveReportInput: LoveReportInput, options?: RequestInit): Promise<LoveReportResponse> => {
+
+  return customFetch<LoveReportResponse>(getReportLoveContentUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(loveReportInput)
+  }
+);}
+
+
+
+
+
+export const getReportLoveContentMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reportLoveContent>>, TError,{data: BodyType<LoveReportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reportLoveContent>>, TError,{data: BodyType<LoveReportInput>}, TContext> => {
+
+const mutationKey = ['reportLoveContent'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reportLoveContent>>, {data: BodyType<LoveReportInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  reportLoveContent(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReportLoveContentMutationResult = NonNullable<Awaited<ReturnType<typeof reportLoveContent>>>
+    export type ReportLoveContentMutationBody = BodyType<LoveReportInput>
+    export type ReportLoveContentMutationError = ErrorType<unknown>
+
+    export const useReportLoveContent = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reportLoveContent>>, TError,{data: BodyType<LoveReportInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reportLoveContent>>,
+        TError,
+        {data: BodyType<LoveReportInput>},
+        TContext
+      > => {
+      return useMutation(getReportLoveContentMutationOptions(options));
+    }
+
+export const getGetLoveSettingsUrl = () => {
+
+
+
+
+  return `/api/love/settings`
+}
+
+export const getLoveSettings = async ( options?: RequestInit): Promise<LoveSettingsResponse> => {
+
+  return customFetch<LoveSettingsResponse>(getGetLoveSettingsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getGetLoveSettingsQueryKey = () => {
+    return [
+    `/api/love/settings`
+    ] as const;
+    }
+
+
+export const getGetLoveSettingsQueryOptions = <TData = Awaited<ReturnType<typeof getLoveSettings>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLoveSettings>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getGetLoveSettingsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getLoveSettings>>> = ({ signal }) => getLoveSettings({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getLoveSettings>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type GetLoveSettingsQueryResult = NonNullable<Awaited<ReturnType<typeof getLoveSettings>>>
+export type GetLoveSettingsQueryError = ErrorType<unknown>
+
+
+
+export function useGetLoveSettings<TData = Awaited<ReturnType<typeof getLoveSettings>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof getLoveSettings>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getGetLoveSettingsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getUpdateLoveSettingsUrl = () => {
+
+
+
+
+  return `/api/love/settings`
+}
+
+export const updateLoveSettings = async (loveSettingsInput: LoveSettingsInput, options?: RequestInit): Promise<LoveSettingsResponse> => {
+
+  return customFetch<LoveSettingsResponse>(getUpdateLoveSettingsUrl(),
+  {
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(loveSettingsInput)
+  }
+);}
+
+
+
+
+
+export const getUpdateLoveSettingsMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLoveSettings>>, TError,{data: BodyType<LoveSettingsInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof updateLoveSettings>>, TError,{data: BodyType<LoveSettingsInput>}, TContext> => {
+
+const mutationKey = ['updateLoveSettings'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof updateLoveSettings>>, {data: BodyType<LoveSettingsInput>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  updateLoveSettings(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type UpdateLoveSettingsMutationResult = NonNullable<Awaited<ReturnType<typeof updateLoveSettings>>>
+    export type UpdateLoveSettingsMutationBody = BodyType<LoveSettingsInput>
+    export type UpdateLoveSettingsMutationError = ErrorType<unknown>
+
+    export const useUpdateLoveSettings = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof updateLoveSettings>>, TError,{data: BodyType<LoveSettingsInput>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof updateLoveSettings>>,
+        TError,
+        {data: BodyType<LoveSettingsInput>},
+        TContext
+      > => {
+      return useMutation(getUpdateLoveSettingsMutationOptions(options));
+    }
+
+export const getRequestLoveMediaUploadUrl = () => {
+
+
+
+
+  return `/api/love/media/request-url`
+}
+
+export const requestLoveMediaUpload = async (requestLoveMediaUploadBody: RequestLoveMediaUploadBody, options?: RequestInit): Promise<LoveMediaUpload> => {
+
+  return customFetch<LoveMediaUpload>(getRequestLoveMediaUploadUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(requestLoveMediaUploadBody)
+  }
+);}
+
+
+
+
+
+export const getRequestLoveMediaUploadMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestLoveMediaUpload>>, TError,{data: BodyType<RequestLoveMediaUploadBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof requestLoveMediaUpload>>, TError,{data: BodyType<RequestLoveMediaUploadBody>}, TContext> => {
+
+const mutationKey = ['requestLoveMediaUpload'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof requestLoveMediaUpload>>, {data: BodyType<RequestLoveMediaUploadBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  requestLoveMediaUpload(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type RequestLoveMediaUploadMutationResult = NonNullable<Awaited<ReturnType<typeof requestLoveMediaUpload>>>
+    export type RequestLoveMediaUploadMutationBody = BodyType<RequestLoveMediaUploadBody>
+    export type RequestLoveMediaUploadMutationError = ErrorType<unknown>
+
+    export const useRequestLoveMediaUpload = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof requestLoveMediaUpload>>, TError,{data: BodyType<RequestLoveMediaUploadBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof requestLoveMediaUpload>>,
+        TError,
+        {data: BodyType<RequestLoveMediaUploadBody>},
+        TContext
+      > => {
+      return useMutation(getRequestLoveMediaUploadMutationOptions(options));
+    }
+
+export const getFinalizeLoveMediaUploadUrl = () => {
+
+
+
+
+  return `/api/love/media/finalize`
+}
+
+export const finalizeLoveMediaUpload = async (finalizeLoveMediaUploadBody: FinalizeLoveMediaUploadBody, options?: RequestInit): Promise<LoveMediaUpload> => {
+
+  return customFetch<LoveMediaUpload>(getFinalizeLoveMediaUploadUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(finalizeLoveMediaUploadBody)
+  }
+);}
+
+
+
+
+
+export const getFinalizeLoveMediaUploadMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeLoveMediaUpload>>, TError,{data: BodyType<FinalizeLoveMediaUploadBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof finalizeLoveMediaUpload>>, TError,{data: BodyType<FinalizeLoveMediaUploadBody>}, TContext> => {
+
+const mutationKey = ['finalizeLoveMediaUpload'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof finalizeLoveMediaUpload>>, {data: BodyType<FinalizeLoveMediaUploadBody>}> = (props) => {
+          const {data} = props ?? {};
+
+          return  finalizeLoveMediaUpload(data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type FinalizeLoveMediaUploadMutationResult = NonNullable<Awaited<ReturnType<typeof finalizeLoveMediaUpload>>>
+    export type FinalizeLoveMediaUploadMutationBody = BodyType<FinalizeLoveMediaUploadBody>
+    export type FinalizeLoveMediaUploadMutationError = ErrorType<unknown>
+
+    export const useFinalizeLoveMediaUpload = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof finalizeLoveMediaUpload>>, TError,{data: BodyType<FinalizeLoveMediaUploadBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof finalizeLoveMediaUpload>>,
+        TError,
+        {data: BodyType<FinalizeLoveMediaUploadBody>},
+        TContext
+      > => {
+      return useMutation(getFinalizeLoveMediaUploadMutationOptions(options));
+    }
+
+export const getServeLoveMediaUrl = (path: string,) => {
+
+
+
+
+  return `/api/love/media/${path}`
+}
+
+export const serveLoveMedia = async (path: string, options?: RequestInit): Promise<Blob> => {
+
+  return customFetch<Blob>(getServeLoveMediaUrl(path),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getServeLoveMediaQueryKey = (path: string,) => {
+    return [
+    `/api/love/media/${path}`
+    ] as const;
+    }
+
+
+export const getServeLoveMediaQueryOptions = <TData = Awaited<ReturnType<typeof serveLoveMedia>>, TError = ErrorType<unknown>>(path: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof serveLoveMedia>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getServeLoveMediaQueryKey(path);
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof serveLoveMedia>>> = ({ signal }) => serveLoveMedia(path, { signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, enabled: path !== null && path !== undefined, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof serveLoveMedia>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ServeLoveMediaQueryResult = NonNullable<Awaited<ReturnType<typeof serveLoveMedia>>>
+export type ServeLoveMediaQueryError = ErrorType<unknown>
+
+
+
+export function useServeLoveMedia<TData = Awaited<ReturnType<typeof serveLoveMedia>>, TError = ErrorType<unknown>>(
+ path: string, options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof serveLoveMedia>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getServeLoveMediaQueryOptions(path,options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getListLoveReportsUrl = () => {
+
+
+
+
+  return `/api/admin/love/reports`
+}
+
+export const listLoveReports = async ( options?: RequestInit): Promise<LoveReportsResponse> => {
+
+  return customFetch<LoveReportsResponse>(getListLoveReportsUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListLoveReportsQueryKey = () => {
+    return [
+    `/api/admin/love/reports`
+    ] as const;
+    }
+
+
+export const getListLoveReportsQueryOptions = <TData = Awaited<ReturnType<typeof listLoveReports>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLoveReports>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListLoveReportsQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listLoveReports>>> = ({ signal }) => listLoveReports({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listLoveReports>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListLoveReportsQueryResult = NonNullable<Awaited<ReturnType<typeof listLoveReports>>>
+export type ListLoveReportsQueryError = ErrorType<unknown>
+
+
+
+export function useListLoveReports<TData = Awaited<ReturnType<typeof listLoveReports>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLoveReports>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListLoveReportsQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getReviewLoveReportUrl = (id: string,) => {
+
+
+
+
+  return `/api/admin/love/reports/${id}`
+}
+
+export const reviewLoveReport = async (id: string,
+    reviewLoveReportBody: ReviewLoveReportBody, options?: RequestInit): Promise<LoveReportResponse> => {
+
+  return customFetch<LoveReportResponse>(getReviewLoveReportUrl(id),
+  {
+    ...options,
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(reviewLoveReportBody)
+  }
+);}
+
+
+
+
+
+export const getReviewLoveReportMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewLoveReport>>, TError,{id: string;data: BodyType<ReviewLoveReportBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof reviewLoveReport>>, TError,{id: string;data: BodyType<ReviewLoveReportBody>}, TContext> => {
+
+const mutationKey = ['reviewLoveReport'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof reviewLoveReport>>, {id: string;data: BodyType<ReviewLoveReportBody>}> = (props) => {
+          const {id,data} = props ?? {};
+
+          return  reviewLoveReport(id,data,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type ReviewLoveReportMutationResult = NonNullable<Awaited<ReturnType<typeof reviewLoveReport>>>
+    export type ReviewLoveReportMutationBody = BodyType<ReviewLoveReportBody>
+    export type ReviewLoveReportMutationError = ErrorType<unknown>
+
+    export const useReviewLoveReport = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof reviewLoveReport>>, TError,{id: string;data: BodyType<ReviewLoveReportBody>}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof reviewLoveReport>>,
+        TError,
+        {id: string;data: BodyType<ReviewLoveReportBody>},
+        TContext
+      > => {
+      return useMutation(getReviewLoveReportMutationOptions(options));
+    }
+
+export const getListLoveAuditUrl = () => {
+
+
+
+
+  return `/api/admin/love/audit`
+}
+
+export const listLoveAudit = async ( options?: RequestInit): Promise<ListLoveAudit200> => {
+
+  return customFetch<ListLoveAudit200>(getListLoveAuditUrl(),
+  {
+    ...options,
+    method: 'GET'
+
+
+  }
+);}
+
+
+
+
+
+export const getListLoveAuditQueryKey = () => {
+    return [
+    `/api/admin/love/audit`
+    ] as const;
+    }
+
+
+export const getListLoveAuditQueryOptions = <TData = Awaited<ReturnType<typeof listLoveAudit>>, TError = ErrorType<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLoveAudit>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+) => {
+
+const {query: queryOptions, request: requestOptions} = options ?? {};
+
+  const queryKey =  queryOptions?.queryKey ?? getListLoveAuditQueryKey();
+
+
+
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof listLoveAudit>>> = ({ signal }) => listLoveAudit({ signal, ...requestOptions });
+
+
+
+
+
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof listLoveAudit>>, TError, TData> & { queryKey: QueryKey }
+}
+
+export type ListLoveAuditQueryResult = NonNullable<Awaited<ReturnType<typeof listLoveAudit>>>
+export type ListLoveAuditQueryError = ErrorType<unknown>
+
+
+
+export function useListLoveAudit<TData = Awaited<ReturnType<typeof listLoveAudit>>, TError = ErrorType<unknown>>(
+  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof listLoveAudit>>, TError, TData>, request?: SecondParameter<typeof customFetch>}
+
+ ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+
+  const queryOptions = getListLoveAuditQueryOptions(options)
+
+  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+
+  return withQueryKey(query, queryOptions.queryKey);
+}
+
+
+
+
+
+
+
+export const getHideLoveMessageUrl = (id: string,) => {
+
+
+
+
+  return `/api/admin/love/messages/${id}/hide`
+}
+
+export const hideLoveMessage = async (id: string, options?: RequestInit): Promise<LoveMessageResponse> => {
+
+  return customFetch<LoveMessageResponse>(getHideLoveMessageUrl(id),
+  {
+    ...options,
+    method: 'PATCH'
+
+
+  }
+);}
+
+
+
+
+
+export const getHideLoveMessageMutationOptions = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof hideLoveMessage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+): UseMutationOptions<Awaited<ReturnType<typeof hideLoveMessage>>, TError,{id: string}, TContext> => {
+
+const mutationKey = ['hideLoveMessage'];
+const {mutation: mutationOptions, request: requestOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, request: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof hideLoveMessage>>, {id: string}> = (props) => {
+          const {id} = props ?? {};
+
+          return  hideLoveMessage(id,requestOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type HideLoveMessageMutationResult = NonNullable<Awaited<ReturnType<typeof hideLoveMessage>>>
+
+    export type HideLoveMessageMutationError = ErrorType<unknown>
+
+    export const useHideLoveMessage = <TError = ErrorType<unknown>,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof hideLoveMessage>>, TError,{id: string}, TContext>, request?: SecondParameter<typeof customFetch>}
+ ): UseMutationResult<
+        Awaited<ReturnType<typeof hideLoveMessage>>,
+        TError,
+        {id: string},
+        TContext
+      > => {
+       return useMutation(getHideLoveMessageMutationOptions(options));
+     }

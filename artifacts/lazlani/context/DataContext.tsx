@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState, ReactNode } from 'react';
+import React, { createContext, useContext, useEffect, useState, useRef, ReactNode, useCallback } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AdminLog, Book, Bookmark, Chapter, Comment, ContactMessage, Conversation, DergiPost, Message, Notification, OzelComment, OzelCommentReply, OzelPost, Poem, Post, PostComment, PostReply, PurchaseRequest, PurchaseType, ReadingList, RecommendationStatus, Story, SupportTicket, TicketStatus, User } from '@/data/types';
 import { SAMPLE_USERS } from '@/data/sampleData';
@@ -220,6 +220,8 @@ interface DataContextType {
   addUser: (user: User) => void;
   /** AuthContext bridge; DataProvider intentionally remains outside AuthProvider. */
   setSyncSession: (userId: string | null, token: string | null, legacyOwnerUserId?: string | null) => void;
+  addSyncListener: (listener: (event: any) => void) => void;
+  removeSyncListener: (listener: (event: any) => void) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -2009,6 +2011,14 @@ export function DataProvider({ children }: { children: ReactNode }) {
     setAdminUsers(prev => prev.map(u => u.id === userId ? { ...u, [perm]: true } : u));
   const adminRevokePermission = (userId: string, perm: UserPerm) =>
     setAdminUsers(prev => prev.map(u => u.id === userId ? { ...u, [perm]: false } : u));
+  const addSyncListener = useCallback((listener: (event: any) => void) => {
+    syncServiceRef.current?.addEventListener(listener);
+  }, []);
+
+  const removeSyncListener = useCallback((listener: (event: any) => void) => {
+    syncServiceRef.current?.removeEventListener(listener);
+  }, []);
+
   const adminBanUser = (userId: string, until?: string) =>
     setAdminUsers(prev => prev.map(u => u.id === userId ? { ...u, isBanned: true, bannedUntil: until ?? null } : u));
   const adminUnbanUser = (userId: string) =>
@@ -2043,7 +2053,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
         bannedWords, filterLevel, addBannedWord, removeBannedWord, setFilterLevelAdmin, checkContent,
         purchaseRequests, requestPurchase, approvePurchase, rejectPurchase, renewPurchase,
         markConversationRead,
-         users, addUser, setSyncSession,
+         users, addUser, setSyncSession, addSyncListener, removeSyncListener,
       }}
     >
       {children}

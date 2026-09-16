@@ -5,6 +5,148 @@
  * API specification
  * OpenAPI spec version: 0.1.0
  */
+export interface LoveRoom {
+  id: string;
+  kind: string;
+  title: string;
+  isMember: boolean;
+}
+
+export type LoveConversationPartner = { [key: string]: unknown } | null;
+
+export interface LoveMessage {
+  id: string;
+  conversationId: string;
+  senderId: string;
+  body?: string | null;
+  version: number;
+  createdAt: string;
+  [key: string]: unknown;
+ }
+
+export interface LoveConversation {
+  id: string;
+  kind: string;
+  partner: LoveConversationPartner;
+  lastMessage: LoveMessage | null;
+  /** @minimum 0 */
+  unreadCount: number;
+  [key: string]: unknown;
+ }
+
+export interface LoveConversationList {
+  conversations: LoveConversation[];
+}
+
+export interface LoveConversationInput {
+  /** @minLength 1 */
+  userId: string;
+}
+
+export interface LoveMessageInput {
+  /**
+     * @minLength 1
+     * @maxLength 200
+     */
+  clientMessageId: string;
+  /** @maxLength 4000 */
+  body?: string;
+  /** @maxLength 500 */
+  mediaObjectPath?: string;
+  /** @maxLength 80 */
+  mediaType?: string;
+}
+
+export interface LoveMessageResponse {
+  message: LoveMessage;
+  duplicate: boolean;
+}
+
+export interface LoveMessageList {
+  messages: LoveMessage[];
+  /** Base64url JSON tuple cursor containing createdAt and id */
+  nextCursor: string | null;
+}
+
+export interface LoveReactionResult {
+  active: boolean;
+}
+
+export interface LoveReadResult {
+  messageId: string;
+}
+
+export type LoveUserProfileResponseUser = { [key: string]: unknown };
+
+export type LoveUserProfileResponsePresence = { [key: string]: unknown };
+
+export interface LoveUserProfileResponse {
+  user: LoveUserProfileResponseUser;
+  presence: LoveUserProfileResponsePresence;
+  [key: string]: unknown;
+ }
+
+export type LoveUsersResponseUsersItem = { [key: string]: unknown };
+
+export interface LoveUsersResponse {
+  users: LoveUsersResponseUsersItem[];
+}
+
+export interface LovePresence {
+  status?: string;
+  expiresAt?: string;
+  [key: string]: unknown;
+ }
+
+export interface LovePresenceResponse {
+  presence: LovePresence[];
+}
+
+export type LoveBlocksResponseBlocksItem = { [key: string]: unknown };
+
+export interface LoveBlocksResponse {
+  blocks: LoveBlocksResponseBlocksItem[];
+}
+
+export interface LoveReportInput {
+  /** @maxLength 500 */
+  reason: string;
+  messageId?: string;
+  reportedUserId?: string;
+}
+
+export type LoveReportResponseReport = { [key: string]: unknown };
+
+export interface LoveReportResponse {
+  report: LoveReportResponseReport;
+}
+
+export type LoveReportsResponseReportsItem = { [key: string]: unknown };
+
+export interface LoveReportsResponse {
+  reports: LoveReportsResponseReportsItem[];
+}
+
+export interface LoveSettingsInput {
+  notifications?: boolean;
+  sound?: boolean;
+  vibration?: boolean;
+  theme?: string;
+}
+
+export type LoveSettingsResponseSettings = { [key: string]: unknown };
+
+export interface LoveSettingsResponse {
+  settings: LoveSettingsResponseSettings;
+}
+
+export interface LoveMediaUpload {
+  uploadURL?: string;
+  objectPath: string;
+  contentType?: string;
+  size?: number;
+}
+
 export interface HealthStatus {
   status: string;
 }
@@ -506,5 +648,73 @@ export type StreamSyncEventsParams = {
  * @minimum 0
  */
 cursor?: number;
+};
+
+export type LoveMessagesParams = {
+before?: string;
+/**
+ * @minimum 1
+ * @maximum 100
+ */
+limit?: number;
+};
+
+export type EditLoveMessageBody = {
+  /** @maxLength 4000 */
+  body: string;
+};
+
+export type MarkLoveConversationReadBody = {
+  messageId: string;
+};
+
+export type SearchLoveUsersParams = {
+/**
+ * @maxLength 80
+ */
+q?: string;
+};
+
+export type HeartbeatLovePresenceBodyStatus = typeof HeartbeatLovePresenceBodyStatus[keyof typeof HeartbeatLovePresenceBodyStatus];
+
+
+export const HeartbeatLovePresenceBodyStatus = {
+  online: 'online',
+  busy: 'busy',
+  offline: 'offline',
+} as const;
+
+export type HeartbeatLovePresenceBody = {
+  status?: HeartbeatLovePresenceBodyStatus;
+};
+
+export type RequestLoveMediaUploadBody = {
+  size: number;
+  contentType: string;
+};
+
+export type FinalizeLoveMediaUploadBody = {
+  objectPath: string;
+  size: number;
+  contentType: string;
+};
+
+export type ReviewLoveReportBodyStatus = typeof ReviewLoveReportBodyStatus[keyof typeof ReviewLoveReportBodyStatus];
+
+
+export const ReviewLoveReportBodyStatus = {
+  open: 'open',
+  resolved: 'resolved',
+  dismissed: 'dismissed',
+} as const;
+
+export type ReviewLoveReportBody = {
+  status: ReviewLoveReportBodyStatus;
+};
+
+export type ListLoveAudit200AuditItem = { [key: string]: unknown };
+
+export type ListLoveAudit200 = {
+  audit: ListLoveAudit200AuditItem[];
 };
 

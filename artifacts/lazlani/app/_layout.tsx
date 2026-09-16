@@ -55,6 +55,7 @@ function RootLayoutNav() {
       <Stack.Screen name="edit-profile" options={{ headerShown: false, animation: 'slide_from_right' }} />
       <Stack.Screen name="settings" options={{ headerShown: false, animation: 'slide_from_right' }} />
       <Stack.Screen name="minnit-chat" options={{ headerShown: false, animation: 'slide_from_bottom' }} />
+      <Stack.Screen name="love" options={{ headerShown: false, animation: 'slide_from_bottom' }} />
       <Stack.Screen name="bulten" options={{ headerShown: false, animation: 'slide_from_right' }} />
       <Stack.Screen name="terms" options={{ headerShown: false, animation: 'slide_from_right' }} />
       <Stack.Screen name="privacy" options={{ headerShown: false, animation: 'slide_from_right' }} />

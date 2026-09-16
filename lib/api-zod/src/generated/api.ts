@@ -781,3 +781,361 @@ export const DeleteStorageObjectParams = zod.object({
 export const DeleteStorageObjectResponse = zod.void()
 
 
+export const LoveRoomResponse = zod.object({
+  "id": zod.string(),
+  "kind": zod.string(),
+  "title": zod.string(),
+  "isMember": zod.boolean()
+})
+
+
+export const loveConversationsResponseConversationsItemUnreadCountMin = 0;
+
+
+
+export const LoveConversationsResponse = zod.object({
+  "conversations": zod.array(zod.object({
+  "id": zod.string(),
+  "kind": zod.string(),
+  "partner": zod.record(zod.string(), zod.unknown()).nullable(),
+  "lastMessage": zod.object({
+  "id": zod.string(),
+  "conversationId": zod.string(),
+  "senderId": zod.string(),
+  "body": zod.string().nullish(),
+  "version": zod.number(),
+  "createdAt": zod.coerce.date()
+}).nullable(),
+  "unreadCount": zod.number().min(loveConversationsResponseConversationsItemUnreadCountMin)
+}))
+})
+
+
+
+
+
+export const CreateLoveConversationBody = zod.object({
+  "userId": zod.string().min(1)
+})
+
+export const createLoveConversationResponseUnreadCountMin = 0;
+
+
+
+export const CreateLoveConversationResponse = zod.object({
+  "id": zod.string(),
+  "kind": zod.string(),
+  "partner": zod.record(zod.string(), zod.unknown()).nullable(),
+  "lastMessage": zod.object({
+  "id": zod.string(),
+  "conversationId": zod.string(),
+  "senderId": zod.string(),
+  "body": zod.string().nullish(),
+  "version": zod.number(),
+  "createdAt": zod.coerce.date()
+}).nullable(),
+  "unreadCount": zod.number().min(createLoveConversationResponseUnreadCountMin)
+})
+
+
+export const LoveMessagesParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const loveMessagesQueryLimitMax = 100;
+
+
+
+export const LoveMessagesQueryParams = zod.object({
+  "before": zod.coerce.string().optional(),
+  "limit": zod.coerce.number().min(1).max(loveMessagesQueryLimitMax).optional()
+})
+
+export const LoveMessagesResponse = zod.object({
+  "messages": zod.array(zod.object({
+  "id": zod.string(),
+  "conversationId": zod.string(),
+  "senderId": zod.string(),
+  "body": zod.string().nullish(),
+  "version": zod.number(),
+  "createdAt": zod.coerce.date()
+})),
+  "nextCursor": zod.string().nullable().describe('Base64url JSON tuple cursor containing createdAt and id')
+})
+
+
+export const SendLoveMessageParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const sendLoveMessageBodyClientMessageIdMax = 200;
+
+export const sendLoveMessageBodyBodyMax = 4000;
+
+export const sendLoveMessageBodyMediaObjectPathMax = 500;
+
+export const sendLoveMessageBodyMediaTypeMax = 80;
+
+
+
+export const SendLoveMessageBody = zod.object({
+  "clientMessageId": zod.string().min(1).max(sendLoveMessageBodyClientMessageIdMax),
+  "body": zod.string().max(sendLoveMessageBodyBodyMax).optional(),
+  "mediaObjectPath": zod.string().max(sendLoveMessageBodyMediaObjectPathMax).optional(),
+  "mediaType": zod.string().max(sendLoveMessageBodyMediaTypeMax).optional()
+})
+
+export const SendLoveMessageResponse = zod.object({
+  "message": zod.object({
+  "id": zod.string(),
+  "conversationId": zod.string(),
+  "senderId": zod.string(),
+  "body": zod.string().nullish(),
+  "version": zod.number(),
+  "createdAt": zod.coerce.date()
+}),
+  "duplicate": zod.boolean()
+})
+
+
+export const EditLoveMessageParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const editLoveMessageBodyBodyMax = 4000;
+
+
+
+export const EditLoveMessageBody = zod.object({
+  "body": zod.string().max(editLoveMessageBodyBodyMax)
+})
+
+export const EditLoveMessageResponse = zod.object({
+  "message": zod.object({
+  "id": zod.string(),
+  "conversationId": zod.string(),
+  "senderId": zod.string(),
+  "body": zod.string().nullish(),
+  "version": zod.number(),
+  "createdAt": zod.coerce.date()
+}),
+  "duplicate": zod.boolean()
+})
+
+
+export const DeleteLoveMessageParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const DeleteLoveMessageResponse = zod.object({
+  "message": zod.object({
+  "id": zod.string(),
+  "conversationId": zod.string(),
+  "senderId": zod.string(),
+  "body": zod.string().nullish(),
+  "version": zod.number(),
+  "createdAt": zod.coerce.date()
+}),
+  "duplicate": zod.boolean()
+})
+
+
+export const SetLoveMessageReactionParams = zod.object({
+  "id": zod.coerce.string(),
+  "reaction": zod.coerce.string()
+})
+
+export const SetLoveMessageReactionResponse = zod.object({
+  "active": zod.boolean()
+})
+
+
+export const RemoveLoveMessageReactionParams = zod.object({
+  "id": zod.coerce.string(),
+  "reaction": zod.coerce.string()
+})
+
+export const RemoveLoveMessageReactionResponse = zod.object({
+  "active": zod.boolean()
+})
+
+
+export const MarkLoveConversationReadParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const MarkLoveConversationReadBody = zod.object({
+  "messageId": zod.string()
+})
+
+export const MarkLoveConversationReadResponse = zod.object({
+  "messageId": zod.string()
+})
+
+
+export const searchLoveUsersQueryQMax = 80;
+
+
+
+export const SearchLoveUsersQueryParams = zod.object({
+  "q": zod.coerce.string().max(searchLoveUsersQueryQMax).optional()
+})
+
+export const SearchLoveUsersResponse = zod.object({
+  "users": zod.array(zod.record(zod.string(), zod.unknown()))
+})
+
+
+export const LoveUserProfileParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const LoveUserProfileResponse = zod.object({
+  "user": zod.record(zod.string(), zod.unknown()),
+  "presence": zod.record(zod.string(), zod.unknown())
+})
+
+
+export const ListLovePresenceResponse = zod.object({
+  "presence": zod.array(zod.object({
+  "status": zod.string().optional(),
+  "expiresAt": zod.coerce.date().optional()
+}))
+})
+
+
+export const HeartbeatLovePresenceBody = zod.object({
+  "status": zod.enum(['online', 'busy', 'offline']).optional()
+})
+
+export const HeartbeatLovePresenceResponse = zod.object({
+  "status": zod.string().optional(),
+  "expiresAt": zod.coerce.date().optional()
+})
+
+
+export const ListLoveBlocksResponse = zod.object({
+  "blocks": zod.array(zod.record(zod.string(), zod.unknown()))
+})
+
+
+export const BlockLoveUserParams = zod.object({
+  "userId": zod.coerce.string()
+})
+
+export const BlockLoveUserResponse = zod.void()
+
+
+export const UnblockLoveUserParams = zod.object({
+  "userId": zod.coerce.string()
+})
+
+export const UnblockLoveUserResponse = zod.void()
+
+
+export const reportLoveContentBodyReasonMax = 500;
+
+
+
+export const ReportLoveContentBody = zod.object({
+  "reason": zod.string().max(reportLoveContentBodyReasonMax),
+  "messageId": zod.string().optional(),
+  "reportedUserId": zod.string().optional()
+})
+
+export const ReportLoveContentResponse = zod.object({
+  "report": zod.record(zod.string(), zod.unknown())
+})
+
+
+export const GetLoveSettingsResponse = zod.object({
+  "settings": zod.record(zod.string(), zod.unknown())
+})
+
+
+export const UpdateLoveSettingsBody = zod.object({
+  "notifications": zod.boolean().optional(),
+  "sound": zod.boolean().optional(),
+  "vibration": zod.boolean().optional(),
+  "theme": zod.string().optional()
+})
+
+export const UpdateLoveSettingsResponse = zod.object({
+  "settings": zod.record(zod.string(), zod.unknown())
+})
+
+
+export const RequestLoveMediaUploadBody = zod.object({
+  "size": zod.number(),
+  "contentType": zod.string()
+})
+
+export const RequestLoveMediaUploadResponse = zod.object({
+  "uploadURL": zod.string().optional(),
+  "objectPath": zod.string(),
+  "contentType": zod.string().optional(),
+  "size": zod.number().optional()
+})
+
+
+export const FinalizeLoveMediaUploadBody = zod.object({
+  "objectPath": zod.string(),
+  "size": zod.number(),
+  "contentType": zod.string()
+})
+
+export const FinalizeLoveMediaUploadResponse = zod.object({
+  "uploadURL": zod.string().optional(),
+  "objectPath": zod.string(),
+  "contentType": zod.string().optional(),
+  "size": zod.number().optional()
+})
+
+
+export const ServeLoveMediaParams = zod.object({
+  "path": zod.coerce.string()
+})
+
+export const ServeLoveMediaResponse = zod.unknown()
+
+
+export const ListLoveReportsResponse = zod.object({
+  "reports": zod.array(zod.record(zod.string(), zod.unknown()))
+})
+
+
+export const ReviewLoveReportParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const ReviewLoveReportBody = zod.object({
+  "status": zod.enum(['open', 'resolved', 'dismissed'])
+})
+
+export const ReviewLoveReportResponse = zod.object({
+  "report": zod.record(zod.string(), zod.unknown())
+})
+
+
+export const ListLoveAuditResponse = zod.object({
+  "audit": zod.array(zod.record(zod.string(), zod.unknown()))
+})
+
+
+export const HideLoveMessageParams = zod.object({
+  "id": zod.coerce.string()
+})
+
+export const HideLoveMessageResponse = zod.object({
+  "message": zod.object({
+  "id": zod.string(),
+  "conversationId": zod.string(),
+  "senderId": zod.string(),
+  "body": zod.string().nullish(),
+  "version": zod.number(),
+  "createdAt": zod.coerce.date()
+}),
+  "duplicate": zod.boolean()
+})
+
+

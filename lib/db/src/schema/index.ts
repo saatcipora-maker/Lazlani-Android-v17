@@ -21,3 +21,4 @@ export * from "./password-reset";
 export * from "./auth";
 export * from "./sync";
 export * from "./premium-requests";
+export * from "./love";

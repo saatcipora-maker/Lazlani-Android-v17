@@ -1,4 +1,9 @@
 - [LAZLANI App Architecture](lazlani-architecture.md) — Demo içeriği yerel kalırken hesap kurtarma sunucu güvenlik sınırından geçer.
 - [Monorepo Dependency Installs](monorepo-dependency-installs.md) — Workspace bağımlılıklarını her zaman sahibi olan pakete hedefle, kök workspace’e değil.
 - [EAS Android build dependency failures](eas-build.md) — Çok sayıda standart Maven paketi çözülemiyorsa sorun genellikle uzak EAS worker/önbellek erişimidir.
+- [EAS pnpm monorepo archives](eas-pnpm-monorepo-archives.md) — GitHub build arşivinde pnpm workspace metadata dosyalarını açıkça dahil et.
+- [Expo project linkage](expo-project-linkage.md) — ProjectId uyuşmazlığında app config’i değiştirmeden önce doğru Expo proje sayfasını doğrula.
 - [Google login and Play signing](google-play-signing.md) — Android Google girişi, upload sertifikasıyla değil Play App Signing SHA-1 ile fiziksel Play kurulumunda doğrulanır.
+- [Replit GitHub push fallback](replit-github-push-fallback.md) — Git sağlayıcısı aktif olsa da CLI tokenı çalışmazsa bağlı GitHub API’siyle commit ağacı aktarılabilir.
+- [LAZLANI release scope](lazlani-release-scope.md) — 1.5.1 giriş düzeltmeleriyle gerçek zamanlı sosyal paketi birlikte kapsar.
+- [LOVE chat architecture](love-chat-architecture.md) — LOVE sohbeti ayrı ilişkisel veriyi kullanır; gerçek zamanlı dağıtım mevcut dayanıklı SSE akışını paylaşır.

@@ -128,6 +128,15 @@ export class SyncService {
   private applyRecord: ApplyRecord;
   private onPermanentFailure?: PermanentFailureHandler;
   private sessionGeneration = 0;
+  private eventListeners = new Set<(event: SyncEvent) => void>();
+
+  public addEventListener(listener: (event: SyncEvent) => void): void {
+    this.eventListeners.add(listener);
+  }
+
+  public removeEventListener(listener: (event: SyncEvent) => void): void {
+    this.eventListeners.delete(listener);
+  }
 
   constructor(applyRecord: ApplyRecord, onPermanentFailure?: PermanentFailureHandler) {
     this.applyRecord = applyRecord;
@@ -457,8 +466,12 @@ export class SyncService {
              setCursor: cursor => { this.cursor = cursor; },
              applyRecord: this.applyRecord,
            });
-            if (!this.isCurrentSession(generation, userId, token)) return;
-            if (!committed) break;
+           if (!this.isCurrentSession(generation, userId, token)) return;
+           if (!committed) break;
+
+           for (const listener of this.eventListeners) {
+             try { listener(event); } catch (e) { console.error('Sync listener error', e); }
+           }
         }
       }
       if (this.isCurrentSession(generation, userId, token)) this.scheduleReconnect();

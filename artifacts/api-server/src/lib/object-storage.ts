@@ -59,13 +59,24 @@ export class InvalidMediaReferenceError extends Error {
 
 export type MediaObjectReference = {
   objectPath: string;
-  namespace: "social-posts" | "dm-photos";
+  namespace: "social-posts" | "dm-photos" | "love-media";
 };
 
 export const MAX_COVER_BYTES = 10 * 1024 * 1024;
+export const MAX_LOVE_MEDIA_BYTES = 10 * 1024 * 1024;
 export const ALLOWED_COVER_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
-export const MEDIA_NAMESPACES = ["book-covers", "social-posts", "dm-photos"] as const;
+export const ALLOWED_LOVE_MEDIA_TYPES = new Set(["image/jpeg", "image/png", "image/webp", "image/gif"]);
+export const MEDIA_NAMESPACES = ["book-covers", "social-posts", "dm-photos", "love-media"] as const;
 type MediaNamespace = (typeof MEDIA_NAMESPACES)[number];
+
+export function validateLoveMediaMetadata(value: { size: number; contentType: string }): string | null {
+  const contentType = value.contentType.toLowerCase().split(";", 1)[0].trim();
+  if (!ALLOWED_LOVE_MEDIA_TYPES.has(contentType)) return "LOVE media must be JPEG, PNG, WebP, or GIF.";
+  if (!Number.isSafeInteger(value.size) || value.size < 1 || value.size > MAX_LOVE_MEDIA_BYTES) {
+    return "LOVE media must be at most 10 MB.";
+  }
+  return null;
+}
 
 function privateObjectDir(): string {
   const value = process.env.PRIVATE_OBJECT_DIR?.trim();
@@ -251,7 +262,8 @@ function isNamespaceObjectPath(
   objectPath: string,
   namespace: "uploads/book-covers" | "book-covers"
     | "uploads/social-posts" | "social-posts"
-    | "uploads/dm-photos" | "dm-photos",
+    | "uploads/dm-photos" | "dm-photos"
+    | "uploads/love-media" | "love-media",
 ): boolean {
   const relative = relativeObjectPath(objectPath);
   const parts = namespace.split("/");
@@ -266,7 +278,8 @@ function ownerFromObjectPath(
   objectPath: string,
   namespace: "uploads/book-covers" | "book-covers"
     | "uploads/social-posts" | "social-posts"
-    | "uploads/dm-photos" | "dm-photos",
+    | "uploads/dm-photos" | "dm-photos"
+    | "uploads/love-media" | "love-media",
 ): string | null {
   const relative = relativeObjectPath(objectPath);
   const parts = namespace.split("/");
@@ -305,6 +318,10 @@ export async function createMediaUpload(
   };
 }
 
+export async function createLoveMediaUpload(userId: string): Promise<{ uploadURL: string; objectPath: string }> {
+  return createMediaUpload(userId, "love-media");
+}
+
 export function isSupportedBookCoverMagic(contentType: string, bytes: Uint8Array): boolean {
   const type = contentType.toLowerCase().split(";", 1)[0].trim();
   if (type === "image/jpeg") {
@@ -339,7 +356,7 @@ export async function finalizeMediaUpload(
   namespace: MediaNamespace,
 ): Promise<{ objectPath: string }> {
   const stagingNamespace = `uploads/${namespace}` as
-    | "uploads/book-covers" | "uploads/social-posts" | "uploads/dm-photos";
+    | "uploads/book-covers" | "uploads/social-posts" | "uploads/dm-photos" | "uploads/love-media";
   if (!isNamespaceObjectPath(objectPath, stagingNamespace)
     || ownerFromObjectPath(objectPath, stagingNamespace) !== userId) {
     throw new ObjectOwnershipError();
@@ -355,8 +372,10 @@ export async function finalizeMediaUpload(
   const [metadata] = await stagingFile.getMetadata();
   const contentType = String(metadata.contentType || "").toLowerCase().split(";", 1)[0].trim();
   const size = Number(metadata.size);
-  if (!ALLOWED_COVER_TYPES.has(contentType) || !Number.isSafeInteger(size)
-    || size < 1 || size > MAX_COVER_BYTES
+  const allowedTypes = namespace === "love-media" ? ALLOWED_LOVE_MEDIA_TYPES : ALLOWED_COVER_TYPES;
+  const maxBytes = namespace === "love-media" ? MAX_LOVE_MEDIA_BYTES : MAX_COVER_BYTES;
+  if (!allowedTypes.has(contentType) || !Number.isSafeInteger(size)
+    || size < 1 || size > maxBytes
     || (expectedMetadata && (
       expectedMetadata.size !== size
       || expectedMetadata.contentType.toLowerCase() !== contentType
@@ -365,8 +384,8 @@ export async function finalizeMediaUpload(
   }
 
   const [contents] = await stagingFile.download();
-  if (contents.length !== size || !isSupportedBookCoverMagic(contentType, contents)) {
-    throw new InvalidObjectError("Uploaded object bytes are not a valid book cover");
+  if (contents.length !== size || !isSupportedImageMagic(contentType, contents)) {
+    throw new InvalidObjectError("Uploaded object bytes are not a supported image");
   }
 
   const finalId = randomUUID();
@@ -375,6 +394,29 @@ export async function finalizeMediaUpload(
   await stagingFile.copy(finalFile);
   await stagingFile.delete();
   return { objectPath: objectPathFor(namespace, userId, finalId) };
+}
+
+export function isSupportedImageMagic(contentType: string, bytes: Uint8Array): boolean {
+  if (isSupportedBookCoverMagic(contentType, bytes)) return true;
+  const type = contentType.toLowerCase().split(";", 1)[0].trim();
+  if (type !== "image/gif") return false;
+  return bytes.length >= 6
+    && ((bytes[0] === 0x47 && bytes[1] === 0x49 && bytes[2] === 0x46
+      && bytes[3] === 0x38 && (bytes[4] === 0x37 || bytes[4] === 0x39) && bytes[5] === 0x61));
+}
+
+export async function validateLoveMediaReference(reference: unknown, ownerUserId: string): Promise<string> {
+  if (typeof reference !== "string" || !isNamespaceObjectPath(reference, "love-media")
+    || ownerFromObjectPath(reference, "love-media") !== ownerUserId) {
+    throw new InvalidMediaReferenceError("Love media belongs to another user or is not finalized");
+  }
+  try {
+    await getStoredObject(reference);
+  } catch (error) {
+    if (error instanceof ObjectNotFoundError) throw new InvalidMediaReferenceError("Love media object does not exist");
+    throw error;
+  }
+  return reference;
 }
 
 export async function getStoredObject(objectPath: string): Promise<File> {
@@ -413,13 +455,15 @@ export async function deleteStoredObject(
 export async function streamStoredObject(
   file: File,
   response: import("express").Response,
-  options: { private?: boolean } = {},
+  options: { private?: boolean; loveMedia?: boolean } = {},
 ): Promise<void> {
   const [metadata] = await file.getMetadata();
   const contentType = String(metadata.contentType || "").toLowerCase().split(";", 1)[0].trim();
   const size = Number(metadata.size);
-  if (!ALLOWED_COVER_TYPES.has(contentType) || !Number.isSafeInteger(size)
-    || size < 1 || size > MAX_COVER_BYTES) {
+  const allowedTypes = options.loveMedia ? ALLOWED_LOVE_MEDIA_TYPES : ALLOWED_COVER_TYPES;
+  const maxBytes = options.loveMedia ? MAX_LOVE_MEDIA_BYTES : MAX_COVER_BYTES;
+  if (!allowedTypes.has(contentType) || !Number.isSafeInteger(size)
+    || size < 1 || size > maxBytes) {
     throw new ObjectNotFoundError();
   }
   response.setHeader("Content-Type", contentType);
