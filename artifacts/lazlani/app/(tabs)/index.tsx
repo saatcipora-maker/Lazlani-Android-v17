@@ -46,6 +46,7 @@ const CAT_TABS: CatTab[] = [
   { key: 'ozel', icon: 'sparkles-outline', label: 'Özel' },
   { key: 'bulten', icon: 'newspaper-outline', label: 'Bültenler' },
   { key: 'dergi', icon: 'book-outline', label: 'Dergi' },
+  { key: 'sohbet', icon: 'chatbubble-ellipses-outline', label: 'Sohbet' },
   { key: 'bremil', icon: 'star-outline', label: 'Bremil', isBremil: true },
 ];
 
@@ -110,6 +111,7 @@ export default function HomeScreen() {
     if (cat.key === 'bulten') { router.push('/bulten' as any); return; }
     if (cat.key === 'dergi') { router.push('/dergi' as any); return; }
     if (cat.key === 'ozel') { router.push('/ozel' as any); return; }
+    if (cat.key === 'sohbet') { router.push('/minnit-chat' as any); return; }
     if (cat.key === 'bremil') { router.push('/bremil' as any); return; }
     setActiveCat(cat.key);
   };
@@ -147,8 +149,8 @@ export default function HomeScreen() {
               testID="header-love-button"
               accessibilityRole="button"
               accessibilityLabel="LOVE"
-              accessibilityHint="Topluluk ekranını açar"
-              onPress={() => router.push('/minnit-chat' as any)}
+              accessibilityHint="Yakında kullanıma açılacak"
+              onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
               activeOpacity={0.78}
               style={[
                 styles.loveButton,
@@ -214,7 +216,14 @@ export default function HomeScreen() {
             }
 
             return (
-              <TouchableOpacity key={cat.key} onPress={() => handleCatPress(cat)} activeOpacity={0.82}>
+              <TouchableOpacity
+                key={cat.key}
+                testID={cat.key === 'sohbet' ? 'home-chat-button' : undefined}
+                accessibilityRole="button"
+                accessibilityLabel={cat.label}
+                onPress={() => handleCatPress(cat)}
+                activeOpacity={0.82}
+              >
                 {isActive ? (
                   <LinearGradient
                     colors={['#9B59F5', '#EC4899']}
