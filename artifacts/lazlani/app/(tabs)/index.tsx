@@ -77,6 +77,7 @@ export default function HomeScreen() {
 
   const [activeCat, setActiveCat] = useState('magaza');
   const [slideIndex,   setSlideIndex]   = useState(0);
+  const [showLoveButton, setShowLoveButton] = useState(false);
   const slideRef  = useRef<FlatList>(null);
   const slideTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
@@ -123,9 +124,12 @@ export default function HomeScreen() {
           <TouchableOpacity
             testID="header-chat-button"
             accessibilityRole="button"
-            accessibilityLabel="LAZLANI sohbetini aç"
-            accessibilityHint="Topluluk sohbeti ekranını açar"
-            onPress={() => router.push('/minnit-chat' as any)}
+            accessibilityLabel="LOVE butonunu göster"
+            accessibilityState={{ expanded: showLoveButton }}
+            onPress={() => {
+              Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+              setShowLoveButton(current => !current);
+            }}
             activeOpacity={0.72}
             hitSlop={8}
             style={[
@@ -137,10 +141,26 @@ export default function HomeScreen() {
             ]}
           >
             <FontAwesome6 name="star-and-crescent" size={15} color={colors.primary} />
-            <View style={[styles.headerChatBadge, { backgroundColor: colors.primary }]}>
-              <Ionicons name="chatbubble" size={7} color={colors.background} />
-            </View>
           </TouchableOpacity>
+          {showLoveButton && (
+            <TouchableOpacity
+              testID="header-love-button"
+              accessibilityRole="button"
+              accessibilityLabel="LOVE"
+              accessibilityHint="Topluluk ekranını açar"
+              onPress={() => router.push('/minnit-chat' as any)}
+              activeOpacity={0.78}
+              style={[
+                styles.loveButton,
+                {
+                  backgroundColor: `${colors.primary}20`,
+                  borderColor: `${colors.primary}80`,
+                },
+              ]}
+            >
+              <Text style={[styles.loveButtonText, { color: colors.primary }]}>LOVE</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         <View style={styles.headerRight}>
@@ -167,24 +187,6 @@ export default function HomeScreen() {
           </TouchableOpacity>
         </View>
       </View>
-
-      <TouchableOpacity
-        testID="home-chat-button"
-        accessibilityRole="button"
-        accessibilityLabel="Topluluk sohbetini aç"
-        onPress={() => router.push('/minnit-chat' as any)}
-        activeOpacity={0.84}
-        style={[styles.chatBanner, { backgroundColor: colors.card, borderColor: `${colors.primary}55` }]}
-      >
-        <View style={[styles.chatBannerIcon, { backgroundColor: `${colors.primary}20` }]}>
-          <Ionicons name="chatbubbles" size={20} color={colors.primary} />
-        </View>
-        <View style={styles.chatBannerCopy}>
-          <Text style={[styles.chatBannerTitle, { color: colors.foreground }]}>Topluluk Sohbeti</Text>
-          <Text style={[styles.chatBannerSubtitle, { color: colors.mutedForeground }]}>Yazarlarla ve okurlarla konuş</Text>
-        </View>
-        <Ionicons name="chevron-forward" size={18} color={colors.primary} />
-      </TouchableOpacity>
 
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         <ScrollView
@@ -452,19 +454,6 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   root: { flex: 1 },
-  chatBanner: {
-    flexDirection: 'row', alignItems: 'center', gap: 12,
-    marginHorizontal: 16, marginBottom: 8, padding: 12,
-    borderWidth: 1, borderRadius: 16,
-  },
-  chatBannerIcon: {
-    width: 40, height: 40, borderRadius: 12,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  chatBannerCopy: { flex: 1, gap: 2 },
-  chatBannerTitle: { fontFamily: 'Poppins_700Bold', fontSize: 14 },
-  chatBannerSubtitle: { fontFamily: 'Poppins_400Regular', fontSize: 11 },
-
   /* Header */
   header: {
     flexDirection: 'row', alignItems: 'center',
@@ -483,11 +472,11 @@ const styles = StyleSheet.create({
     width: 30, height: 30, borderRadius: 15, borderWidth: 1,
     alignItems: 'center', justifyContent: 'center',
   },
-  headerChatBadge: {
-    position: 'absolute', right: -3, bottom: -2,
-    width: 13, height: 13, borderRadius: 7,
+  loveButton: {
+    height: 28, paddingHorizontal: 10, borderRadius: 14, borderWidth: 1,
     alignItems: 'center', justifyContent: 'center',
   },
+  loveButtonText: { fontFamily: 'Poppins_700Bold', fontSize: 10, letterSpacing: 1 },
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   iconBtn: { position: 'relative', padding: 4 },
   notifDot: {
