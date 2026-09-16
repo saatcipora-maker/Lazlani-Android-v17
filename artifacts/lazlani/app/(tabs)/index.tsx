@@ -8,7 +8,7 @@ const SCREEN_W = Dimensions.get('window').width;
 const SLIDE_W  = SCREEN_W;          // tam ekran genişliği
 const SLIDE_H  = 220;               // slider yüksekliği
 import { LinearGradient } from 'expo-linear-gradient';
-import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome6, Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
@@ -118,7 +118,30 @@ export default function HomeScreen() {
 
       {/* ── Header ── */}
       <View style={[styles.header, { paddingTop: topPad + 10 }]}>
-        <Text style={styles.logo}>LAZLANİ</Text>
+        <View style={styles.logoGroup}>
+          <Text style={styles.logo}>LAZLANİ</Text>
+          <TouchableOpacity
+            testID="header-chat-button"
+            accessibilityRole="button"
+            accessibilityLabel="LAZLANI sohbetini aç"
+            accessibilityHint="Topluluk sohbeti ekranını açar"
+            onPress={() => router.push('/minnit-chat' as any)}
+            activeOpacity={0.72}
+            hitSlop={8}
+            style={[
+              styles.headerChatButton,
+              {
+                backgroundColor: `${colors.primary}16`,
+                borderColor: `${colors.primary}80`,
+              },
+            ]}
+          >
+            <FontAwesome6 name="star-and-crescent" size={15} color={colors.primary} />
+            <View style={[styles.headerChatBadge, { backgroundColor: colors.primary }]}>
+              <Ionicons name="chatbubble" size={7} color={colors.background} />
+            </View>
+          </TouchableOpacity>
+        </View>
 
         <View style={styles.headerRight}>
           <TouchableOpacity
@@ -447,10 +470,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row', alignItems: 'center',
     paddingHorizontal: 16, paddingBottom: 12, gap: 8,
   },
+  logoGroup: {
+    flex: 1, flexDirection: 'row', alignItems: 'center',
+    justifyContent: 'center', gap: 8,
+  },
   logo: {
-    flex: 1, textAlign: 'center',
+    textAlign: 'center',
     fontFamily: 'Poppins_700Bold', fontSize: 21,
     color: '#F5C842', letterSpacing: 2,
+  },
+  headerChatButton: {
+    width: 30, height: 30, borderRadius: 15, borderWidth: 1,
+    alignItems: 'center', justifyContent: 'center',
+  },
+  headerChatBadge: {
+    position: 'absolute', right: -3, bottom: -2,
+    width: 13, height: 13, borderRadius: 7,
+    alignItems: 'center', justifyContent: 'center',
   },
   headerRight: { flexDirection: 'row', alignItems: 'center', gap: 6 },
   iconBtn: { position: 'relative', padding: 4 },
