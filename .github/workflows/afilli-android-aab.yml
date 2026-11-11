@@ -48,7 +48,7 @@ jobs:
       - name: Validate release inputs before installing or building
         id: release
         env:
-          AFILLI_SIGNING_AVAILABLE: ${{ secrets.AFILLI_UPLOAD_KEYSTORE_BASE64 != '' && secrets.AFILLI_UPLOAD_KEY_ALIAS != '' && secrets.AFILLI_UPLOAD_STORE_PASSWORD != '' && secrets.AFILLI_UPLOAD_KEY_PASSWORD != '' }}
+          AFILLI_SIGNING_AVAILABLE: ${{ secrets.AFILLI_UPLOAD_KEYSTORE_BASE64 != '' && secrets.AFILLI_UPLOAD_STORE_PASSWORD != '' && secrets.AFILLI_UPLOAD_KEY_PASSWORD != '' }}
         run: node artifacts/mobile/scripts/android-release.cjs prepare
       - uses: actions/setup-java@v4
         with:

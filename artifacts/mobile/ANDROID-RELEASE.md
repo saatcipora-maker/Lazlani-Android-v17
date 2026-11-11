@@ -50,7 +50,7 @@ Bu ortamın **Variables** bölümüne:
 | --- | --- |
 | `AFILLI_CLERK_PUBLISHABLE_KEY` | Aynı Afilli üretim ortamının `pk_live_` yayınlanabilir anahtarı. Sunucu gizli anahtarı veya `pk_test_` kullanılmaz. |
 | `AFILLI_UPLOAD_KEYSTORE_BASE64` | Mevcut Play yükleme anahtarı dosyasının Base64 kodlaması. Yeni, ilgisiz anahtar üretmeyin. |
-| `AFILLI_UPLOAD_KEY_ALIAS` | Mevcut anahtarın alias değeri. |
+| `AFILLI_UPLOAD_KEY_ALIAS` | İsteğe bağlı: mevcut anahtarın alias değeri. Boşsa yalnızca Play yükleme sertifikasıyla eşleşen tek bir özel anahtar otomatik seçilir. |
 | `AFILLI_UPLOAD_STORE_PASSWORD` | Anahtar deposunun parolası. |
 | `AFILLI_UPLOAD_KEY_PASSWORD` | İlgili özel anahtarın parolası. |
 
@@ -58,6 +58,14 @@ Anahtar dosyalarını ve parolaları sohbet mesajına, kaynak koda veya repoya
 koymayın. Base64 **şifreleme değildir**. Bu değerleri yalnızca güvenli Secrets
 alanlarına girin; temsilciye değerlerini göndermeyin. GitHub erişimi OAuth
 bağlantısından sağlanmalı; sohbetten kişisel erişim tokenı istenmez.
+
+Alias boş bırakıldığında liste yalnızca sertifika kontrolü ve imzalama
+adımlarında, sabit İngilizce `keytool -list -rfc` çıktısından okunur. Liste veya
+alias günlüklerde gösterilmez. İlk bulunan anahtar seçilmez: özel anahtar
+kaydının yaprak sertifikası, Play'den ayrıca alınan yükleme SHA-256 değeriyle
+eşleşmeli ve eşleşme tek olmalıdır. Eşleşme yoksa veya birden fazlaysa işlem
+durur. Seçilen alias ile sertifika tekrar dışarı aktarılıp bağımsız olarak
+doğrulanır; yanlış parolalar veya yanlış sertifika kabul edilmez.
 
 Mobil uygulamanın canlı Clerk anahtarı ile API'nin doğruladığı Clerk üretim
 ortamı aynı olmalı. Yalnızca `pk_live_` yazmak çalışan üretim girişi kanıtı

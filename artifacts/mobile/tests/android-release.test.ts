@@ -109,6 +109,11 @@ describe("existing Google Play identity and Android release safeguards", () => {
     expect(workflow).toContain("persist-credentials: false");
     expect(workflow).toContain("contents: read");
     expect(workflow).toContain("if-no-files-found: error");
+    const signingGate = workflow.split("\n").find((line: string) => line.includes("AFILLI_SIGNING_AVAILABLE:"));
+    expect(signingGate).toContain("AFILLI_UPLOAD_KEYSTORE_BASE64");
+    expect(signingGate).toContain("AFILLI_UPLOAD_STORE_PASSWORD");
+    expect(signingGate).toContain("AFILLI_UPLOAD_KEY_PASSWORD");
+    expect(signingGate).not.toContain("AFILLI_UPLOAD_KEY_ALIAS");
     expect(workflow).not.toMatch(/google-play|fastlane|eas (?:build|submit)/i);
   });
 });

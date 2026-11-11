@@ -4,6 +4,7 @@ const os = require('node:os');
 const { execFileSync } = require('node:child_process');
 const { createHash, X509Certificate } = require('node:crypto');
 const { prepareReleaseConfig, unsignedGradle, certificateFingerprint, validateManifest } = require('./android-release-config.cjs');
+const { uploadAliasFromListing } = require('./android-signing-alias.cjs');
 
 const root = path.resolve(__dirname, '..');
 const configPath = path.join(root, 'app.json');
@@ -72,9 +73,13 @@ function withUploadKey(action) {
     const keystore = path.join(temporary, 'upload.keystore');
     const certificate = path.join(temporary, 'upload.der');
     fs.writeFileSync(keystore, bytes, { mode: 0o600 });
-    const alias = required('AFILLI_UPLOAD_KEY_ALIAS');
     required('AFILLI_UPLOAD_STORE_PASSWORD');
     required('AFILLI_UPLOAD_KEY_PASSWORD');
+    const alias = process.env.AFILLI_UPLOAD_KEY_ALIAS || uploadAliasFromListing(
+      command('keytool', ['-J-Duser.language=en', '-J-Duser.country=US', '-list', '-rfc',
+        '-keystore', keystore, '-storepass:env', 'AFILLI_UPLOAD_STORE_PASSWORD']),
+      required('AFILLI_EXPECTED_UPLOAD_SHA256'),
+    );
     command('keytool', ['-exportcert', '-keystore', keystore, '-alias', alias,
       '-storepass:env', 'AFILLI_UPLOAD_STORE_PASSWORD', '-file', certificate]);
     assertCertificate(fs.readFileSync(certificate));
