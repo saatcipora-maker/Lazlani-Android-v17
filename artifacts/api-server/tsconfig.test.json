@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "../..",
+    "incremental": false,
+    "types": ["node", "pino-http"]
+  },
+  "include": ["tests/**/*.ts"]
+}

@@ -1,6 +1,7 @@
 import app from "./app";
 import { logger } from "./lib/logger";
-import { startPasswordResetTokenCleanup } from "./lib/password-reset-cleanup-scheduler";
+import { startChatPhotoCleanup } from "./lib/chatPhotoCleanup";
+import { startContentCleanup } from "./lib/contentCleanup";
 
 const rawPort = process.env["PORT"];
 
@@ -23,5 +24,6 @@ app.listen(port, (err) => {
   }
 
   logger.info({ port }, "Server listening");
-  startPasswordResetTokenCleanup();
+  startChatPhotoCleanup();
+  startContentCleanup();
 });

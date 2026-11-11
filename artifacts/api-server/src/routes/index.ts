@@ -1,20 +1,15 @@
 import { Router, type IRouter } from "express";
 import healthRouter from "./health";
-import authRouter from "./auth";
-import syncRouter from "./sync";
-import storageRouter from "./storage";
-import premiumRequestsRouter from "./premium-requests";
-import adminUsersRouter from "./admin-users";
-import loveRouter from "./love";
+import favoriRouter from "./favori";
 
 const router: IRouter = Router();
 
+// The API artifact is mounted at /api, so this also serves as its health check.
+router.get("/", (_req, res) => {
+  res.json({ status: "ok" });
+});
+
 router.use(healthRouter);
-router.use(authRouter);
-router.use(syncRouter);
-router.use(storageRouter);
-router.use(premiumRequestsRouter);
-router.use(adminUsersRouter);
-router.use(loveRouter);
+router.use(favoriRouter);
 
 export default router;
