@@ -24,10 +24,17 @@ inceleyin. GitHub Actions ayarlarında `android-release` ortamı kullanılmalı.
 
 **Yalnızca ayrı dala aktarmak derlemeyi başlatılabilir hale getirmez.**
 GitHub'ın `workflow_dispatch` kuralı gereği workflow dosyası varsayılan dalda da
-bulunmalı. Mevcut aktarım `main` dalını değiştirmeden yapılır. Değişiklikler
-incelenip ayrıca onayla birleştirilmeden Actions ekranındaki **Run workflow**
-düğmesi görünmeyebilir. Bu birleştirme veya kaynak aktarımı Google Play yayını
-değildir; akış yalnızca elle başlatılır.
+bulunmalı. Eski uygulama kodunu korumak için, sahibinin açık onayıyla `main`
+dalına **yalnızca** `.github/workflows/afilli-android-aab.yml` eklenebilir.
+Afilli kaynaklarının tamamını `main` dalına birleştirmek şart değildir.
+Derleme başlatılırken kaynak dalı olarak **afilli-android-16** seçilmelidir;
+eski uygulama kaynaklarının bulunduğu `main` dalı seçilmemelidir. Bu kaynak veya
+derleme tanımı aktarımı Google Play yayını değildir; akış yalnızca elle başlatılır.
+
+`android-release` ortamı ilk kurulurken depo sahibinin onayını gerektirecek
+şekilde korunur. Derleme elle başlatıldıktan sonra GitHub'daki ortam onayı da
+verilmeden işlemler başlamaz. Önceden var olan ortamın güvenlik kuralları
+kurulum sırasında zayıflatılmamalıdır.
 
 Bu ortamın **Variables** bölümüne:
 
