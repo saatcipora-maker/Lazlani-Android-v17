@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; connect-src 'none'; img-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>Afilli — Anahtar metnini hazırla</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;padding:28px 16px;background:#f6f0e7;color:#30261e;font:18px/1.6 system-ui,sans-serif}
+    main{max-width:720px;margin:auto}h1{font-size:30px;line-height:1.25}h2{font-size:22px;margin-top:0}
+    .card{background:#fffdf9;border:1px solid #d8c8b5;border-radius:14px;padding:24px;margin:20px 0}
+    .action{display:block;width:100%;padding:18px;margin:14px 0;border:0;border-radius:10px;background:#6b442c;color:#fff;font:700 20px/1.4 system-ui,sans-serif;text-align:center;text-decoration:none;cursor:pointer}
+    .action:disabled,.action.disabled{background:#e7dfd5;color:#70665d;cursor:not-allowed}
+    :focus-visible{outline:4px solid #1778aa;outline-offset:4px}.notice{border-left:5px solid #9c682d;padding:12px 16px;background:#efe4d4}
+    #status{font-weight:700;min-height:64px}#details{min-height:28px}code{font-size:16px;overflow-wrap:anywhere;background:#f0e9df;padding:3px 6px}
+    li{margin:12px 0}.small{font-size:15px}input[hidden]{display:none}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Afilli — Anahtar metnini hazırla</h1>
+  <p class="notice"><strong>Bu dosyayı bilgisayarına indirip çift tıklayarak aç.</strong>
+    Anahtar dosyan yalnızca kendi tarayıcında işlenir. Hiçbir sunucuya gönderilmez.
+    Bu yardımcıya şifre girilmez.</p>
+  <section class="card" aria-labelledby="steps-title">
+    <h2 id="steps-title">Sırayla bu üç düğmeyi kullan</h2>
+    <input id="key-file" type="file" accept=".jks,.keystore,.p12,.pfx" hidden disabled aria-label="Bilgisayarındaki mevcut yükleme anahtarı dosyası">
+    <button class="action" id="pick-file" type="button" disabled>1. Anahtar dosyanı seç</button>
+    <p class="small">Daha önce bulduğun <strong>.jks, .keystore, .p12 veya .pfx</strong> dosyasını seç.
+      Google Play’den indirilen .pem veya .der sertifikası değil, mevcut özel anahtar dosyan gerekir.</p>
+    <p id="status" role="status" aria-live="polite">Yerel çalışma modu kontrol ediliyor…</p>
+    <p id="details" class="small"></p>
+    <button class="action" id="copy-key" type="button" disabled>2. Gizli metni kopyala</button>
+    <a class="action disabled" id="open-github"
+       href="https://github.com/saatcipora-maker/Lazlani-Android-v17/settings/environments/26951228181/edit"
+       target="_blank" rel="noopener noreferrer" aria-disabled="true" tabindex="-1">3. GitHub ayarlarını aç</a>
+  </section>
+  <section class="card" aria-labelledby="github-title">
+    <h2 id="github-title">GitHub açıldığında</h2>
+    <ol>
+      <li><code>AFILLI_UPLOAD_KEYSTORE_BASE64</code> satırındaki <strong>kaleme</strong> bas.</li>
+      <li><strong>Değer / Value</strong> kutusuna tıkla. Kutuda bir yazı varsa <strong>Ctrl+A</strong> ile yalnızca o kutunun içini seç.</li>
+      <li><strong>Ctrl+V</strong> ile hazırlanan metni yapıştır.</li>
+      <li><strong>Güncelle / Update secret</strong> düğmesine bas.</li>
+    </ol>
+    <p><strong>Diğer kayıtları değiştirme. Kopyaladıktan sonra arada başka bir şey kopyalama.</strong></p>
+  </section>
+  <p class="notice"><strong>Gizli metni sohbete yapıştırma veya fotoğrafını gönderme.</strong>
+    Bu sayfa metnin kendisini ekranda göstermez. Bu yardımcı bir AAB dosyası değildir.
+    Şifre ve Play sertifikası denetimi ayrıca derlemede yapılır.</p>
+</main>
+<script id="helper-code">
+(() => {
+  'use strict';
+  const input = document.getElementById('key-file');
+  const pick = document.getElementById('pick-file');
+  const copy = document.getElementById('copy-key');
+  const link = document.getElementById('open-github');
+  const status = document.getElementById('status');
+  const details = document.getElementById('details');
+  let encoded = '';
+  let copied = false;
+  let generation = 0;
+  function enableLink(enabled) {
+    link.setAttribute('aria-disabled', String(!enabled));
+    link.tabIndex = enabled ? 0 : -1;
+    link.classList.toggle('disabled', !enabled);
+  }
+  function reset() {
+    generation++;
+    encoded = '';
+    copied = false;
+    copy.disabled = true;
+    enableLink(false);
+    details.textContent = '';
+  }
+  link.addEventListener('click', event => {
+    if (!copied) event.preventDefault();
+  });
+  // Private files cannot be selected inside an online or embedded preview.
+  if (location.protocol !== 'file:') {
+    status.textContent = 'Önce bu yardımcıyı indir. Ardından bilgisayarındaki HTML dosyasına çift tıkla. Dosya seçimi yalnızca yerel kopyada açılır.';
+    return;
+  }
+  pick.disabled = false;
+  input.disabled = false;
+  status.textContent = 'Hazır. Önce “1. Anahtar dosyanı seç” düğmesine bas.';
+  pick.addEventListener('click', () => {
+    reset();
+    input.value = '';
+    status.textContent = 'Açılan pencereden mevcut anahtar dosyanı seç.';
+    input.click();
+  });
+  input.addEventListener('change', async () => {
+    reset();
+    const ticket = generation;
+    const file = input.files && input.files[0];
+    if (!file) {
+      status.textContent = 'Dosya seçilmedi. İlk düğmeden tekrar seçebilirsin.';
+      return;
+    }
+    if (!/\.(jks|keystore|p12|pfx)$/i.test(file.name)) {
+      status.textContent = 'Bu bir anahtar dosyası uzantısı değil. Mevcut .jks, .keystore, .p12 veya .pfx dosyanı seç.';
+      return;
+    }
+    // GitHub secrets have a 48 KiB limit; Base64 needs 4 bytes per 3 input bytes.
+    if (file.size < 1 || 4 * Math.ceil(file.size / 3) > 48 * 1024) {
+      status.textContent = 'Dosya boş veya GitHub gizli kayıt sınırını aşıyor. Kaydetme; dosyayı kontrol et.';
+      return;
+    }
+    status.textContent = 'Dosya yalnızca bu bilgisayarda hazırlanıyor…';
+    try {
+      const bytes = new Uint8Array(await file.arrayBuffer());
+      if (ticket !== generation) return;
+      const javaStore = bytes.length >= 4 && (
+        (bytes[0] === 0xfe && bytes[1] === 0xed && bytes[2] === 0xfe && bytes[3] === 0xed) ||
+        (bytes[0] === 0xce && bytes[1] === 0xce && bytes[2] === 0xce && bytes[3] === 0xce)
+      );
+      if (!javaStore && bytes[0] !== 0x30) {
+        status.textContent = 'Dosyanın başlığı anahtar deposuna benzemiyor. Kod, fotoğraf veya metin dosyası yerine asıl anahtar dosyanı seç.';
+        return;
+      }
+      let binary = '';
+      for (let offset = 0; offset < bytes.length; offset += 8192) {
+        binary += String.fromCharCode(...bytes.subarray(offset, offset + 8192));
+      }
+      const value = btoa(binary);
+      if (!value || value.length !== 4 * Math.ceil(bytes.length / 3) || !/^[A-Za-z0-9+/]+={0,2}$/.test(value)) {
+        throw new Error('Encoding failed');
+      }
+      encoded = value;
+      copy.disabled = false;
+      status.textContent = 'Dosya hazır. Şimdi “2. Gizli metni kopyala” düğmesine bas.';
+      details.textContent = bytes.length.toLocaleString('tr-TR') + ' bayt → ' + value.length.toLocaleString('tr-TR') + ' karakter. Dosya henüz hiçbir yere gönderilmedi.';
+    } catch {
+      if (ticket !== generation) return;
+      reset();
+      status.textContent = 'Dosya okunamadı. İlk düğmeden tekrar seç. Henüz GitHub’a kaydetme.';
+    }
+  });
+  copy.addEventListener('click', async () => {
+    if (!encoded) return;
+    const ticket = generation;
+    const value = encoded;
+    copy.disabled = true;
+    try {
+      let success = false;
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        try {
+          await navigator.clipboard.writeText(value);
+          success = true;
+        } catch { /* Try the local browser's legacy copy command below. */ }
+      }
+      if (!success) {
+        const temporary = document.createElement('textarea');
+        temporary.value = value;
+        temporary.setAttribute('readonly', '');
+        temporary.style.position = 'fixed';
+        temporary.style.left = '-10000px';
+        document.body.appendChild(temporary);
+        try {
+          temporary.focus();
+          temporary.select();
+          success = document.execCommand('copy');
+        } finally {
+          temporary.value = '';
+          temporary.remove();
+        }
+      }
+      if (ticket !== generation) return;
+      if (!success) throw new Error('Clipboard unavailable');
+      copied = true;
+      enableLink(true);
+      status.textContent = 'Kopyalandı! Şimdi “3. GitHub ayarlarını aç” düğmesine bas.';
+    } catch {
+      if (ticket !== generation) return;
+      copied = false;
+      enableLink(false);
+      status.textContent = 'Kopyalama olmadı. Bu dosyayı Chrome’da yerel olarak açıp tekrar dene. Henüz GitHub’a kaydetme.';
+    } finally {
+      if (ticket === generation) copy.disabled = !encoded;
+    }
+  });
+})();
+</script>
+</body>
+</html>
