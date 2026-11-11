@@ -5,6 +5,7 @@ const { execFileSync } = require('node:child_process');
 const { createHash, X509Certificate } = require('node:crypto');
 const { prepareReleaseConfig, unsignedGradle, certificateFingerprint, validateManifest } = require('./android-release-config.cjs');
 const { uploadAliasFromListing } = require('./android-signing-alias.cjs');
+const { safeKeytoolError } = require('./android-keytool-errors.cjs');
 
 const root = path.resolve(__dirname, '..');
 const configPath = path.join(root, 'app.json');
@@ -19,8 +20,9 @@ function required(name) {
 function command(binary, args) {
   try {
     return execFileSync(binary, args, { encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] });
-  } catch {
+  } catch (error) {
     // Never include subprocess environment, passwords or keystore data in logs.
+    if (binary === 'keytool') throw new Error(safeKeytoolError(error));
     throw new Error(`${binary} işlemi başarısız; araç kurulumu ve derleme ayarlarını kontrol et.`);
   }
 }

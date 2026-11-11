@@ -10,7 +10,7 @@ import { describe, expect, it } from "vitest";
 // Only synthetic bytes and a PUBLIC trust-root certificate are used. Mock JDK
 // commands exercise cleanup/error handling; no real keystore, password or AAB.
 describe("Android upload-key subprocess isolation", () => {
-  it.each(["valid", "password-failure", "certificate-mismatch", "missing-alias", "auto-alias", "ambiguous-alias", "auto-export-mismatch", "signing-failure", "auto-signing-failure"])(
+  it.each(["valid", "password-failure", "diagnostic-password-failure", "diagnostic-format-failure", "diagnostic-algorithm-failure", "certificate-mismatch", "missing-alias", "auto-alias", "ambiguous-alias", "auto-export-mismatch", "signing-failure", "auto-signing-failure"])(
     "removes private temporary files and redacts command errors in %s",
     (scenario) => {
       const directory = mkdtempSync(join(tmpdir(), "afilli-signing-test-"));
@@ -24,6 +24,16 @@ describe("Android upload-key subprocess isolation", () => {
         const fakeKeytool = `#!${process.execPath}
 const fs = require('node:fs');
 if (process.env.FIXTURE_SCENARIO === 'password-failure') {
+  console.error(process.env.AFILLI_UPLOAD_STORE_PASSWORD);
+  process.exit(1);
+}
+const diagnosticFailures = {
+  'diagnostic-password-failure': 'Keystore was tampered with, or password was incorrect',
+  'diagnostic-format-failure': 'Unrecognized keystore format',
+  'diagnostic-algorithm-failure': 'NoSuchAlgorithmException',
+};
+if (diagnosticFailures[process.env.FIXTURE_SCENARIO]) {
+  console.log(diagnosticFailures[process.env.FIXTURE_SCENARIO]);
   console.error(process.env.AFILLI_UPLOAD_STORE_PASSWORD);
   process.exit(1);
 }
@@ -88,6 +98,12 @@ process.exit(1);
         expect(logs).not.toContain(Buffer.from(syntheticBytes).toString("base64"));
         expect(logs).not.toContain("Alias name:");
         expect(logs).not.toContain("fixture");
+        const diagnostics: Record<string, string> = {
+          "diagnostic-password-failure": "AFILLI_UPLOAD_STORE_PASSWORD kaydını kontrol et.",
+          "diagnostic-format-failure": "AFILLI_UPLOAD_KEYSTORE_BASE64 kaydının doğru dosyadan",
+          "diagnostic-algorithm-failure": "Java uyumluluğunu kontrol et.",
+        };
+        if (diagnostics[scenario]) expect(logs).toContain(diagnostics[scenario]);
       } finally {
         rmSync(directory, { recursive: true, force: true });
       }
