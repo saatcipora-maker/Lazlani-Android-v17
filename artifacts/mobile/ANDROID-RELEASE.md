@@ -71,6 +71,18 @@ Mobil uygulamanın canlı Clerk anahtarı ile API'nin doğruladığı Clerk üre
 ortamı aynı olmalı. Yalnızca `pk_live_` yazmak çalışan üretim girişi kanıtı
 değildir; mevcut önizleme anahtarlarını değiştirerek bu kontrolü aşmayın.
 
+Replit tarafından yönetilen mevcut kurulumda dış Android derlemesinin
+paylaşılabilir giriş ayarı, sunucunun da kullandığı
+`@clerk/shared/keys` içindeki `publishableKeyFromHost` ile doğrulanmış
+yayımlanmış API alan adından çözümlenir. Yönetilen Clerk secret değerleri
+okunmaz veya dışarı aktarılmaz. Önce yayımlanmış proxy'nin
+`/v1/environment` yanıtında `display_config.instance_environment_type`
+değerinin `production` olduğu doğrulanmalıdır. Dış derleme için seçilen proxy
+adresi de bu doğrulanmış yayına ait olmalıdır. Bunlar yalnızca GitHub'daki
+derleme ayarlarıdır; Replit'in yönettiği `CLERK_*` veya geliştirme ortamı
+değerleri değiştirilmez. Bu bağlantı kontrolü, gerçek cihazda giriş testinin
+yerini tutmaz.
+
 ## Derleme ve çıktı
 
 1. Play Console’dan **bütün kanallarda** yüklenmiş en yüksek sürüm kodunu bulun.
