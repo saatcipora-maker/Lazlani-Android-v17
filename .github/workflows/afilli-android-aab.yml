@@ -1,0 +1,102 @@
+name: Afilli Android AAB
+
+on:
+  workflow_dispatch:
+    inputs:
+      highest_play_version_code:
+        description: Play Console’daki bütün kanallarda yüklenmiş en yüksek sürüm kodu
+        required: true
+        type: string
+      release_version:
+        description: Kullanıcıya görünen Afilli sürümü
+        required: true
+        default: '2.0.0'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: afilli-android-release
+  cancel-in-progress: false
+
+jobs:
+  android:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    environment: android-release
+    env:
+      CI: '1'
+      AFILLI_HIGHEST_PLAY_VERSION_CODE: ${{ inputs.highest_play_version_code }}
+      AFILLI_RELEASE_VERSION: ${{ inputs.release_version }}
+      EXPO_PUBLIC_DOMAIN: ${{ vars.AFILLI_API_HOST }}
+      EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.AFILLI_CLERK_PUBLISHABLE_KEY }}
+      EXPO_PUBLIC_CLERK_PROXY_URL: ${{ vars.AFILLI_CLERK_PROXY_URL }}
+      AFILLI_EXPECTED_UPLOAD_SHA256: ${{ vars.AFILLI_EXPECTED_UPLOAD_SHA256 }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.26.1
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: pnpm
+      - name: Validate release inputs before installing or building
+        id: release
+        env:
+          AFILLI_SIGNING_AVAILABLE: ${{ secrets.AFILLI_UPLOAD_KEYSTORE_BASE64 != '' && secrets.AFILLI_UPLOAD_KEY_ALIAS != '' && secrets.AFILLI_UPLOAD_STORE_PASSWORD != '' && secrets.AFILLI_UPLOAD_KEY_PASSWORD != '' }}
+        run: node artifacts/mobile/scripts/android-release.cjs prepare
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Check the existing upload certificate before building
+        env:
+          AFILLI_UPLOAD_KEYSTORE_BASE64: ${{ secrets.AFILLI_UPLOAD_KEYSTORE_BASE64 }}
+          AFILLI_UPLOAD_KEY_ALIAS: ${{ secrets.AFILLI_UPLOAD_KEY_ALIAS }}
+          AFILLI_UPLOAD_STORE_PASSWORD: ${{ secrets.AFILLI_UPLOAD_STORE_PASSWORD }}
+          AFILLI_UPLOAD_KEY_PASSWORD: ${{ secrets.AFILLI_UPLOAD_KEY_PASSWORD }}
+        run: node artifacts/mobile/scripts/android-release.cjs check-key
+      - uses: android-actions/setup-android@v3
+      - name: Install frozen workspace dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Check shared libraries and mobile types
+        run: pnpm run typecheck:libs && pnpm --filter @workspace/mobile run typecheck
+      - name: Generate native Afilli Android project
+        working-directory: artifacts/mobile
+        run: pnpm exec expo prebuild --platform android --no-install
+      - name: Remove template signing before Gradle
+        run: node artifacts/mobile/scripts/android-release.cjs unsigned
+      - name: Build unsigned release without access to the private upload key
+        working-directory: artifacts/mobile/android
+        env:
+          NODE_ENV: production
+        run: chmod +x gradlew && ./gradlew bundleRelease --no-daemon
+      - name: Sign only after dependency scripts and Gradle have finished
+        env:
+          AFILLI_UPLOAD_KEYSTORE_BASE64: ${{ secrets.AFILLI_UPLOAD_KEYSTORE_BASE64 }}
+          AFILLI_UPLOAD_KEY_ALIAS: ${{ secrets.AFILLI_UPLOAD_KEY_ALIAS }}
+          AFILLI_UPLOAD_STORE_PASSWORD: ${{ secrets.AFILLI_UPLOAD_STORE_PASSWORD }}
+          AFILLI_UPLOAD_KEY_PASSWORD: ${{ secrets.AFILLI_UPLOAD_KEY_PASSWORD }}
+        run: node artifacts/mobile/scripts/android-release.cjs sign
+      - name: Get checksum-pinned official bundletool
+        run: |
+          curl --fail --location --silent --show-error --output "$RUNNER_TEMP/bundletool.jar" \
+            https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar
+          echo "a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29  $RUNNER_TEMP/bundletool.jar" | sha256sum --check
+      - name: Verify bundle identity, version and upload signature
+        env:
+          AFILLI_BUNDLETOOL_JAR: ${{ runner.temp }}/bundletool.jar
+          AFILLI_OUTPUT_DIR: ${{ runner.temp }}/afilli-output
+        run: node artifacts/mobile/scripts/android-release.cjs verify
+      - name: Save verified AAB for download, not Google Play submission
+        uses: actions/upload-artifact@v4
+        with:
+          name: Afilli-${{ steps.release.outputs.version_code }}-AAB
+          path: ${{ runner.temp }}/afilli-output/
+          if-no-files-found: error
+          retention-days: 7
